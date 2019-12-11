@@ -1,0 +1,34 @@
+&nml_grid_size
+  imut                  = 360,
+  jmut                  = 180,
+  km                    = 101,
+  ksgm                  = 101,
+  kbbl			= 0,
+/
+
+&nml_coordinate
+  lspherical            = .true.,
+  lsub                  = .false.,
+  lzstar                = .true.,
+/
+
+&nml_vert_grid
+  file_dz_cm            = "../DZ/dz_cm-L102m1.d",
+/
+
+&nml_horz_grid
+  lon_west_end_of_core  =   1.0d0,
+  lat_south_end_of_core = -89.0d0,
+  dx_const_deg          =   1.0d0,
+  dy_const_deg          =   1.0d0,
+/
+
+&nml_topo
+  file_topo             = "dummy.d",
+/
+
+&nml_record_date
+  rec_first_date        = 1000, 1, 1, 0, 0, 0,
+  rec_last_date         = 1000,12, 1, 0, 0, 0,
+  rec_interval_date     =    0, 1, 0, 0, 0, 0,
+/

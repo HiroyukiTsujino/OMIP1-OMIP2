@@ -1,0 +1,12 @@
+{
+    "MRI.COM":{
+	"path":"../model/MRI.COM/20190809/omip2",
+	"fname":"tos.nc",
+	"name":"tos"
+    },
+    "MRI.COM_aircore":{
+	"path":"../model/MRI.COM/20191114/omip2_aircore",
+	"fname":"tos.nc",
+	"name":"tos"
+    }
+}

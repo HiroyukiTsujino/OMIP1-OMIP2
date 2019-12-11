@@ -1,0 +1,12 @@
+&nml_adt2onedeg
+  ibyr=1993,
+  ieyr=2018,
+  adt_in_dir='CMEMS_org'
+  adt_in_base='adt_mon',
+  undef_in = 9999.9e0,
+  adt_out_base='zos_adt',
+  undef_out = -9.99e33,
+  l_apply_gauss_filter = .false.,
+  g_half_width_degree = 0.5d0
+  i_range = 0
+&end

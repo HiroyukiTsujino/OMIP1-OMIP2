@@ -1,0 +1,20 @@
+{
+    "MRI.COM_omip1":{
+	"path":"../model/MRI.COM/20191114/omip1",
+	"fnamex":"tauuo.nc",
+	"fnamey":"tauvo.nc",
+	"factor":"1.e0",
+	"undef":"-9.00e33",
+        "undefnan":"False",
+	"gtorlt":"lt"
+    },
+    "CAS-LICOM3_omip1":{
+	"path":"../model/CAS-LICOM3/20190917",
+	"fnamex":"OMIP1_tau_311_372_WOA1x1.nc",
+	"fnamey":"OMIP1_tau_311_372_WOA1x1.nc",
+	"factor":"1.e0",
+        "undef":"9.9e34",
+        "undefnan":"False",
+	"gtorlt":"gt"
+    }
+}

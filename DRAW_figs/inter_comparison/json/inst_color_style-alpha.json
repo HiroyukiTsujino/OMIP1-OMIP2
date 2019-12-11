@@ -1,0 +1,27 @@
+{
+    "CAS-LICOM3_alpha1_0":{
+	"color":"blue",
+        "style":"solid",
+	"marker":"0"
+    },
+    "CAS-LICOM3_alpha0_7":{
+	"color":"green",
+        "style":"solid",
+	"marker":"0"
+    },
+    "MRI.COM_alpha1_0":{
+	"color":"darkorange",
+        "style":"solid",
+	"marker":"0"
+    },
+    "MRI.COM_alpha0_7":{
+	"color":"red",
+        "style":"solid",
+	"marker":"0"
+    },
+    "MRI.COM_alpha0_0":{
+	"color":"purple",
+        "style":"solid",
+	"marker":"0"
+    }
+}

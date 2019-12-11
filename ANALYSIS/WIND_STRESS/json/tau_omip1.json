@@ -1,0 +1,17 @@
+{
+    "CMCC-NEMO":{
+	"path":"../model/CMCC-NEMO/20191109/OMIP1",
+	"fnamex":"OMIP1.1d_CMCC_1m_tauuo_201001_207112.nc",
+	"fnamey":"OMIP1.1d_CMCC_1m_tauvo_201001_207112.nc",
+	"namex":"tauuo",
+	"namey":"tauvo",
+	"factor":"1.e0",
+        "undef":"9.9e19",
+        "undefnan":"False",
+	"gtorlt":"gt",
+	"lonname":"lon",
+	"latname":"lat",
+	"londim":"lon",
+	"latdim":"lat"
+    }
+}

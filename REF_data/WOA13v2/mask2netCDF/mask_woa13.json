@@ -1,0 +1,19 @@
+{
+    "Basin_Index":{
+	"-999":"Land",
+	"1":"Atlantic Ocean",
+        "2":"Pacific Ocean",
+        "3":"Indian Ocean",
+	"4":"Mediterranean Sea",
+	"5":"Baltic Sea",
+	"6":"Black Sea",
+	"7":"Red Sea",
+	"8":"Persian Gulf",
+	"9":"Hudson Bay",
+	"10":"Southern Ocean",
+	"11":"Arctic Ocean",
+	"12":"Sea of Japan",
+	"53":"Caspian Sea",
+	"56":"Bay of Bengal"
+    }
+}    

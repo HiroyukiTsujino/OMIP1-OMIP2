@@ -1,0 +1,12 @@
+{
+    "MRICOM":{
+	"path":"../model/MRI.COM/20190809/omip2",
+	"fname":"thetao_basin.nc",
+	"name":"thetao"
+    },
+    "MRICOM_aircore":{
+	"path":"../model/MRI.COM/20191114/omip2_aircore",
+	"fname":"thetao_basin.nc",
+	"name":"thetao"
+    }
+}

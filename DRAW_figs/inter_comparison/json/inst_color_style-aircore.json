@@ -1,0 +1,12 @@
+{
+    "MRI.COM":{
+	"color":"blue",
+        "style":"solid",
+	"marker":"0"
+    },
+    "MRI.COM_aircore":{
+	"color":"red",
+        "style":"solid",
+	"marker":"0"
+    }
+}

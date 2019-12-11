@@ -1,0 +1,27 @@
+{
+    "MRICOM_alpha1_0":{
+	"path":"../OMIP/MRICOM/20190809/omip2",
+	"fname":"zos.nc",
+	"name":"zos"
+    },
+    "CAS-LICOM3_alpha1_0":{
+	"path":"../OMIP/CAS-LICOM3/20190731",
+        "fname":"OMIP2_zos_306To366_monthly_remapycon.nc",
+        "name":"zos"
+    },
+    "MRICOM_alpha0_7":{
+	"path":"../OMIP/MRICOM/20191108/omip2_0.7",
+	"fname":"zos.nc",
+	"name":"zos"
+    },
+    "CAS-LICOM3_alpha0_7":{
+	"path":"../OMIP/CAS-LICOM3/20191023",
+        "fname":"OMIP2_zos_306To366_monthly_remapycon.nc",
+        "name":"zos"
+    },
+    "MRICOM_alpha0_0":{
+	"path":"../OMIP/MRICOM/20191108/omip2_0.0",
+	"fname":"zos.nc",
+	"name":"zos"
+    }
+}

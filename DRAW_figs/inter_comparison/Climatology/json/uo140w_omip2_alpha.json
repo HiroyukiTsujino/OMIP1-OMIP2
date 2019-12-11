@@ -1,0 +1,27 @@
+{
+    "MRI.COM_alpha1_0":{
+	"path":"../model/MRI.COM/20190823/omip2",
+	"fname":"uo.nc",
+	"name":"uo"
+    },
+    "CAS-LICOM3_alpha1_0":{
+	"path":"../model/CAS-LICOM3/20190731",
+        "fname":"OMIP2_uo_140W_335_306To366_yearmean_intlevel_setzaxis.nc",
+        "name":"uo"
+    },
+    "MRI.COM_alpha0_7":{
+	"path":"../model/MRI.COM/20191108/omip2_0.7",
+	"fname":"uo.nc",
+	"name":"uo"
+    },
+    "CAS-LICOM3_alpha0_7":{
+	"path":"../model/CAS-LICOM3/20191023",
+        "fname":"OMIP2_uo_140W_335_306To366_yearmean_intlevel_setzaxis.nc",
+        "name":"uo"
+    },
+    "MRI.COM_alpha0_0":{
+	"path":"../model/MRI.COM/20191108/omip2_0.0",
+	"fname":"uo.nc",
+	"name":"uo"
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "MIROC-COCO4.9":{
+	"color":"darkgreen",
+        "style":"solid",
+	"marker":"2"
+    },
+    "MIROC-COCO4.9_52yr":{
+	"color":"blue",
+        "style":"solid",
+	"marker":"3"
+    },
+    "MRI.COM":{
+	"color":"darkorange",
+        "style":"solid",
+	"marker":"0"
+    },
+    "MRI.COM_52yr":{
+	"color":"red",
+        "style":"solid",
+	"marker":"0"
+    }
+}

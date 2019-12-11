@@ -1,0 +1,27 @@
+{
+    "FSU-COAPS":{
+	"path":"OMIP/FSU-COAPS/20190724",
+        "fname":"amoc_rapid_monthly_t_6thcycles_core2_fsu.nc",
+	"factor":"1.e0"
+    },
+    "MIROC-COCO4-9":{
+	"path":"OMIP/MIROC-COCO4-9/20190731/CORE",
+        "fname":"amoc_rapid.nc",
+	"factor":"1.e-9"
+    },
+    "LICOM3-CICE4":{
+	"path":"OMIP/LICOM3-CICE4/20190731",
+        "fname":"OMIP1_amoc_rapid_311To372_monthly.nc",
+	"factor":"1.e0"
+    },
+    "AWI-FESOM":{
+	"path":"OMIP/AWI-FESOM/20190731/OMIP1/loop6",
+        "fname":"amoc_rapid_Omon_FESOM1.4_historical_loop6_gr_194801-200912.nc",
+	"factor":"1.e0"
+    },
+    "NCAR-POP":{
+	"path":"OMIP/NCAR-POP/20190731/omip1",
+        "fname":"amoc_rapid_Omon_CESM2_omip1_r2i1p1f1_gn_031101-037212.nc",
+	"factor":"1.e-9"
+    }
+}    
