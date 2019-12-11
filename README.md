@@ -6,6 +6,10 @@ OMIP1-OMIP2 comparison
   which is summarized as a paper to be submitted
   to Geoscientific Model Development (Tsujino et al. 2019).
 
+  Note that this repository provides only scripts to process data.
+  Data should be obtained separately, which will be made available at
+  <https://climate.mri-jma.go.jp/pub/archives/Tsujino-et-al_OMIP/data>.
+
 
 Contents
 --------

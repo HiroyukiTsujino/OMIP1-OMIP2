@@ -1,7 +1,11 @@
 Spin_up
 ========
 
-  * draw figures showing spinup behaviors
+  * Draw figures that show spinup behaviors of the simulations.
+
+  * Note:
+     - You need to load anaconda3 to run Python scripts in this directory.
+
 
 In main part and supplement
 --------

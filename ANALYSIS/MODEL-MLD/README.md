@@ -2,6 +2,7 @@ MODEL_MLD
 ========
 
   * Performance evaluation of OMIP simulations.
+  * Python scripts in this directory require anaconda3.
 
 
 Contents

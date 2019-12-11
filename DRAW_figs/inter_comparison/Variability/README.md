@@ -1,6 +1,8 @@
 Interannual variability
 ========
 
+  * Note:
+     - You need to load anaconda3 to run Python scripts in this directory.
 
 Contents
 --------

@@ -7,10 +7,10 @@ DRAW_figs
 Contents
 --------
 
-  * intercomparison: Draw figures for OMIP1-OMIP2 intercomparison paper.
+  * intercomparison: Draw figures of an OMIP1-OMIP2 intercomparison paper.
 
-  * quick_look: Give a quick look at resutlts, submitted data
-     - Note: Not maintained well.
+  * quick_look: Give a quick look at model outputs.
+     - Note: Contents of "quick_look" are is not maintained well.
 
 
 Usage Notes

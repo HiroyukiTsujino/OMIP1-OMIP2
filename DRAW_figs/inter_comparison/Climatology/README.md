@@ -2,7 +2,7 @@ Long-term mean
 ========
 
   * Note:
-     - You need to anaconda3 to run Python scripts in this directory.
+     - You need to load anaconda3 to run Python scripts in this directory.
 
 Contents
 --------
