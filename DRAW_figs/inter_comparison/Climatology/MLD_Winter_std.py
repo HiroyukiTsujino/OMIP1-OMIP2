@@ -126,10 +126,12 @@ ax = [ [ plt.axes(axes0[0],projection=proj),
 
 # [left, bottom, width, height]
 ax_cbar = [
+    plt.axes([0.43,0.68,0.012,0.23]),
     plt.axes([0.93,0.68,0.012,0.23]),
+    plt.axes([0.43,0.37,0.012,0.23]),
     plt.axes([0.93,0.37,0.012,0.23]),
-    plt.axes([0.93,0.06,0.012,0.23]),
     plt.axes([0.43,0.06,0.012,0.23]),
+    plt.axes([0.93,0.06,0.012,0.23]),
 ]
 
 bounds1 = np.arange(0,1550,50)
@@ -189,33 +191,33 @@ for panel in range(6):
             else:
                 da = dashob
 
-        if (mod == 1 and ns == 0):
-            da.plot(ax=ax[panel][ns],cmap=cmap[panel],
-                    levels=bounds,
-                    extend='both',
-                    cbar_kwargs={'orientation': 'vertical',
-                                 'spacing':'uniform',
-                                 'label': '[m]',
-                                 'ticks': ticks_bounds,},
-                    cbar_ax=ax_cbar[q],
-                    transform=ccrs.PlateCarree())
-        else:
-            if (panel == 4 and ns ==0):
-                da.plot(ax=ax[panel][ns],cmap=cmap[panel],
-                        levels=bounds,
-                        extend='both',
-                        cbar_kwargs={'orientation': 'vertical',
-                                     'spacing':'uniform',
-                                     'label': '[m]',
-                                     'ticks': ticks_bounds,},
-                        cbar_ax=ax_cbar[panel-1],
-                        transform=ccrs.PlateCarree())
-            else:
-                da.plot(ax=ax[panel][ns],cmap=cmap[panel],
-                        levels=bounds,
-                        extend='both',
-                        add_colorbar=False,
-                        transform=ccrs.PlateCarree())
+#        if (mod == 1 and ns == 0):
+        da.plot(ax=ax[panel][ns],cmap=cmap[panel],
+                levels=bounds,
+                extend='both',
+                cbar_kwargs={'orientation': 'vertical',
+                             'spacing':'uniform',
+                             'label': '[m]',
+                             'ticks': ticks_bounds,},
+                cbar_ax=ax_cbar[panel],
+                transform=ccrs.PlateCarree())
+#        else:
+#            if (panel == 4 and ns ==0):
+#                da.plot(ax=ax[panel][ns],cmap=cmap[panel],
+#                        levels=bounds,
+#                        extend='both',
+#                        cbar_kwargs={'orientation': 'vertical',
+#                                     'spacing':'uniform',
+#                                     'label': '[m]',
+#                                     'ticks': ticks_bounds,},
+#                        cbar_ax=ax_cbar[panel-1],
+#                        transform=ccrs.PlateCarree())
+#            else:
+#                da.plot(ax=ax[panel][ns],cmap=cmap[panel],
+#                        levels=bounds,
+#                        extend='both',
+#                        add_colorbar=False,
+#                        transform=ccrs.PlateCarree())
             
 for panel in range(6):
     for ns in range(2):
