@@ -8,6 +8,6 @@ ARC_DIR=/denkei-shared/og1/htsujino/OMIP
 
 set -e
 
-ln -s ${ARC_DIR}/model .
-ln -s ${ARC_DIR}/analysis .
-ln -s ${ARC_DIR}/refdata .
+ln -sfn ${ARC_DIR}/model .
+ln -sfn ${ARC_DIR}/analysis .
+ln -sfn ${ARC_DIR}/refdata .

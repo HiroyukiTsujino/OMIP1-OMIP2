@@ -36,8 +36,8 @@
 	"latname":"lat"
     },
     "AWI-FESOM":{
-	"path":"../model/AWI-FESOM/20190731/OMIP2/loop6",
-        "fname":"mlotst_Omon_FESOM1.4_historical_loop6_gr_195801-201812.nc",
+	"path":"../model/AWI-FESOM/20191212/OMIP1/loop6",
+        "fname":"mlotst_version2_Omon_FESOM1.4_historical_loop6_gr_194801-200912.nc",
         "name":"mlotst",
         "undef":"0.99e20",
         "undefnan":"False",

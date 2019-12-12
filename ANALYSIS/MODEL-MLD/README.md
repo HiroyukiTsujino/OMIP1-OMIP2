@@ -10,8 +10,8 @@ Contents
 
   * Calculation of climatology (annual, monthly)
 
-    - $ python ./MODEL_MLD_climatology_np.py omip1 1980 2009 all
-    - $ python ./MODEL_MLD_climatology_np.py omip2 1980 2009 all
+    - $ python ./MODEL_MLD_climatology_np.py omip1 1980 2009 all (or individual model name)
+    - $ python ./MODEL_MLD_climatology_np.py omip2 1980 2009 all (or individual model name)
 
 
   * Calculation for Taylor diagram

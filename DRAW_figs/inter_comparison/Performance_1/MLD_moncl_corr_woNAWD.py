@@ -154,7 +154,7 @@ dia = TaylorDiagram(stdrefs[intvl],
                     fig=fig,
                     rect=rects[intvl],
                     label='deBoyer et al. (2004)',
-                    srange=(0.0, 2.0))
+                    srange=(0.0, 1.8))
 
 for mip in range(2):
     id_df=id_df+1
