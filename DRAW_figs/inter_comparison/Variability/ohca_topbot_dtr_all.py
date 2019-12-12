@@ -317,7 +317,7 @@ for var in var_list:
                 for legobj in leg.legendHandles:
                     legobj.set_linewidth(1.0)
             else:
-                thetaoga_mean_df[ndf].plot(y=thetaoga_mean_df[ndf].columns[0],color='darkgrey',linewidth=8,ax=axes[nax],ylim=ylim[nv],xlim=[1948,2018],legend=False)
+                thetaoga_mean_df[ndf].plot(y=thetaoga_mean_df[ndf].columns[0],color='darkgrey',linewidth=4,ax=axes[nax],ylim=ylim[nv],xlim=[1948,2018],legend=False)
                 axes[nax].set_title(title[nax],{'fontsize':8, 'verticalalignment':'top'})
                 axes[nax].tick_params(labelsize=6)
                 ax2=axes[nax].twinx()
