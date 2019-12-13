@@ -5,10 +5,16 @@ import numpy as np
 import netCDF4
 import xarray as xr
 import cartopy.crs as ccrs
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import datetime
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 import math
+
+ystr = 1993
+yend = 2009
+nyr = yend - ystr + 1
+factor_5ptail = 1.64  # 5-95%
 
 if (len(sys.argv) < 2) :
     print ('Usage: ' + sys.argv[0] + ' [MMM or modelname] [show (to check using viewer)]')
@@ -26,10 +32,10 @@ metainfo = [ json.load(open("./json/zos_omip1_wo_coco.json")),
 model_list = [ metainfo[0].keys(), metainfo[1].keys() ]
 
 if (sys.argv[1] == 'MMM'):
-    suptitle = 'Multi Model Mean' + ' SSH (ave. from 1993 to 2009) (an outlier excluded)'
+    suptitle = 'Multi Model Mean' + ' SSH (ave. from '+str(ystr)+' to '+str(yend)+') (an outlier excluded)'
     outfile = './fig/SSH_bias_MMM'
 else:
-    suptitle = sys.argv[1] + ' SSH (ave. from 1993 to 2009)'
+    suptitle = sys.argv[1] + ' SSH (ave. from '+str(ystr)+' to '+str(yend)+')'
     model_list[0] = [sys.argv[1]]
     model_list[1] = [sys.argv[1]]
     outfile = './fig/SSH_bias_' + sys.argv[1]
@@ -52,7 +58,7 @@ time = [ time1, time2 ]
 print( "Loading CMEMS data" )
 reffile = '../refdata/CMEMS/zos_adt_CMEMS_1x1_monthly_199301-201812.nc'
 DS0 = xr.open_dataset( reffile )
-da0 = DS0.zos.sel(time=slice('1993','2009'))
+da0 = DS0.zos.sel(time=slice(str(ystr),str(yend)))
 
 ##J mask0 = 50S以北,50N以南で True となる2次元配列
 mask0 = np.array(abs(DS0.lat)<50).reshape(len(DS0.lat),1)*np.array(~np.isnan(DS0.lon))
@@ -80,6 +86,11 @@ ny = len(ncare.dimensions['lat'])
 area = ncare.variables['areacello'][:,:]
 ncare.close()
 
+# uncertainty of difference between omip-1 and omip-2
+
+stdfile = '../analysis/STDs/SSH_omip1-omip2_stats.nc'
+DS_stats = xr.open_dataset( stdfile )
+
 data = []
 for omip in range(2):
     d = np.empty( (len(model_list[omip]),180,360) )
@@ -99,7 +110,7 @@ for omip in range(2):
 
         DS['time'] = time[omip]
 
-        tmp = DS.zos.sel(time=slice('1993','2009'))
+        tmp = DS.zos.sel(time=slice(str(ystr),str(yend)))
 
         ##J 50S-50N 平均値計算の前に格子をあわせる
         if model == "NorESM-BLOM":
@@ -207,6 +218,16 @@ for panel in range(6):
                             'label': '[m]',
                             'ticks': ticks_bounds, },
             transform=ccrs.PlateCarree())
+
+    if (panel == 4):
+        mpl.rcParams['hatch.color'] = 'limegreen'
+        mpl.rcParams['hatch.linewidth'] = 0.5
+        x = DS_stats["lon"].values
+        y = DS_stats["lat"].values
+        z = np.abs(DS_stats["mean"]) - factor_5ptail * DS_stats["std"]
+        z = np.where( z > 0, 1, np.nan )
+        ax[panel].contourf(x,y,z,hatches=['xxxxxxx'],colors='none',transform=ccrs.PlateCarree())
+        
     ax[panel].coastlines()
     ax[panel].set_xticks(np.arange(-180,180.1,60),crs=ccrs.PlateCarree())
     ax[panel].set_yticks(np.arange(-90,90.1,30),crs=ccrs.PlateCarree())

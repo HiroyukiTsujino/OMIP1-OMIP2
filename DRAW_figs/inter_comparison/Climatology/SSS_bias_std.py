@@ -5,6 +5,7 @@ import numpy as np
 import netCDF4
 import xarray as xr
 import cartopy.crs as ccrs
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 import datetime
@@ -22,11 +23,16 @@ metainfo = [ json.load(open("./json/sos_omip1.json")),
 model_list = [ metainfo[0].keys(), metainfo[1].keys() ]
 
 
+ystr = 1980
+yend = 2009
+nyr = yend - ystr + 1
+factor_5ptail = 1.64  # 5-95%
+
 if (sys.argv[1] == 'MMM'):
-    suptitle = 'Multi Model Mean' + ' SSS (ave. from 1980 to 2009)'
+    suptitle = 'Multi Model Mean' + ' SSS (ave. from '+str(ystr)+' to '+str(yend)+')'
     outfile = './fig/SSS_bias_MMM'
 else:
-    suptitle = sys.argv[1] + ' SSS (ave. from 1980 to 2009)'
+    suptitle = sys.argv[1] + ' SSS (ave. from '+str(ystr)+' to '+str(yend)+')'
     model_list[0] = [sys.argv[1]]
     model_list[1] = [sys.argv[1]]
     outfile = './fig/SSS_bias_' + sys.argv[1]
@@ -58,6 +64,11 @@ ny = len(ncare.dimensions['lat'])
 area = ncare.variables['areacello'][:,:]
 ncare.close()
 
+# uncertainty of difference between omip-1 and omip-2
+
+stdfile = '../analysis/STDs/SSS_omip1-omip2_stats.nc'
+DS_stats = xr.open_dataset( stdfile )
+
 data = []
 for omip in range(2):
     d = np.empty( (len(model_list[omip]),180,360) )
@@ -75,7 +86,7 @@ for omip in range(2):
 
         DS['time'] = time[omip]
 
-        tmp = DS.sos.sel(time=slice('1980','2009')).mean(dim='time',skipna=False)
+        tmp = DS.sos.sel(time=slice(str(ystr),str(yend))).mean(dim='time',skipna=False)
 
         if model == "NorESM-BLOM":
             tmp = tmp.assign_coords(lon=('x', np.where( tmp.lon < 0, tmp.lon + 360, tmp.lon )))
@@ -116,7 +127,7 @@ ax = [
 bounds1 = [-1.0, -0.7, -0.4, -0.3, -0.2, -0.1, 0.1, 0.2, 0.3, 0.4, 0.7, 1.0]
 bounds2 = [-0.4, -0.3, -0.2, -0.1, -0.06, -0.02, 0.02, 0.06, 0.1, 0.2, 0.3, 0.4]
 bounds3 = [30, 31, 32, 33.0, 33.6, 34.0, 34.3, 34.6, 34.9, 35.2, 35.5, 35.8, 36.1, 36.5, 36.9, 37.3 ]
-bounds4 = [0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.7, 1.0, 1.5, 2.0]
+bounds4 = [0.02, 0.05, 0.1, 0.2, 0.3, 0.5, 0.7, 1.0, 1.5, 2.0]
 ticks_bounds4 = [0.0, 0.5, 1.0, 1.5, 2.0] 
 
 cmap = [ 'RdBu_r', 'RdBu_r', 'viridis', 'viridis', 'RdBu_r', 'RdYlBu_r' ]
@@ -171,6 +182,15 @@ for panel in range(6):
                          'ticks': ticks_bounds,},
             transform=ccrs.PlateCarree())
 
+    if (panel == 4):
+        mpl.rcParams['hatch.color'] = 'limegreen'
+        mpl.rcParams['hatch.linewidth'] = 0.5
+        x = DS_stats["lon"].values
+        y = DS_stats["lat"].values
+        z = np.abs(DS_stats["mean"]) - factor_5ptail * DS_stats["std"]
+        z = np.where( z > 0, 1, np.nan )
+        ax[panel].contourf(x,y,z,hatches=['xxxxxxx'],colors='none',transform=ccrs.PlateCarree())
+        
     ax[panel].coastlines()
     ax[panel].set_xticks(np.arange(-180,180.1,60),crs=ccrs.PlateCarree())
     ax[panel].set_yticks(np.arange(-90,90.1,30),crs=ccrs.PlateCarree())

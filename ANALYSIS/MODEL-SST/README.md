@@ -44,6 +44,11 @@ Contents
     - samples: sample output used for the submitted paper
 
 
+  * Compute total uncertainty (standard deviation) of the difference between OMIP-1 and OMIP-2 simulations
+
+    - $ python ./SST_diff_std.py
+
+
 Contact
 --------
 

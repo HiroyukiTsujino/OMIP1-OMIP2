@@ -3,15 +3,15 @@ import sys
 import json
 import numpy as np
 import xarray as xr
-import matplotlib.pyplot as plt
 import matplotlib as mpl
+import matplotlib.pyplot as plt
 import netCDF4
 
 if (len(sys.argv) < 2) :
     print ('Usage: ' + sys.argv[0] + ' [MMM or modelname] [show (to check using viewer)]')
     sys.exit()
 
-xlim = [ [-90, -30], [-30, 90], [-30, 30], [-30, 60] ]
+factor_5ptail = 1.64  # 5-95%
 
 metainfo = [ json.load(open("./json/zmt_omip1.json")),
              json.load(open("./json/zmt_omip2.json")) ]
@@ -23,6 +23,7 @@ title2 = [ '(a) Ensemble bias (OMIP1 - WOA13v2)', '(b) Ensemble bias (OMIP2 - WO
            '(c) Ensemble std (OMIP2 - WOA13v2)', '(d) Ensemble std (OMIP2 - WOA13v2)',
            '(e) OMIP2 - OMIP1', '(f) WOA13v2' ]
 
+xlim = [ [-90, -30], [-30, 90], [-30, 30], [-30, 60] ]
 lev33 = [ 0.,    10.,   20.,   30.,   50.,   75.,   100.,  125.,  150.,  200., 
           250.,  300.,  400.,  500.,  600.,  700.,  800.,  900.,  1000., 1100.,
           1200., 1300., 1400., 1500., 1750., 2000., 2500., 3000., 3500., 4000.,
@@ -49,6 +50,10 @@ reffile = '../refdata/WOA13v2/1deg_L33/annual/woa13_decav_th_basin.1000'
 da_ref = xr.open_dataset( reffile, decode_times=False)["thetao"].mean(dim='time')
 da_ref = da_ref.assign_coords(basin=[0,1,2,3])
 
+# uncertainty of difference between omip-1 and omip-2
+
+stdfile = '../analysis/STDs/ZMT_omip1-omip2_stats.nc'
+DS_stats = xr.open_dataset( stdfile )
 
 data = []
 for omip in range(2):
@@ -196,6 +201,9 @@ cmap = [ 'RdBu_r', 'RdBu_r', 'viridis', 'viridis', 'RdBu_r', 'RdYlBu_r' ]
 
 item = [ 'omip1bias', 'omip2bias', 'omip1std', 'omip2std', 'omip2-1', 'obs' ]
 
+mpl.rcParams['hatch.color'] = 'limegreen'
+mpl.rcParams['hatch.linewidth'] = 0.5
+
 for panel in range(6):
     if (item[panel] == 'omip1bias' or item[panel] == 'omip2bias'):
         bounds = bounds1
@@ -228,14 +236,24 @@ for panel in range(6):
                                            'ticks': ticks_bounds,},
                               cbar_ax=ax_cbar[panel],
                               add_labels=False,add_colorbar=True)
+        if (panel == 4):
+            x = DS_stats["lat"].values
+            y = DS_stats["depth"].values
+            z = np.abs(DS_stats["mean"].isel(basin=m)) - factor_5ptail * DS_stats["std"].isel(basin=m)
+            z = np.where( z > 0, 1, np.nan )
+            ax[panel][m].contourf(x,y,z,hatches=['xxxxxxx'],colors='none')
+
         ax[panel][m].set_title(title[m],{'fontsize':8, 'verticalalignment':'top'})
         ax[panel][m].tick_params(labelsize=9)
         ax[panel][m].invert_yaxis()
         ax[panel][m].set_xlim(xlim[m][0],xlim[m][1])
         ax[panel][m].set_xticks(np.arange(xlim[m][0],xlim[m][1]+0.1,30))
         ax[panel][m].set_facecolor('lightgray')
+
+
     for m in range(1,4):
         ax[panel][m].tick_params(axis='y',labelleft=False)
+
 
 fig.text(0.25,0.925,title2[0],fontsize=12,
          horizontalalignment='center',verticalalignment='center')

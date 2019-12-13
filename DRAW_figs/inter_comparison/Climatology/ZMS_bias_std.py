@@ -3,6 +3,7 @@ import sys
 import json
 import numpy as np
 import xarray as xr
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import netCDF4
 
@@ -10,8 +11,9 @@ if (len(sys.argv) < 2) :
     print ('Usage: ' + sys.argv[0] + ' [MMM or modelname] [show (to check using viewer)]')
     sys.exit()
 
-xlim = [ [-90, -30], [-30, 90], [-30, 30], [-30, 60] ]
+factor_5ptail = 1.64  # 5-95%
 
+xlim = [ [-90, -30], [-30, 90], [-30, 30], [-30, 60] ]
 
 metainfo = [ json.load(open("./json/zms_omip1.json")),
              json.load(open("./json/zms_omip2.json")) ]
@@ -47,6 +49,10 @@ reffile = '../refdata/WOA13v2/1deg_L33/annual/woa13_decav_s_basin.1000'
 da_ref = xr.open_dataset( reffile, decode_times=False)["so"].mean(dim='time')
 da_ref = da_ref.assign_coords(basin=[0,1,2,3])
 
+# uncertainty of difference between omip-1 and omip-2
+
+stdfile = '../analysis/STDs/ZMS_omip1-omip2_stats.nc'
+DS_stats = xr.open_dataset( stdfile )
 
 data = []
 for omip in range(2):
@@ -190,6 +196,9 @@ cmap = [ 'RdBu_r', 'RdBu_r', 'viridis', 'viridis', 'RdBu_r', 'RdYlBu_r' ]
 
 item = [ 'omip1bias', 'omip2bias', 'omip1std', 'omip2std', 'omip2-1', 'obs' ]
 
+mpl.rcParams['hatch.color'] = 'limegreen'
+mpl.rcParams['hatch.linewidth'] = 0.5
+
 for panel in range(6):
     if (item[panel] == 'omip1bias' or item[panel] == 'omip2bias'):
         bounds = bounds1
@@ -222,6 +231,13 @@ for panel in range(6):
                                            'ticks': ticks_bounds,},
                               cbar_ax=ax_cbar[panel],
                               add_labels=False,add_colorbar=True)
+        if (panel == 4):
+            x = DS_stats["lat"].values
+            y = DS_stats["depth"].values
+            z = np.abs(DS_stats["mean"].isel(basin=m)) - factor_5ptail * DS_stats["std"].isel(basin=m)
+            z = np.where( z > 0, 1, np.nan )
+            ax[panel][m].contourf(x,y,z,hatches=['xxxxxxx'],colors='none')
+
         ax[panel][m].set_title(title[m],{'fontsize':8, 'verticalalignment':'top'})
         ax[panel][m].tick_params(labelsize=9)
         ax[panel][m].invert_yaxis()

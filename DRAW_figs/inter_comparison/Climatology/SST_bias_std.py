@@ -17,6 +17,7 @@ if (len(sys.argv) < 2) :
 ystr = 1980
 yend = 2009
 nyr = yend - ystr + 1
+factor_5ptail = 1.64  # 5-95%
 
 
 title = [ '(a) Ensemble bias (OMIP1 -  PCMDI)', '(b) Ensemble bias (OMIP2 -  PCMDI)', '(c) Ensemble STD (OMIP1 - PCMDI)',
@@ -52,7 +53,7 @@ time = [ time1, time2 ]
 
 #J データ読込・平均
 
-print( "Loading AMIP data" )
+print( "Loading PCMDI-SST data" )
 reffile = '../refdata/PCMDI-SST/tos_input4MIPs_SSTsAndSeaIce_CMIP_PCMDI-AMIP-1-1-4_gn_187001-201712.nc'
 mskfile = '../refdata/PCMDI-SST/sftof_input4MIPs_SSTsAndSeaIce_CMIP_PCMDI-AMIP-1-1-4_gn.nc'
 #J 年平均計算も行う。ただし日数の重みがつかないので不正確
@@ -67,6 +68,11 @@ nx = len(ncare.dimensions['lon'])
 ny = len(ncare.dimensions['lat'])
 area = ncare.variables['areacello'][:,:]
 ncare.close()
+
+# uncertainty of difference between omip-1 and omip-2
+
+stdfile = '../analysis/STDs/SST_omip1-omip2_stats.nc'
+DS_stats = xr.open_dataset( stdfile )
 
 data = []
 for omip in range(2):
@@ -138,7 +144,7 @@ ticks_bounds3 = [0, 5, 10, 15, 20, 25, 30]
 bounds4 = [0.1, 0.2, 0.3, 0.4, 0.5, 0.7, 1.0, 1.5, 2.0, 2.5]
 ticks_bounds4 = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5] 
 
-cmap = [ 'RdBu_r', 'RdBu_r', 'Greens', 'Greens', 'RdBu_r', 'RdYlBu_r' ]
+cmap = [ 'RdBu_r', 'RdBu_r', 'viridis', 'viridis', 'RdBu_r', 'RdYlBu_r' ]
 
 item = [ 'omip1bias', 'omip2bias', 'omip1std', 'omip2std', 'omip2-1', 'amip' ]
 
@@ -184,26 +190,23 @@ for panel in range(6):
         da = DS[item[panel]]
 
 
-#    if (panel == 0 or panel == 2 or panel == 4):
-#        ii = int(panel / 2)
-#        print(ii)
     da.plot(ax=ax[panel],cmap=cmap[panel],
             levels=bounds,
             extend='both',
-#            cbar_ax = ax_cbar[ii],
             cbar_kwargs={'orientation': 'vertical',
-#                         'spacing':'proportional',
                          'spacing':'uniform',
                          'label': '[$^\circ$C]',
                          'ticks': ticks_bounds,},
             transform=ccrs.PlateCarree())
-#    else:
-#        da.plot(ax=ax[panel],cmap=cmap[panel],
-#            levels=bounds,
-#            extend='both',
-#            add_colorbar=False,
-#            transform=ccrs.PlateCarree())
 
+    if (panel == 4):
+        mpl.rcParams['hatch.color'] = 'limegreen'
+        mpl.rcParams['hatch.linewidth'] = 0.5
+        x = DS_stats["lon"].values
+        y = DS_stats["lat"].values
+        z = np.abs(DS_stats["mean"]) - factor_5ptail * DS_stats["std"]
+        z = np.where( z > 0, 1, np.nan )
+        ax[panel].contourf(x,y,z,hatches=['xxxxxxx'],colors='none',transform=ccrs.PlateCarree())
         
     ax[panel].coastlines()
     ax[panel].set_xticks(np.arange(-180,180.1,60),crs=ccrs.PlateCarree())
