@@ -14,11 +14,11 @@ In main part and supplement
      - Figure S1: FigS1_vat_mip.py 1  ... FigS1 (omip1 all models)
      - Figure S2: FigS1_vat_mip.py 2  ... FigS2 (omip2 all models)
 
-  * Figure 2 : FigS1_sivol_all.py
-     - Figure S3: FigS1_sivol_mip.py 1
+  * Figure 2 : FigS2_all_std.py MMM
+     - Figure S3-S6: FigS2_allmodels.py [1,2] [1,2] ... [omip1 or omip2] [temperature or salinity]
 
-  * Figure 3 : FigS2_all_std.py MMM
-     - Figure S4-S7: FigS2_allmodels.py [1,2] [1,2] ... [omip1 or omip2] [temperature or salinity]
+  * Figure 3 : FigS1_sivol_all.py
+     - Figure S7: FigS1_sivol_mip.py 1
 
   * Figure 4 : FigS3_all.py ... All in one figure
      - Figure S8: FigS3_mip.py 1 ... omip1

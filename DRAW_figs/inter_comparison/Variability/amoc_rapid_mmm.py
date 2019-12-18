@@ -117,7 +117,7 @@ print(rapid_annual_all)
 # draw figures
 fig  = plt.figure(figsize = (15,9))
 axes = fig.add_subplot(1,1,1)
-rapid_annual_all.plot(y=rapid_annual_all.columns[2*i+2],color='darkgrey',linewidth=4,ax=axes,ylim=[7,23],title='AMOC_RAPID (26N)')
+rapid_annual_all.plot(y=rapid_annual_all.columns[2*i+2],color='darkgrey',linewidth=4,ax=axes,ylim=[7,23],title='AMOC_RAPID (26.5N)')
 rapid_annual_all.plot(y=rapid_annual_all.columns[2*i]  ,color='darkred' ,linewidth=4,ax=axes,ylim=[7,23])
 rapid_annual_all.plot(y=rapid_annual_all.columns[2*i+1],color='darkblue',linewidth=4,ax=axes,ylim=[7,23])
 #rapid_annual_all.plot(y=rapid_annual_all.columns[0:i],ax=axes,ylim=[7,23],title='AMOC_RAPID_OMIP1 (CORE)')

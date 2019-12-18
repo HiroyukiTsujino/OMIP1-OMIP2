@@ -16,7 +16,7 @@ suptitle = 'Ocean circulation metrics'
 outfile = './fig/FigS3_ALL'
 
 
-title_list = [ "(a) OMIP1 (AMOC maximum at 26N)", "(b) OMIP2 (AMOC maximum at 26N)", "(c) MMM (AMOC maximum at 26N)",
+title_list = [ "(a) OMIP1 (AMOC maximum at 26.5N)", "(b) OMIP2 (AMOC maximum at 26.5N)", "(c) MMM (AMOC maximum at 26.5N)",
                "(d) OMIP1 (Drake Passage transport)", "(e) OMIP2 (Drake Passage transport)", "(f) MMM (Drake Passage transport)",
                "(g) OMIP1 (Indonesian through flow)", "(h) OMIP2 (Indonesian through flow)", "(i) MMM (Indonesian through flow)",
                "(j) OMIP1 (GMOC minimum at 30S)", "(k) OMIP2 (GMOC minimum at 30S)", "(l) MMM (GMOC minimum at 30S)" ]

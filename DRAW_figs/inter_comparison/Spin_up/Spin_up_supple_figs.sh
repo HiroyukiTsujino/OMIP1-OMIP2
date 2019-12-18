@@ -16,13 +16,7 @@ done
 mv ./fig/FigS1_vat_OMIP1.png ../supple_figs/figS01.png
 mv ./fig/FigS1_vat_OMIP2.png ../supple_figs/figS02.png
 
-echo "Figure S3 ......."
-
-python ./FigS1_sivol_mip.py 1 ${show}
-
-mv ./fig/FigS1_sivol_allmodels.png ../supple_figs/figS03.png
-
-echo "Figure S4 - S7 ......."
+echo "Figure S3 - S6 ......."
 
 for mip in 1 2
 do
@@ -32,10 +26,16 @@ do
   done
 done   
 
-mv ./fig/FigS2_OMIP1-thetao.png ../supple_figs/figS04.png
-mv ./fig/FigS2_OMIP2-thetao.png ../supple_figs/figS05.png
-mv ./fig/FigS2_OMIP1-so.png ../supple_figs/figS06.png
-mv ./fig/FigS2_OMIP2-so.png ../supple_figs/figS07.png
+mv ./fig/FigS2_OMIP1-thetao.png ../supple_figs/figS03.png
+mv ./fig/FigS2_OMIP2-thetao.png ../supple_figs/figS04.png
+mv ./fig/FigS2_OMIP1-so.png ../supple_figs/figS05.png
+mv ./fig/FigS2_OMIP2-so.png ../supple_figs/figS06.png
+
+echo "Figure S7 ......."
+
+python ./FigS1_sivol_mip.py 1 ${show}
+
+mv ./fig/FigS1_sivol_allmodels.png ../supple_figs/figS07.png
 
 echo "Figure S8 ......."
 

@@ -15,7 +15,7 @@ metainfo = [ json.load(open('json/amoc_rapid_omip1.json')),
 lineinfo = json.load(open('../json/inst_color_style.json'))
 
 outfile = './fig/Fig1a_all'
-suptitle = 'AMOC at RAPID section (26$^{\circ}$N)'
+suptitle = 'AMOC at RAPID section (26.5$^{\circ}$N)'
 
 
 ######## RAPID ########

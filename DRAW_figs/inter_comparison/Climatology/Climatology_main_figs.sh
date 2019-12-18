@@ -112,25 +112,25 @@ echo "............done"
 echo
 echo "Start appendix ....."
 
-if [ x${draw[35]} = xyes ]; then
-   echo "Figure 35 ......."
-   python ./Heat_Transport_omip2_alpha.py
-   mv ./fig/heat_transport_omip2_alpha.pdf ../main_figs/figB4.pdf
-   mv ./fig/heat_transport_omip2_alpha.png ../main_figs/figB4.png
-fi
-   
-if [ x${draw[36]} = xyes ]; then
-   echo "Figure 36 ......."
-   python ./U140W_omip2_alpha.py
-   mv ./fig/U140W_omip2_alpha.pdf ../main_figs/figB5.pdf
-   mv ./fig/U140W_omip2_alpha.png ../main_figs/figB5.png
-fi
+#if [ x${draw[35]} = xyes ]; then
+#   echo "Figure 35 ......."
+#   python ./Heat_Transport_omip2_alpha.py
+#   mv ./fig/heat_transport_omip2_alpha.pdf ../main_figs/figB4.pdf
+#   mv ./fig/heat_transport_omip2_alpha.png ../main_figs/figB4.png
+#fi
+#   
+#if [ x${draw[36]} = xyes ]; then
+#   echo "Figure 36 ......."
+#   python ./U140W_omip2_alpha.py
+#   mv ./fig/U140W_omip2_alpha.pdf ../main_figs/figB5.pdf
+#   mv ./fig/U140W_omip2_alpha.png ../main_figs/figB5.png
+#fi
    
 if [ x${draw[39]} = xyes ]; then
-   echo "Figure 39 ......."
+   echo "Figure B5 (35)......."
    python ./SST_bias_aircore.py
-   mv ./fig/SST_bias_aircore.pdf ../main_figs/figB8.pdf
-   mv ./fig/SST_bias_aircore.png ../main_figs/figB8.png
+   mv ./fig/SST_bias_aircore.pdf ../main_figs/figB5.pdf
+   mv ./fig/SST_bias_aircore.png ../main_figs/figB5.png
 fi
 
 echo "............done"
