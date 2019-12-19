@@ -16,7 +16,7 @@ from netCDF4 import Dataset, num2date
 #    sys.exit()
 
 
-title_list = [ "(a) OMIP1  AMOC maximum at 26N",     "(b) OMIP2  AMOC maximum at 26N",
+title_list = [ "(a) OMIP1  AMOC maximum at 26.5N",   "(b) OMIP2  AMOC maximum at 26.5N",
                "(c) OMIP1  Drake Passage transport", "(d) OMIP2  Drake Passage transport",
                "(e) OMIP1  Indonesian through flow", "(f) OMIP2  Indonesian through flow",
                "(g) OMIP1  GMOC minimum at 30S",     "(h) OMIP2  GMOC minimum at 30S" ]

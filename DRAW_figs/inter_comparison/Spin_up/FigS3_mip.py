@@ -16,7 +16,7 @@ if (len(sys.argv) < 2) :
     sys.exit()
 
 
-title_list = [ "(a) AMOC maximum at 26N",
+title_list = [ "(a) AMOC maximum at 26.5N",
                "(b) Drake Passage transport",
                "(c) Indonesian through flow",
                "(d) GMOC minimum at 30S", ]

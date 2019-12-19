@@ -16,7 +16,7 @@ from netCDF4 import Dataset, num2date
 #    sys.exit()
 
 
-title_list = [ "(a) AMOC maximum at 26N", "(b) Drake Passage transport",
+title_list = [ "(a) AMOC maximum at 26.5N", "(b) Drake Passage transport",
                "(c) Indonesian through flow", "(d) GMOC minimum at 30S" ]
 
 outfile = './fig/FigS3_omip2_aircore'

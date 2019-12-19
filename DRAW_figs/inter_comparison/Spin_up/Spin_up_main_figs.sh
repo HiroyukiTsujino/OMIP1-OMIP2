@@ -73,7 +73,7 @@ if [ x${draw[33]} = xyes ]; then
   echo "Figure B3 (33)......."
   python ./FigS1_vat_mip_aircore.py
   mv ./fig/FigS1_vat_aircore.pdf ../main_figs/figB3.pdf
-  mv ./fig/FigS1_vat_aricore.png ../main_figs/figB3.png
+  mv ./fig/FigS1_vat_aircore.png ../main_figs/figB3.png
 fi
 
 if [ x${draw[34]} = xyes ]; then
