@@ -212,7 +212,7 @@ for ii in range(nummodel[0]):
         linewid=1
     rapid_annual_model[0].plot(y=rapid_annual_model[0].columns[ii],ax=axes,color=linecol,linewidth=linewid,linestyle=linesty,ylim=[7,23],label=inst)
     axes.set_xlabel('')
-    axes.set_ylabel(r'$\times 10^9 \mathrm{kg}\,\mathrm{m}^{-3}$',fontsize=12)
+    axes.set_ylabel(r'$\times 10^9 \mathrm{kg}\,\mathrm{s}^{-1}$',fontsize=12)
     leg = axes.legend(bbox_to_anchor=(1.01,0.3),loc='upper left')
     for legobj in leg.legendHandles:
         legobj.set_linewidth(2.0)
@@ -232,7 +232,7 @@ for ii in range(nummodel[1]):
         linewid=1
     rapid_annual_model[1].plot(y=rapid_annual_model[1].columns[ii],ax=axes,color=linecol,linewidth=linewid,linestyle=linesty,ylim=[7,23],legend=False)
     axes.set_xlabel('')
-    axes.set_ylabel(r'$\times 10^9 \mathrm{kg}\,\mathrm{m}^{-3}$',fontsize=12)
+    axes.set_ylabel(r'$\times 10^9 \mathrm{kg}\,\mathrm{s}^{-1}$',fontsize=12)
     #leg = axes.legend(bbox_to_anchor=(1.01,1.0))
     #for legobj in leg.legendHandles:
     #    legobj.set_linewidth(2.0)
@@ -246,7 +246,7 @@ axes.fill_between(x=rapid_annual_all.index,y1=rapid_annual_all['OMIP2-min'],y2=r
 rapid_annual_all.plot(y=rapid_annual_all.columns[5],color='darkblue',linewidth=2,ax=axes,ylim=[7,23])
 rapid_annual_all.plot(y=rapid_annual_all.columns[1],color='darkred' ,linewidth=2,ax=axes,ylim=[7,23])
 axes.set_xlabel('year',fontsize=10)
-axes.set_ylabel(r'$\times 10^9 \mathrm{kg}\,\mathrm{m}^{-3}$',fontsize=12)
+axes.set_ylabel(r'$\times 10^9 \mathrm{kg}\,\mathrm{s}^{-1}$',fontsize=12)
 leg = axes.legend(bbox_to_anchor=(1.01,1.0),loc='upper left')
 for legobj in leg.legendHandles:
     legobj.set_linewidth(2.0)
