@@ -47,7 +47,8 @@ Contents
 
   * Compute total uncertainty (standard deviation) of the difference between OMIP-1 and OMIP-2 simulations
 
-    - $ python ./SSH_diff_std.py
+    (- $ python ./SSH_diff_std.py)
+    - $ python ./SSH_diff_std_med.py (Mediterranean Sea excluded)
 
 
 Contact

@@ -25,10 +25,10 @@ title = [ '(a) Ensemble bias (OMIP1 - CMEMS)', '(b) Ensemble bias (OMIP2 - CMEMS
           '(c) Ensemble std (OMIP1 - CMEMS)', '(d) Ensemble std (OMIP2 - CMEMS)',
           '(e) OMIP2 - OMIP1', '(f) CMEMS' ]
 
-metainfo = [ json.load(open("./json/zos_omip1_wo_coco.json")),
-             json.load(open("./json/zos_omip2_wo_coco.json")) ]
-#metainfo = [ json.load(open("./json/zos_omip1.json")),
-#             json.load(open("./json/zos_omip2.json")) ]
+#metainfo = [ json.load(open("./json/zos_omip1_wo_coco.json")),
+#             json.load(open("./json/zos_omip2_wo_coco.json")) ]
+metainfo = [ json.load(open("./json/zos_omip1.json")),
+             json.load(open("./json/zos_omip2.json")) ]
 model_list = [ metainfo[0].keys(), metainfo[1].keys() ]
 
 if (sys.argv[1] == 'MMM'):
@@ -70,17 +70,21 @@ maskcmems = ncmskcmems.variables['zosmask'][:,:]
 ncmskcmems.close()
 ################################################
 # Ad hoc modification for Mediterranean (mask out entirely)
-#maskcmems[120:140,0:40] = 0
-#maskcmems[120:130,355:359] = 0
-################################################
+maskcmems[120:140,0:40] = 0
+maskcmems[120:130,355:359] = 0
 
+maskmed = np.array(np.empty((180,360)),dtype=np.int64)
+maskmed[:,:] = 1
+maskmed[120:140,0:40] = 0
+maskmed[120:130,355:359] = 0
+################################################
 
 ##J wgt0 = 緯度に応じた重み (2次元配列, mask0 = False の場所は0に)
 #wgt0 = np.empty(mask0.shape)
 wgt0 = np.empty(maskcmems.shape)
 for i in range(len(DS0.zos[0][0][:])):
     for j in range(len(DS0.zos[0][:])):
-#        wgt0[j,i] = math.cos(math.radians(DS0.lat.values[j])) * mask0[j,i]
+#        wgt0[j,i] = math.cos(math.radians(DS0.lat.values[j])) * mask0[j,i] * maskcmems[j,i]
         wgt0[j,i] = math.cos(math.radians(DS0.lat.values[j])) * maskcmems[j,i]
 
 ##J wgt = 平均に使う重み(時間方向も含めた3次元配列)
@@ -105,6 +109,12 @@ ncare.close()
 
 stdfile = '../analysis/STDs/SSH_omip1-omip2_stats.nc'
 DS_stats = xr.open_dataset( stdfile )
+
+d_tmp0 = np.empty((180,360))
+d_tmp1 = np.empty((180,360))
+d_tmp2 = np.empty((180,360))
+d_tmp3 = np.empty((180,360))
+d_tmp4 = np.empty((180,360))
 
 data = []
 for omip in range(2):
@@ -145,10 +155,15 @@ for omip in range(2):
 
     data += [d]
 
+d_tmp0=np.where(maskcmems==0, np.NaN, da0.values)
+d_tmp1=np.where(maskcmems==0, np.NaN, data[0])
+d_tmp2=np.where(maskcmems==0, np.NaN, data[1])
+d_tmp3=np.where(maskmed==0, np.NaN, data[0])
+d_tmp4=np.where(maskmed==0, np.NaN, data[1])
 
-DS = xr.Dataset( {'omip1bias': (['model','lat','lon'], data[0] - da0.values),
-                  'omip2bias': (['model','lat','lon'], data[1] - da0.values),
-                  'omip2-1': (['model','lat','lon'], data[1] - data[0]),
+DS = xr.Dataset( {'omip1bias': (['model','lat','lon'], d_tmp1 - d_tmp0),
+                  'omip2bias': (['model','lat','lon'], d_tmp2 - d_tmp0),
+                  'omip2-1': (['model','lat','lon'], d_tmp4 - d_tmp3),
                   'obs': (['lat','lon'], da0.values), },
                  coords = { 'lat': np.linspace(-89.5,89.5,num=180), 
                             'lon': np.linspace(0.5,359.5,num=360), } )

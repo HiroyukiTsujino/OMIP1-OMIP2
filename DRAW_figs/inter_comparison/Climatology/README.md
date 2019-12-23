@@ -27,7 +27,7 @@ Contents
      - Figure S22: SICONC_SH_allmodels.py 9 1
      - Figure S23: SICONC_SH_allmodels.py 9 2
 
-  * Figure 8: SSH_bias_std.py MMM
+  * Figure 8: SSH_bias_std_med.py MMM   # exclude Mediterranean
      - Figure S24: SSH_bias_allmodels.py 1
      - Figure S25: SSH_bias_allmodels.py 2
      - Figure S26: SSH_bias_allmodels.py 3

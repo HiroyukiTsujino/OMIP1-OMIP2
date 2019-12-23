@@ -47,7 +47,7 @@ fi
    
 if [ x${draw[8]} = xyes ]; then
    echo "Figure 8 ......."
-   python ./SSH_bias_std.py MMM
+   python ./SSH_bias_std_med.py MMM
    mv ./fig/SSH_bias_MMM.pdf ../main_figs/fig08.pdf
    mv ./fig/SSH_bias_MMM.png ../main_figs/fig08.png
 fi

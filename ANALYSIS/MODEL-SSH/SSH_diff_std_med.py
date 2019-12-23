@@ -20,10 +20,10 @@ nyr = yend - ystr + 1
 factor_5ptail = 1.64  # 5-95%
 num_bootstraps = 10000
 
-#metainfo = [ json.load(open("./json/zos_omip1.json")), 
-#             json.load(open("./json/zos_omip2.json")) ]
-metainfo = [ json.load(open("./json/zos_omip1_wo_coco.json")), 
-             json.load(open("./json/zos_omip2_wo_coco.json")) ]
+metainfo = [ json.load(open("./json/zos_omip1.json")), 
+             json.load(open("./json/zos_omip2.json")) ]
+#metainfo = [ json.load(open("./json/zos_omip1_wo_coco.json")), 
+#             json.load(open("./json/zos_omip2_wo_coco.json")) ]
 model_list = [ metainfo[0].keys(), metainfo[1].keys() ]
 
 suptitle = 'Multi Model Mean' + ' (SSH ave. from '+str(ystr)+' to '+str(yend)+')'
@@ -45,6 +45,12 @@ cmemsmskf = '../refdata/CMEMS/zos_mask_gn_199301-200912.nc'
 ncmskcmems = netCDF4.Dataset(cmemsmskf,'r')
 maskcmems = ncmskcmems.variables['zosmask'][:,:]
 ncmskcmems.close()
+################################################
+# Ad hoc modification for Mediterranean (mask out entirely)
+maskcmems[120:140,0:40] = 0
+maskcmems[120:130,355:359] = 0
+################################################
+
 ##J wgt0 = 緯度に応じた重み (2次元配列, mask0 = False の場所は0に)
 #wgt0 = np.empty(mask0.shape)
 wgt0 = np.empty(maskcmems.shape)
@@ -70,6 +76,8 @@ for yr in range(1958,2019):
 
 time = [ time1, time2 ]
 
+d_tmp1 = np.empty( (nyr,180,360) )
+d_tmp2 = np.empty( (nyr,180,360) )
 #J データ読込・平均
 data = []
 for omip in range(2):
@@ -111,7 +119,12 @@ for omip in range(2):
         for n in range(len(data_ave)):
             tmp[n] = tmp[n] - data_ave[n]
 
-        d[nmodel] = tmp.values.reshape(nyr,180,360)
+        d_tmp1 = tmp.values.reshape(nyr,180,360)
+        for n in range(nyr):
+            d_tmp2[n] = np.where(maskcmems == 0, np.NaN, d_tmp1[n])
+
+        d[nmodel] = d_tmp2
+        #d[nmodel] = tmp.values.reshape(nyr,180,360)
         nmodel += 1
 
     data += [d]
@@ -127,8 +140,8 @@ DS_stats = xr.Dataset( { 'mean': (['lat','lon'], dout[0]),
                        'M':    (['lat','lon'], dout[2]),
                        'V':    (['lat','lon'], dout[3]),
                        'B':    (['lat','lon'], dout[4]),},
-                     coords = { 'lat': np.linspace(-89.5,89.5,num=180), 
-                                'lon': np.linspace(0.5,359.5,num=360), }, )
+                       coords = { 'lat': np.linspace(-89.5,89.5,num=180), 
+                                  'lon': np.linspace(0.5,359.5,num=360), }, )
 
 print( 'Output netCDF4' )
 path_out='../analysis/STDs/'
@@ -174,7 +187,7 @@ z = np.abs(DS_stats["mean"]) - factor_5ptail * DS_stats["std"]
 z = np.where( z > 0, 1, np.nan )
 ax1.contourf(x,y,z,hatches=['xxxxx'],colors='none',transform=ccrs.PlateCarree())
 
-ax1.coastlines()
+ax1.coastlines(resolution='50m')
 ax1.set_xticks(np.arange(-180,180.1,60),crs=ccrs.PlateCarree())
 ax1.set_yticks(np.arange(-90,90.1,30),crs=ccrs.PlateCarree())
 ax1.xaxis.set_major_formatter(lon_formatter)

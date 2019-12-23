@@ -57,6 +57,11 @@ ncmskcmems.close()
 # Ad hoc modification for Mediterranean (mask out entirely)
 maskcmems[120:140,0:40] = 0
 maskcmems[120:130,355:359] = 0
+
+maskmed = np.array(np.empty((180,360)),dtype=np.int64)
+maskmed[:,:] = 1
+maskmed[120:140,0:40] = 0
+maskmed[120:130,355:359] = 0
 ################################################
 
 
@@ -82,6 +87,10 @@ nx = len(ncare.dimensions['lon'])
 ny = len(ncare.dimensions['lat'])
 area = ncare.variables['areacello'][:,:]
 ncare.close()
+
+d_tmp0 = np.empty((180,360))
+d_tmp1 = np.empty((180,360))
+d_tmp2 = np.empty((180,360))
 
 data = []
 for omip in range(2):
@@ -117,14 +126,21 @@ for omip in range(2):
         for n in range(len(data_ave)):
             tmp[n] = tmp[n] - data_ave[n]
 
-        d[nmodel] = tmp.mean(dim='time',skipna=False)
+        #d[nmodel] = np.where(maskcmems==0, np.NaN, tmp.mean(dim='time',skipna=False).values)
+        if model == "MIROC-COCO4.9":
+            d[nmodel] = np.where(maskmed == 0, np.NaN, tmp.mean(dim='time',skipna=False).values)
+        else:
+            d[nmodel] = tmp.mean(dim='time',skipna=False).values
         nmodel += 1
 
     data += [d]
 
+d_tmp0=np.where(maskcmems==0, np.NaN, da0.values)
+d_tmp1=np.where(maskcmems==0, np.NaN, data[0])
+d_tmp2=np.where(maskcmems==0, np.NaN, data[1])
 
-DS = xr.Dataset( {'omip1bias': (['model','lat','lon'], data[0] - da0.values),
-                  'omip2bias': (['model','lat','lon'], data[1] - da0.values),
+DS = xr.Dataset( {'omip1bias': (['model','lat','lon'], d_tmp1 - d_tmp0),
+                  'omip2bias': (['model','lat','lon'], d_tmp2 - d_tmp0),
                   'omip2-1': (['model','lat','lon'], data[1] - data[0]),
                   'obs': (['lat','lon'], da0.values), },
                  coords = { 'lat': np.linspace(-89.5,89.5,num=180), 
