@@ -46,7 +46,7 @@ DS0 = xr.open_dataset( reffile )
 da0 = DS0.zos.sel(time=slice('1993','2009'))
 
 ##J mask0 = 50S以北,50N以南で True となる2次元配列
-mask0 = np.array(abs(DS0.lat)<50).reshape(len(DS0.lat),1)*np.array(~np.isnan(DS0.lon))
+#mask0 = np.array(abs(DS0.lat)<50).reshape(len(DS0.lat),1)*np.array(~np.isnan(DS0.lon))
 
 # mask based on CMEMS
 cmemsmskf = '../refdata/CMEMS/zos_mask_gn_199301-200912.nc'
@@ -66,10 +66,12 @@ maskmed[120:130,355:359] = 0
 
 
 ##J wgt0 = 緯度に応じた重み (2次元配列, mask0 = False の場所は0に)
-wgt0 = np.empty(mask0.shape)
+#wgt0 = np.empty(mask0.shape)
+wgt0 = np.empty(maskcmems.shape)
 for i in range(len(DS0.zos[0][0][:])):
     for j in range(len(DS0.zos[0][:])):
-        wgt0[j,i] = math.cos(math.radians(DS0.lat.values[j])) * mask0[j,i] * maskcmems[j,i]
+#        wgt0[j,i] = math.cos(math.radians(DS0.lat.values[j])) * mask0[j,i] * maskcmems[j,i]
+        wgt0[j,i] = math.cos(math.radians(DS0.lat.values[j])) * maskcmems[j,i]
 
 ##J wgt = 平均に使う重み(時間方向も含めた3次元配列)
 ##J       未定義の格子では重みを 0 にする

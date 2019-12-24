@@ -191,13 +191,13 @@ leg = axes.legend(bbox_to_anchor=(1.01,1.0),loc='upper left')
 for legobj in leg.legendHandles:
     legobj.set_linewidth(2.0)
 
-plt.subplots_adjust(left=0.1,right=0.78,bottom=0.08,top=0.92, hspace=0.22)
+plt.subplots_adjust(left=0.12,right=0.78,bottom=0.08,top=0.92,hspace=0.22)
 #
 outpdf = outfile+'.pdf'
 outpng = outfile+'.png'
 
-plt.savefig(outpng, bbox_inches='tight', pad_inches=0.0)
-plt.savefig(outpdf, bbox_inches='tight', pad_inches=0.0)
+plt.savefig(outpng, bbox_inches='tight', pad_inches=0.05)
+plt.savefig(outpdf, bbox_inches='tight', pad_inches=0.05)
 
 if (len(sys.argv) == 2 and sys.argv[1] == 'show') :
     plt.show()
