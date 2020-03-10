@@ -115,7 +115,7 @@ for model in metainfo.keys():
     ncann.createDimension('time', None)
 
     lat = ncann.createVariable('lat', np.dtype('float').char, ('lat'))
-    lat.latg_name = 'latitude'
+    lat.long_name = 'latitude'
     lat.units = 'degrees_north'
     lat.axis = 'Y'
     lat.standard_name = 'latitude'

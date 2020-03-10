@@ -93,7 +93,7 @@ mldann.units = 'm'
 mldann.missing_value = -9.99e33
 
 lat = ncann.createVariable('lat', np.dtype('float').char, ('lat'))
-lat.latg_name = 'latitude'
+lat.long_name = 'latitude'
 lat.units = 'degrees_north'
 lat.axis = 'Y'
 lat.standard_name = 'latitude'
@@ -127,7 +127,7 @@ ncmon.createDimension('bnds', 2)
 ncmon.createDimension('time', None)
 
 lat = ncmon.createVariable('lat', np.dtype('float').char, ('lat'))
-lat.latg_name = 'latitude'
+lat.long_name = 'latitude'
 lat.units = 'degrees_north'
 lat.axis = 'Y'
 lat.standard_name = 'latitude'
@@ -181,7 +181,7 @@ mld_mask.units = '1'
 mld_mask.missing_value = -999
 
 lat = ncmsk.createVariable('lat', np.dtype('float').char, ('lat'))
-lat.latg_name = 'latitude'
+lat.long_name = 'latitude'
 lat.units = 'degrees_north'
 lat.axis = 'Y'
 lat.standard_name = 'latitude'

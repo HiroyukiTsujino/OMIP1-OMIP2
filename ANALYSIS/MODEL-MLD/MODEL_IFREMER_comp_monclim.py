@@ -300,7 +300,7 @@ for model in metainfo.keys():
     mldcor.missing_value = -9.99e33
 
     lat = nccor.createVariable('lat', np.dtype('float').char, ('lat'))
-    lat.latg_name = 'latitude'
+    lat.long_name = 'latitude'
     lat.units = 'degrees_north'
     lat.axis = 'Y'
     lat.standard_name = 'latitude'
