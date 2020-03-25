@@ -137,8 +137,8 @@ nout = 0
 for yr in range(styr,edyr+1):
 
     rec_base = (yr-start_yr)*12
-    sst_ann = 0.0
-    day_ann = 0.0
+    sst_ann[:,:] = 0.0
+    day_ann[:,:] = 0.0
 
     for mn in range(1,13):
 

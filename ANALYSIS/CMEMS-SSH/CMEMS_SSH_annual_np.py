@@ -135,9 +135,9 @@ nout = 0
 for yr in range(styr,edyr+1):
 
     rec_base = (yr-start_yr)*12
-    ssh_ann = 0.0
-    day_ann = 0
-    mask_cmems = 1.0
+    ssh_ann[:,:] = 0.0
+    day_ann[:,:] = 0
+    mask_cmems[:,:] = 1.0
 
     for mn in range(1,13):
 

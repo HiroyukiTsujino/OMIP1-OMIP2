@@ -165,10 +165,12 @@ for model in metainfo.keys():
     for yr in range(styr,edyr+1):
 
         rec_base = (yr-start_yr)*12
-        ssh_ann = 0.0
-        day_ann = 0
-        mask_model = 1
+        ssh_ann[:,:] = 0.0
+        day_ann[:,:] = 0
+        mask_model[:,:] = 1
 
+        print(ssh_ann)
+        
         for mn in range(1,13):
 
             recn = rec_base + mn - 1

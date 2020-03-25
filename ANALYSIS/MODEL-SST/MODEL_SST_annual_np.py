@@ -162,9 +162,9 @@ for model in metainfo.keys():
     for yr in range(styr,edyr+1):
 
         rec_base = (yr-start_yr)*12
-        sst_ann = 0.0
-        day_ann = 0.0
-        mask_model = 1
+        sst_ann[:,:] = 0.0
+        day_ann[:,:] = 0.0
+        mask_model[:,:] = 1
 
         for mn in range(1,13):
 
