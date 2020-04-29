@@ -17,15 +17,15 @@ l_netcdf_in=.true.
 l_netcdf_out=.true.
 deflate_level=0
 
-ln -sfn ../grid/script/NAMELIST.MXE.WOA13v2_1x1_L33.annual NAMELIST.MXE
+ln -sfn ../grid/script/NAMELIST.MXE.WOA13v2_1x1_L33.monthly NAMELIST.MXE
 ln -sfn ../grid/script/NAMELIST.MXE.WOA13v2_1x1_L33.const  NAMELIST.MXE.const
-ln -sfn ./script/NAMELIST.MXE.OUT.annual NAMELIST.MXE.OUT
+ln -sfn ./script/NAMELIST.MXE.OUT.monthly NAMELIST.MXE.OUT
 
 for n in 1 2
 do
 
-flin_trc="../DATA/annual/woa13_decav_${item[${n}]}"
-flout="../DATA/annual/woa13_decav_${item[${n}]}_horizontal"
+flin_trc="../DATA/monthly/woa13_decav_${item[${n}]}"
+flout="../DATA/monthly/woa13_decav_${item[${n}]}_horizontal"
 
 ./horizontal_mean<<EOF
 &nml_horz_mean

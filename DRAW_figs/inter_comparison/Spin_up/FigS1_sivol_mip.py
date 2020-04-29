@@ -322,8 +322,8 @@ else:
 
 for m in range(4):
     ax[m].set_title(title_list[m],{'fontsize':10,'verticalalignment':'top'})
-    ax[m].set_xlim(1593,2018)
-    ax[m].set_xticks(np.arange(1663,2018.1,71))
+    ax[m].set_xlim(1592,2018)
+    ax[m].set_xticks(np.arange(1592,2018.1,71))
     if ( m == 3 ):
         ax[m].set_xlabel('year',fontsize=10)
     else:

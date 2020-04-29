@@ -133,7 +133,8 @@ for n in range(2):
                 print (istf, iedf)
                 d_fsu[isto:iedo+1,:] = d_tmp[istf:iedf+1,:] * factor
                 #print (d_fsu)
-                d[nvar,nmodel] = d_fsu - d_woa[nvar]
+                #d[nvar,nmodel] = d_fsu - d_woa[nvar]
+                d[nvar,nmodel] = d_fsu - d_fsu[0]
 
             elif (n == 0) and (model == "MIROC-COCO4.9"):
                 nc = netCDF4.Dataset(infile,'r')
@@ -142,7 +143,8 @@ for n in range(2):
 
                 d_coco = np.full( (len(time[n]),33), np.nan )
                 d_coco[0:62*5,:] = d_tmp[0:62*5,:] * factor
-                d[nvar,nmodel] = d_coco - d_woa[nvar]
+                #d[nvar,nmodel] = d_coco - d_woa[nvar]
+                d[nvar,nmodel] = d_coco - d_coco[0]
 
             elif (model == "CMCC-NEMO"):
                 if (n == 0):
@@ -167,7 +169,8 @@ for n in range(2):
 
                 d_cmcc = np.full( (len(time[n]),33), np.nan )
                 d_cmcc[0:num_yr,:] = d_tmp2[0:num_yr,:] * factor
-                d[nvar,nmodel] = d_cmcc - d_woa[nvar]
+                #d[nvar,nmodel] = d_cmcc - d_woa[nvar]
+                d[nvar,nmodel] = d_cmcc - d_cmcc[0]
 
             elif (model == "EC-Earth3-NEMO"):
                 
@@ -191,7 +194,8 @@ for n in range(2):
                         f2 = f1(d_lev33)
                         d_barca[num_yr*i+nt,:] = f2[:] * factor
 
-                d[nvar,nmodel] = d_barca - d_woa[nvar]
+                #d[nvar,nmodel] = d_barca - d_woa[nvar]
+                d[nvar,nmodel] = d_barca - d_barca[0]
 
             elif (model == "GFDL-MOM"):
                 if (n == 0):
@@ -252,7 +256,8 @@ for n in range(2):
                         d_gfdl[isto:iedo+1,:] = d_tmp2[istf:iedf+1,:] * factor
 
                         
-                d[nvar,nmodel] = d_gfdl - d_woa[nvar]
+                #d[nvar,nmodel] = d_gfdl - d_woa[nvar]
+                d[nvar,nmodel] = d_gfdl - d_gfdl[0]
 
             else:
 
@@ -272,7 +277,8 @@ for n in range(2):
                     DS_read = DS_read.interp(lev=lev33)
                     print(DS_read[var].values)
                     
-                d[nvar,nmodel] = DS_read[var].values * factor - d_woa[nvar]
+                #d[nvar,nmodel] = DS_read[var].values * factor - d_woa[nvar]
+                d[nvar,nmodel] = DS_read[var].values * factor - DS_read[var].isel(time=0).values * factor
 
             nmodel += 1
 
@@ -346,9 +352,9 @@ for model in model_list[omip-1]:
         
     ax[nmodel].set_title(model,{'fontsize':9,'verticalalignment':'top'})
     ax[nmodel].tick_params(labelsize=7)
-    ax[nmodel].set_xlim(1593,2018)
+    ax[nmodel].set_xlim(1592,2018)
     ax[nmodel].set_ylabel('')
-    ax[nmodel].set_xticks(np.arange(1663,2018.1,71))
+    ax[nmodel].set_xticks(np.arange(1592,2018.1,71))
     ax[nmodel].invert_yaxis()
     ax[nmodel].set_facecolor('lightgray')
     if ( nmodel > 8 ):

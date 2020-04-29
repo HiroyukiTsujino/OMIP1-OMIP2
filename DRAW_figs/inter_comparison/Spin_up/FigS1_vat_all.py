@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 import sys
+sys.path.append("../../../python")
 import json
 import math
 import numpy as np
+import pandas as pd
 import xarray as xr
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from distutils.util import strtobool
 import netCDF4
 from netCDF4 import Dataset, num2date
+from uncertain_Wakamatsu import uncertain
 
-#
 #if (len(sys.argv) < 2) :
 #    print ('Usage: ' + sys.argv[0] + ' 0 (suppress plt.show) or 1 (execute plt.show)')
 #    sys.exit()
@@ -303,7 +305,107 @@ for n in range(2):
     lincol += [coltmp]
     linsty += [stytmp]
     nummodel += [nmodel]
-    
+
+##### output text #####
+
+for n in range(2):
+    if (n == 0):
+        ifirst_yr=0
+    else:
+        ifirst_yr=1
+
+    nmodel = 0
+    dict_circulation={}
+    for model in model_list[n]:
+        if (model == 'MIROC-COCO4.9'):
+            v700m     = DS[n]['thetaoga_700'].sel(model=nmodel,time=slice(1909,1938)).mean(dim='time').values - DS[n]['thetaoga_700'].sel(model=nmodel).isel(time=ifirst_yr).values
+            v2000m    = DS[n]['thetaoga_2000'].sel(model=nmodel,time=slice(1909,1938)).mean(dim='time').values - DS[n]['thetaoga_2000'].sel(model=nmodel).isel(time=ifirst_yr).values
+            v2000mbot = DS[n]['thetaoga_2000_bottom'].sel(model=nmodel,time=slice(1909,1938)).mean(dim='time').values - DS[n]['thetaoga_2000_bottom'].sel(model=nmodel).isel(time=ifirst_yr).values
+            vtopbot   = DS[n]['thetaoga_all'].sel(model=nmodel,time=slice(1909,1938)).mean(dim='time').values - DS[n]['thetaoga_all'].sel(model=nmodel).isel(time=ifirst_yr).values
+        else:
+            v700m     = DS[n]['thetaoga_700'].sel(model=nmodel,time=slice(1980,2009)).mean(dim='time').values - DS[n]['thetaoga_700'].sel(model=nmodel).isel(time=ifirst_yr).values
+            v2000m    = DS[n]['thetaoga_2000'].sel(model=nmodel,time=slice(1980,2009)).mean(dim='time').values - DS[n]['thetaoga_2000'].sel(model=nmodel).isel(time=ifirst_yr).values
+            v2000mbot = DS[n]['thetaoga_2000_bottom'].sel(model=nmodel,time=slice(1980,2009)).mean(dim='time').values - DS[n]['thetaoga_2000_bottom'].sel(model=nmodel).isel(time=ifirst_yr).values
+            vtopbot   = DS[n]['thetaoga_all'].sel(model=nmodel,time=slice(1980,2009)).mean(dim='time').values - DS[n]['thetaoga_all'].sel(model=nmodel).isel(time=ifirst_yr).values
+
+        dict_circulation[model]=[v700m,v2000m,v2000mbot,vtopbot]
+        nmodel += 1
+
+    mipid='OMIP'+str(n+1)
+    summary=pd.DataFrame(dict_circulation,index=['v700m-'+ str(mipid),'v2000m-'+ str(mipid),'v2000m-bot-'+ str(mipid),'vtop-bot-'+ str(mipid)])
+    tmp1=summary.mean(axis=1)
+    tmp2=summary.std(axis=1,ddof=0)
+    print(tmp1,tmp2)
+    summary.insert(0,'Z-MMM',tmp1)
+    summary.insert(0,'Z-STD',tmp2)
+    summary_t=summary.T
+    print (summary_t)
+    summary_t.to_csv('csv/vat_full_omip' + str(n+1) + '.csv')
+
+# omip1 - omip2
+
+print("Compute uncertainty of the difference omip2-omip1")
+
+ystr = 1980
+yend = 2009
+nyr = yend - ystr + 1
+nmod = len(model_list[0])
+
+d_v700m     = np.array(np.empty( (nmod, nyr) ),dtype=np.float64)
+d_v2000m    = np.array(np.empty( (nmod, nyr) ),dtype=np.float64)
+d_v2000mbot = np.array(np.empty( (nmod, nyr) ),dtype=np.float64)
+d_vtopbot   = np.array(np.empty( (nmod, nyr) ),dtype=np.float64)
+
+nmodel = 0
+for model in model_list[0]:
+    if (model == 'MIROC-COCO4.9'):
+        v700m_omip1     = DS[0]['thetaoga_700'].sel(model=nmodel,time=slice(1909,1938)).values - DS[0]['thetaoga_700'].sel(model=nmodel).isel(time=0).values
+        v2000m_omip1    = DS[0]['thetaoga_2000'].sel(model=nmodel,time=slice(1909,1938)).values - DS[0]['thetaoga_2000'].sel(model=nmodel).isel(time=0).values
+        v2000mbot_omip1 = DS[0]['thetaoga_2000_bottom'].sel(model=nmodel,time=slice(1909,1938)).values - DS[0]['thetaoga_2000_bottom'].sel(model=nmodel).isel(time=0).values
+        vtopbot_omip1   = DS[0]['thetaoga_all'].sel(model=nmodel,time=slice(1909,1938)).values - DS[0]['thetaoga_all'].sel(model=nmodel).isel(time=0).values
+        v700m_omip2     = DS[1]['thetaoga_700'].sel(model=nmodel,time=slice(1909,1938)).values - DS[1]['thetaoga_700'].sel(model=nmodel).isel(time=1).values
+        v2000m_omip2    = DS[1]['thetaoga_2000'].sel(model=nmodel,time=slice(1909,1938)).values - DS[1]['thetaoga_2000'].sel(model=nmodel).isel(time=1).values
+        v2000mbot_omip2 = DS[1]['thetaoga_2000_bottom'].sel(model=nmodel,time=slice(1909,1938)).values - DS[1]['thetaoga_2000_bottom'].sel(model=nmodel).isel(time=1).values
+        vtopbot_omip2   = DS[1]['thetaoga_all'].sel(model=nmodel,time=slice(1909,1938)).values - DS[1]['thetaoga_all'].sel(model=nmodel).isel(time=1).values
+    else:
+        v700m_omip1     = DS[0]['thetaoga_700'].sel(model=nmodel,time=slice(1980,2009)).values - DS[0]['thetaoga_700'].sel(model=nmodel).isel(time=0).values
+        v2000m_omip1    = DS[0]['thetaoga_2000'].sel(model=nmodel,time=slice(1980,2009)).values - DS[0]['thetaoga_2000'].sel(model=nmodel).isel(time=0).values
+        v2000mbot_omip1 = DS[0]['thetaoga_2000_bottom'].sel(model=nmodel,time=slice(1980,2009)).values - DS[0]['thetaoga_2000_bottom'].sel(model=nmodel).isel(time=0).values
+        vtopbot_omip1   = DS[0]['thetaoga_all'].sel(model=nmodel,time=slice(1980,2009)).values - DS[0]['thetaoga_all'].sel(model=nmodel).isel(time=0).values
+        v700m_omip2     = DS[1]['thetaoga_700'].sel(model=nmodel,time=slice(1980,2009)).values - DS[1]['thetaoga_700'].sel(model=nmodel).isel(time=1).values
+        v2000m_omip2    = DS[1]['thetaoga_2000'].sel(model=nmodel,time=slice(1980,2009)).values - DS[1]['thetaoga_2000'].sel(model=nmodel).isel(time=1).values
+        v2000mbot_omip2 = DS[1]['thetaoga_2000_bottom'].sel(model=nmodel,time=slice(1980,2009)).values - DS[1]['thetaoga_2000_bottom'].sel(model=nmodel).isel(time=1).values
+        vtopbot_omip2   = DS[1]['thetaoga_all'].sel(model=nmodel,time=slice(1980,2009)).values - DS[1]['thetaoga_all'].sel(model=nmodel).isel(time=1).values
+
+    d_v700m[nmodel,:] = v700m_omip2[:] - v700m_omip1[:]
+    d_v2000m[nmodel,:] = v2000m_omip2[:] - v2000m_omip1[:]
+    d_v2000mbot[nmodel,:] = v2000mbot_omip2[:] - v2000mbot_omip1[:]
+    d_vtopbot[nmodel,:] = vtopbot_omip2[:] - vtopbot_omip1[:]
+
+    nmodel += 1
+
+num_bootstraps = 10000
+factor_5pct = 1.64  # 5-95%
+
+dout_700m = uncertain(d_v700m, "v700", nmod, nyr, num_bootstraps )
+zval = dout_700m["mean"] / dout_700m["std"]
+print(dout_700m)
+print("z-value = ",zval)
+
+dout_2000m = uncertain(d_v2000m, "v2000", nmod, nyr, num_bootstraps )
+zval = dout_2000m["mean"] / dout_2000m["std"]
+print(dout_2000m)
+print("z-value = ",zval)
+
+dout_2000mbot = uncertain(d_v2000mbot, "v2000bot", nmod, nyr, num_bootstraps )
+zval = dout_2000mbot["mean"] / dout_2000mbot["std"]
+print(dout_2000mbot)
+print("z-value = ",zval)
+
+dout_topbot = uncertain(d_vtopbot, "topbot", nmod, nyr, num_bootstraps )
+zval = dout_topbot["mean"] / dout_topbot["std"]
+print(dout_topbot)
+print("z-value = ",zval)
 
 #J 描画
 fig = plt.figure(figsize=(11,8))
@@ -324,7 +426,7 @@ ax = [ plt.subplot(4,3,1),
 for n in range(2):
     nv = 0
     for var in var_list:
-        nf = nv * 3 + n 
+        nf = nv * 3 + n
         nmodel = 0
         for model in model_list[n]:
             linecol=lincol[n][nmodel]
@@ -366,7 +468,7 @@ for var in var_list:
         DS_full[1][var].mean(dim='model').plot.line(x='time',ax=ax[nf],label='OMIP2-MMM',color='darkblue')
     else:
         DS_full[1][var].mean(dim='model').plot.line(x='time',ax=ax[nf],color='darkblue')
-        
+
     ax[nf].fill_between(x=DS_full[1]['time'],
                         y1=DS_full[1][var].min(dim='model'),
                         y2=DS_full[1][var].max(dim='model'),
@@ -390,8 +492,8 @@ for n in range(2):
         nf = nv * 3 + n
         ax[nf].set_title(title_list[nf],{'fontsize':10, 'verticalalignment':'top'})
         ax[nf].tick_params(labelsize=9)
-        ax[nf].set_xlim(1593,2018)
-        ax[nf].set_xticks(np.arange(1663,2018.1,71))
+        ax[nf].set_xlim(1592,2018)
+        ax[nf].set_xticks(np.arange(1592,2018.1,71))
         if ( nv == 3 ):
             ax[nf].set_xlabel('year',fontsize=10)
         else:
@@ -418,8 +520,8 @@ for nv in range(4):
     nf = nv * 3 + 2
     ax[nf].set_title(title_list[nf],{'fontsize':10,'verticalalignment':'top'})
     ax[nf].tick_params(labelsize=9)
-    ax[nf].set_xlim(1593,2018)
-    ax[nf].set_xticks(np.arange(1663,2018.1,71))
+    ax[nf].set_xlim(1592,2018)
+    ax[nf].set_xticks(np.arange(1592,2018.1,71))
     if ( nv == 3 ):
         ax[nf].set_xlabel('year',fontsize=10)
     else:

@@ -142,7 +142,8 @@ for n in range(2):
                 print (istf, iedf)
                 d_fsu[isto:iedo+1,:] = d_tmp[istf:iedf+1,:] * factor
                 #print (d_fsu)
-                d[nvar,nmodel] = d_fsu - d_woa[nvar]
+                #d[nvar,nmodel] = d_fsu - d_woa[nvar]
+                d[nvar,nmodel] = d_fsu - d_fsu[0]
 
             elif (n == 0) and (model == "MIROC-COCO4.9"):
                 nc = netCDF4.Dataset(infile,'r')
@@ -151,7 +152,8 @@ for n in range(2):
 
                 d_coco = np.full( (len(time[n]),33), np.nan )
                 d_coco[0:62*5,:] = d_tmp[0:62*5,:] * factor
-                d[nvar,nmodel] = d_coco - d_woa[nvar]
+                #d[nvar,nmodel] = d_coco - d_woa[nvar]
+                d[nvar,nmodel] = d_coco - d_coco[0]
 
             elif (model == "CMCC-NEMO"):
                 if (n == 0):
@@ -176,7 +178,8 @@ for n in range(2):
 
                 d_cmcc = np.full( (len(time[n]),33), np.nan )
                 d_cmcc[0:num_yr,:] = d_tmp2[0:num_yr,:] * factor
-                d[nvar,nmodel] = d_cmcc - d_woa[nvar]
+                #d[nvar,nmodel] = d_cmcc - d_woa[nvar]
+                d[nvar,nmodel] = d_cmcc - d_cmcc[0]
 
             elif (model == "EC-Earth3-NEMO"):
                 
@@ -202,7 +205,8 @@ for n in range(2):
                         f2 = f1(d_lev33)
                         d_barca[num_yr*i+nt,:] = f2[:] * factor
 
-                d[nvar,nmodel] = d_barca - d_woa[nvar]
+                #d[nvar,nmodel] = d_barca - d_woa[nvar]
+                d[nvar,nmodel] = d_barca - d_barca[0]
 
             elif (model == "GFDL-MOM"):
                 if (n == 0):
@@ -262,8 +266,8 @@ for n in range(2):
                         print (istf, iedf)
                         d_gfdl[isto:iedo+1,:] = d_tmp2[istf:iedf+1,:] * factor
 
-                        
-                d[nvar,nmodel] = d_gfdl - d_woa[nvar]
+                #d[nvar,nmodel] = d_gfdl - d_woa[nvar]
+                d[nvar,nmodel] = d_gfdl - d_gfdl[0]
 
             else:
 
@@ -283,7 +287,8 @@ for n in range(2):
                     DS_read = DS_read.interp(lev=lev33)
                     print(DS_read[var].values)
                     
-                d[nvar,nmodel] = DS_read[var].values * factor - d_woa[nvar]
+                #d[nvar,nmodel] = DS_read[var].values * factor - d_woa[nvar]
+                d[nvar,nmodel] = DS_read[var].values * factor - DS_read[var].isel(time=0).values * factor
 
             nmodel += 1
 
@@ -324,19 +329,19 @@ ax = [ plt.subplot(4,2,1),
 clabels = ['$^{\circ}$C', 'psu']
 
 if len(sys.argv) == 1:
-    bounds = [ [-1.0, -0.7, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3,
-                0.4, 0.7, 1.0], 
-               [-0.2, -0.15, -0.1, -0.07, -0.04, -0.02, 0, 0.02, 0.04,
-                0.07, 0.1, 0.15, 0.2] ]
+    bounds = [ [-1.0, -0.7, -0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3,
+                0.4, 0.5, 0.7, 1.0], 
+               [-0.1, -0.07, -0.05, -0.03, -0.02, -0.01, 0, 0.01, 0.02, 0.03, 0.05, 0.07, 0.1] ]
     bounds_std = [ [0.1, 0.2, 0.3, 0.5, 0.7, 1.0, 1.5], 
                    [0.01, 0.02, 0.03, 0.05, 0.07, 0.1, 0.2, 0.3, 0.5] ]
 else:
-    bounds = [ [-1.0, -0.7, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3,
-                0.4, 0.7, 1.0], 
-               [-0.2, -0.15, -0.1, -0.07, -0.04, -0.02, 0, 0.02, 0.04,
-                0.07, 0.1, 0.15, 0.2] ]
-    bounds_std = [ [0.1, 0.2, 0.3, 0.5, 0.7, 1.0, 1.5, 2.0], 
+    bounds = [ [-1.0, -0.7, -0.5, -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3,
+                0.4, 0.5, 0.7, 1.0], 
+               [-0.1, -0.07, -0.05, -0.03, -0.02, -0.01, 0, 0.01, 0.02, 0.03, 0.05, 0.07, 0.1] ]
+    bounds_std = [ [0.1, 0.2, 0.3, 0.4, 0.5, 0.7, 1.0, 1.5], 
                    [0.01, 0.02, 0.03, 0.05, 0.07, 0.1, 0.2, 0.3, 0.5] ]
+
+ddof_dic={'ddof' : 0}
 
 for n in range(2):
     for nvar in range(2):
@@ -358,8 +363,8 @@ for n in range(2):
 
         ax[nax].set_title(title_list[nax],{'fontsize':10, 'verticalalignment':'top'})
         ax[nax].tick_params(labelsize=9)
-        ax[nax].set_xlim(1593,2018)
-        ax[nax].set_xticks(np.arange(1663,2018.1,71))
+        ax[nax].set_xlim(1592,2018)
+        ax[nax].set_xticks(np.arange(1592,2018.1,71))
         ax[nax].invert_yaxis()
         ax[nax].set_yticks(np.arange(0,6000,1000))
         ax[nax].set_facecolor('lightgray')
@@ -374,11 +379,14 @@ for n in range(2):
         print(nax+1,title_list[nax])
         var = var_list[nvar]
         if len(model_list[n]) > 1:
-            da = DS[n][var].std(dim='model').transpose()
+            da = DS[n][var].std(dim='model', **ddof_dic).transpose()
         else:
             da = DS[n][var].transpose()
 
-        da.plot(ax=ax[nax],cmap='viridis',
+        cmm = plt.cm.get_cmap('terrain')
+        #cmm.set_under("green")
+        #print(cmm)
+        da.plot(ax=ax[nax],cmap=cmm,
                 levels=bounds_std[nvar],
                 extend='both',
                 cbar_kwargs={'orientation': 'vertical',
@@ -386,10 +394,12 @@ for n in range(2):
                              'label': clabels[nvar],
                              'ticks': bounds_std[nvar], } )
 
+        #cmm.set_under("black")
+        #print(cmm)
         ax[nax].set_title(title_list[nax],{'fontsize':10, 'verticalalignment':'top'})
         ax[nax].tick_params(labelsize=9)
-        ax[nax].set_xlim(1593,2018)
-        ax[nax].set_xticks(np.arange(1663,2018.1,71))
+        ax[nax].set_xlim(1592,2018)
+        ax[nax].set_xticks(np.arange(1592,2018.1,71))
         ax[nax].invert_yaxis()
         ax[nax].set_yticks(np.arange(0,6000,1000))
         ax[nax].set_facecolor('lightgray')

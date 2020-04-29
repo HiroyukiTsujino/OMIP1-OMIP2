@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
+sys.path.append("../../../python")
 import json
 import math
 import numpy as np
@@ -8,6 +9,7 @@ import matplotlib.pyplot as plt
 from distutils.util import strtobool
 import netCDF4
 from netCDF4 import Dataset, num2date
+from uncertain_Wakamatsu import uncertain
 
 #########################################
 
@@ -298,6 +300,51 @@ for n in range(2):
     #    print(DS_tmp['sivoln'].isel(model=nm))
     #    nm +=1
         
+#--------------------------------------------------
+# omip1 - omip2
+
+print("Compute uncertainty of the difference omip2-omip1")
+
+ystr = 1980
+yend = 2009
+nyr = yend - ystr + 1
+nmod = len(model_list[0])
+
+d_sivoln  = np.array(np.empty( (nmod, nyr) ),dtype=np.float64)
+d_sivols  = np.array(np.empty( (nmod, nyr) ),dtype=np.float64)
+
+nmodel = 0
+for model in model_list[0]:
+    if (model == 'MIROC-COCO4.9'):
+        sivoln_omip1 = DS[0]['sivoln'].sel(model=nmodel,time=slice(1909,1938)).values
+        sivols_omip1 = DS[0]['sivols'].sel(model=nmodel,time=slice(1909,1938)).values
+        sivoln_omip2 = DS[1]['sivoln'].sel(model=nmodel,time=slice(1909,1938)).values
+        sivols_omip2 = DS[1]['sivols'].sel(model=nmodel,time=slice(1909,1938)).values
+    else:
+        sivoln_omip1 = DS[0]['sivoln'].sel(model=nmodel,time=slice(1980,2009)).values
+        sivols_omip1 = DS[0]['sivols'].sel(model=nmodel,time=slice(1980,2009)).values
+        sivoln_omip2 = DS[1]['sivoln'].sel(model=nmodel,time=slice(1980,2009)).values
+        sivols_omip2 = DS[1]['sivols'].sel(model=nmodel,time=slice(1980,2009)).values
+
+    d_sivoln[nmodel,:] = sivoln_omip2[:] - sivoln_omip1[:]
+    d_sivols[nmodel,:] = sivols_omip2[:] - sivols_omip1[:]
+
+    nmodel += 1
+
+num_bootstraps = 10000
+factor_5pct = 1.64  # 5-95%
+
+dout_sivoln = uncertain(d_sivoln, "sivoln", nmod, nyr, num_bootstraps )
+zval = dout_sivoln["mean"] / dout_sivoln["std"]
+print(dout_sivoln)
+print("z-value = ",zval)
+
+dout_sivols = uncertain(d_sivols, "sivols", nmod, nyr, num_bootstraps )
+zval = dout_sivols["mean"] / dout_sivols["std"]
+print(dout_sivols)
+print("z-value = ",zval)
+
+#-------------------------------------------------------------------------
 #J 描画
 fig = plt.figure(figsize=(11,8))
 fig.suptitle( suptitle, fontsize=18 )
@@ -367,8 +414,8 @@ for nv in range(2):
         nf = 3 * nv + nm
         ax[nf].set_title(title_list[nf],{'fontsize':10,'verticalalignment':'top'})
         ax[nf].tick_params(labelsize=9)
-        ax[nf].set_xlim(1593,2018)
-        ax[nf].set_xticks(np.arange(1663,2018.1,71))
+        ax[nf].set_xlim(1592,2018)
+        ax[nf].set_xticks(np.arange(1592,2018.1,71))
         if ( nv == 1 ):
             ax[nf].set_xlabel('year',fontsize=10)
         else:

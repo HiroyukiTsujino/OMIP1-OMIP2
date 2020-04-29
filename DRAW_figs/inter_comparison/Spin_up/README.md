@@ -15,7 +15,7 @@ In main part and supplement
      - Figure S2: FigS1_vat_mip.py 2  ... FigS2 (omip2 all models)
 
   * Figure 2 : FigS2_all_std.py MMM
-     - Figure S3-S6: FigS2_allmodels.py [1,2] [1,2] ... [omip1 or omip2] [temperature or salinity]
+     - Figure S3-S6: FigS2_allmodels.py [1,2] [1,2] ... [omip1 or omip2] [temperature(1) or salinity(2)]
 
   * Figure 3 : FigS1_sivol_all.py
      - Figure S7: FigS1_sivol_mip.py 1

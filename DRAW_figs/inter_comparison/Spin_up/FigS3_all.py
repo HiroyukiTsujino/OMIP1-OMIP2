@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
+sys.path.append("../../../python")
 import json
 import math
 import numpy as np
@@ -9,6 +10,7 @@ import matplotlib.pyplot as plt
 from distutils.util import strtobool
 import netCDF4
 from netCDF4 import Dataset, num2date
+from uncertain_Wakamatsu import uncertain
 
 #####
 
@@ -16,10 +18,10 @@ suptitle = 'Ocean circulation metrics'
 outfile = './fig/FigS3_ALL'
 
 
-title_list = [ "(a) OMIP1 (AMOC maximum at 26.5N)", "(b) OMIP2 (AMOC maximum at 26.5N)", "(c) MMM (AMOC maximum at 26.5N)",
+title_list = [ "(a) OMIP1 (AMOC maximum at 26.5$^{\circ}$N)", "(b) OMIP2 (AMOC maximum at 26.5$^{\circ}$N)", "(c) MMM (AMOC maximum at 26.5$^{\circ}$N)",
                "(d) OMIP1 (Drake Passage transport)", "(e) OMIP2 (Drake Passage transport)", "(f) MMM (Drake Passage transport)",
                "(g) OMIP1 (Indonesian through flow)", "(h) OMIP2 (Indonesian through flow)", "(i) MMM (Indonesian through flow)",
-               "(j) OMIP1 (GMOC minimum at 30S)", "(k) OMIP2 (GMOC minimum at 30S)", "(l) MMM (GMOC minimum at 30S)" ]
+               "(j) OMIP1 (GMOC minimum at 30$^{\circ}$S)", "(k) OMIP2 (GMOC minimum at 30$^{\circ}$S)", "(l) MMM (GMOC minimum at 30$^{\circ}$S)" ]
 
 metainfo = [ json.load(open("./json/circ_omip1.json")),
              json.load(open("./json/circ_omip2.json")) ]
@@ -484,6 +486,10 @@ for n in range(2):
 
     DS_tmp = xr.Dataset( var_dict, coords = { 'time': time_new } ).sortby('time')
 
+    #nt = len(time_new)
+    #for nn in range(nt):
+    #    print(nn, DS[n]['time'].isel(time=nn).values, DS[n]['amoc'].isel(model=2,time=nn).values)
+
     DS_full += [DS_tmp]
 
     lincol += [coltmp]
@@ -501,18 +507,92 @@ for n in range(2):
             amoctmp = DS[n]['amoc'].sel(model=nmodel,time=slice(1909,1938)).mean(dim='time').values
             gmoctmp = DS[n]['gmoc'].sel(model=nmodel,time=slice(1909,1938)).mean(dim='time').values
             draketmp = DS[n]['drake'].sel(model=nmodel,time=slice(1909,1938)).mean(dim='time').values
+            itftmp = DS[n]['itf'].sel(model=nmodel,time=slice(1909,1938)).mean(dim='time').values
         else:
             amoctmp = DS[n]['amoc'].sel(model=nmodel,time=slice(1980,2009)).mean(dim='time').values
             gmoctmp = DS[n]['gmoc'].sel(model=nmodel,time=slice(1980,2009)).mean(dim='time').values
             draketmp = DS[n]['drake'].sel(model=nmodel,time=slice(1980,2009)).mean(dim='time').values
+            itftmp = DS[n]['itf'].sel(model=nmodel,time=slice(1980,2009)).mean(dim='time').values
 
-        dict_circulation[model]=[amoctmp,gmoctmp,draketmp]
+        dict_circulation[model]=[amoctmp,gmoctmp,draketmp,itftmp]
         nmodel += 1
 
-    summary=pd.DataFrame(dict_circulation,index=['AMOC','GMOC','ACC'])
+    mipid='OMIP'+str(n+1)
+    summary=pd.DataFrame(dict_circulation,index=['AMOC-'+ str(mipid),'GMOC-'+ str(mipid),'ACC-'+ str(mipid),'ITF-'+ str(mipid)])
+    tmp1=summary.mean(axis=1)
+    tmp2=summary.std(axis=1,ddof=0)
+    print(tmp1,tmp2)
+    summary.insert(0,'Z-MMM',tmp1)
+    summary.insert(0,'Z-STD',tmp2)
     summary_t=summary.T
     print (summary_t)
     summary_t.to_csv('csv/circulation_index_omip' + str(n+1) + '.csv')
+
+
+# omip1 - omip2
+
+print("Compute uncertainty of the difference omip2-omip1")
+
+ystr = 1980
+yend = 2009
+nyr = yend - ystr + 1
+nmod = len(model_list[0])
+
+d_amoc  = np.array(np.empty( (nmod, nyr) ),dtype=np.float64)
+d_gmoc  = np.array(np.empty( (nmod, nyr) ),dtype=np.float64)
+d_drake = np.array(np.empty( (nmod, nyr) ),dtype=np.float64)
+d_itf   = np.array(np.empty( (nmod, nyr) ),dtype=np.float64)
+
+nmodel = 0
+for model in model_list[0]:
+    if (model == 'MIROC-COCO4.9'):
+        amoc_omip1 = DS[0]['amoc'].sel(model=nmodel,time=slice(1909,1938)).values
+        gmoc_omip1 = DS[0]['gmoc'].sel(model=nmodel,time=slice(1909,1938)).values
+        drake_omip1 = DS[0]['drake'].sel(model=nmodel,time=slice(1909,1938)).values
+        itf_omip1 = DS[0]['itf'].sel(model=nmodel,time=slice(1909,1938)).values
+        amoc_omip2 = DS[1]['amoc'].sel(model=nmodel,time=slice(1909,1938)).values
+        gmoc_omip2 = DS[1]['gmoc'].sel(model=nmodel,time=slice(1909,1938)).values
+        drake_omip2 = DS[1]['drake'].sel(model=nmodel,time=slice(1909,1938)).values
+        itf_omip2 = DS[1]['itf'].sel(model=nmodel,time=slice(1909,1938)).values
+    else:
+        amoc_omip1 = DS[0]['amoc'].sel(model=nmodel,time=slice(1980,2009)).values
+        gmoc_omip1 = DS[0]['gmoc'].sel(model=nmodel,time=slice(1980,2009)).values
+        drake_omip1 = DS[0]['drake'].sel(model=nmodel,time=slice(1980,2009)).values
+        itf_omip1 = DS[0]['itf'].sel(model=nmodel,time=slice(1980,2009)).values
+        amoc_omip2 = DS[1]['amoc'].sel(model=nmodel,time=slice(1980,2009)).values
+        gmoc_omip2 = DS[1]['gmoc'].sel(model=nmodel,time=slice(1980,2009)).values
+        drake_omip2 = DS[1]['drake'].sel(model=nmodel,time=slice(1980,2009)).values
+        itf_omip2 = DS[1]['itf'].sel(model=nmodel,time=slice(1980,2009)).values
+
+    d_amoc[nmodel,:] = amoc_omip2[:] - amoc_omip1[:]
+    d_gmoc[nmodel,:] = gmoc_omip2[:] - gmoc_omip1[:]
+    d_drake[nmodel,:] = drake_omip2[:] - drake_omip1[:]
+    d_itf[nmodel,:] = itf_omip2[:] - itf_omip1[:]
+
+    nmodel += 1
+
+num_bootstraps = 10000
+factor_5pct = 1.64  # 5-95%
+
+dout_amoc = uncertain(d_amoc, "amoc", nmod, nyr, num_bootstraps )
+zval = dout_amoc["mean"] / dout_amoc["std"]
+print(dout_amoc)
+print("z-value = ",zval)
+
+dout_gmoc = uncertain(d_gmoc, "gmoc", nmod, nyr, num_bootstraps )
+zval = dout_gmoc["mean"] / dout_gmoc["std"]
+print(dout_gmoc)
+print("z-value = ",zval)
+
+dout_drake = uncertain(d_drake, "drake", nmod, nyr, num_bootstraps )
+zval = dout_drake["mean"] / dout_drake["std"]
+print(dout_drake)
+print("z-value = ",zval)
+
+dout_itf = uncertain(d_itf, "itf", nmod, nyr, num_bootstraps )
+zval = dout_itf["mean"] / dout_itf["std"]
+print(dout_itf)
+print("z-value = ",zval)
 
 #J 描画
 fig = plt.figure(figsize=(11,8.0))
@@ -597,8 +677,8 @@ for n in range(3):
         nf = nvar * 3 + n
         ax[nf].set_title(title_list[nf],{'fontsize':10,'verticalalignment':'top'})
         ax[nf].tick_params(labelsize=8)
-        ax[nf].set_xlim(1593,2018)
-        ax[nf].set_xticks(np.arange(1663,2018.1,71))
+        ax[nf].set_xlim(1592,2018)
+        ax[nf].set_xticks(np.arange(1592,2018.1,71))
         if ( nvar == 3 ):
             ax[nf].set_xlabel('year',fontsize=10)
         else:

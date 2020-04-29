@@ -16,10 +16,10 @@ if (len(sys.argv) < 2) :
     sys.exit()
 
 
-title_list = [ "(a) AMOC maximum at 26.5N",
+title_list = [ "(a) AMOC maximum at 26.5$^{\circ}$N",
                "(b) Drake Passage transport",
                "(c) Indonesian through flow",
-               "(d) GMOC minimum at 30S", ]
+               "(d) GMOC minimum at 30$^{\circ}$S", ]
 
 
 if (int(sys.argv[1]) == 3):
@@ -512,8 +512,8 @@ else:
 
 for nvar in range(4):
     ax[nvar].set_title(title_list[nvar],{'fontsize':10,'verticalalignment':'top'})
-    ax[nvar].set_xlim(1593,2018)
-    ax[nvar].set_xticks(np.arange(1663,2018.1,71))
+    ax[nvar].set_xlim(1592,2018)
+    ax[nvar].set_xticks(np.arange(1592,2018.1,71))
     if ( nvar == 3 ):
         ax[nvar].set_xlabel('year',fontsize=10)
     else:
