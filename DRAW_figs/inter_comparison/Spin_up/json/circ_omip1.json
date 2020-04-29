@@ -39,46 +39,6 @@
 	    "factor":"1.e0"
 	}
     },
-    "CAS-LICOM3":{
-	"multidata":"False",
-	"y":"lat",
-	"amoc":{
-	    "path":"../model/CAS-LICOM3/20190731",
-	    "fname":"OMIP1_msftmyz_001To372_yearmean_lat_intlevel_setzaxis.nc",
-	    "name":"msftmyz",
-	    "exdim_name":"basin",
-	    "exdim":"1",
-	    "zdim":"lev",
-	    "zvar":"lev",
-	    "factor":"1.e0"
-	},
-	"drake":{
-	    "path":"../model/CAS-LICOM3/20190731",
-	    "fname":"OMIP1_Drake_passage_001To372_annual.nc",
-	    "name":"mfo",
-	    "exdim_name":"None",
-	    "exdim":"0",
-	    "factor":"1.e0"
-	},
-	"itf":{
-	    "path":"../model/CAS-LICOM3/20190731",
-	    "fname":"OMIP1_indonesian_throughflow_6S_001To372_annual.nc",
-	    "name":"mfo",
-	    "exdim_name":"None",
-	    "exdim":"0",
-	    "factor":"1.e0"
-	},
-	"gmoc":{
-	    "path":"../model/CAS-LICOM3/20190731",
-	    "fname":"OMIP1_msftmyz_001To372_yearmean_lat_intlevel_setzaxis.nc",
-	    "name":"msftmyz",
-	    "exdim_name":"basin",
-	    "exdim":"0",
-	    "zdim":"lev",
-	    "zvar":"lev",
-	    "factor":"1.e0"
-	}
-    },
     "MIROC-COCO4.9":{
 	"multidata":"False",
 	"y":"lat",
@@ -117,6 +77,46 @@
 	    "zdim":"depth",
 	    "zvar":"depth",
 	    "factor":"1.e-9"
+	}
+    },
+    "CAS-LICOM3":{
+	"multidata":"False",
+	"y":"lat",
+	"amoc":{
+	    "path":"../model/CAS-LICOM3/20190731",
+	    "fname":"OMIP1_msftmyz_001To372_yearmean_lat_intlevel_setzaxis.nc",
+	    "name":"msftmyz",
+	    "exdim_name":"basin",
+	    "exdim":"1",
+	    "zdim":"lev",
+	    "zvar":"lev",
+	    "factor":"1.e0"
+	},
+	"drake":{
+	    "path":"../model/CAS-LICOM3/20190731",
+	    "fname":"OMIP1_Drake_passage_001To372_annual.nc",
+	    "name":"mfo",
+	    "exdim_name":"None",
+	    "exdim":"0",
+	    "factor":"1.e0"
+	},
+	"itf":{
+	    "path":"../model/CAS-LICOM3/20190731",
+	    "fname":"OMIP1_indonesian_throughflow_6S_001To372_annual.nc",
+	    "name":"mfo",
+	    "exdim_name":"None",
+	    "exdim":"0",
+	    "factor":"1.e0"
+	},
+	"gmoc":{
+	    "path":"../model/CAS-LICOM3/20190731",
+	    "fname":"OMIP1_msftmyz_001To372_yearmean_lat_intlevel_setzaxis.nc",
+	    "name":"msftmyz",
+	    "exdim_name":"basin",
+	    "exdim":"0",
+	    "zdim":"lev",
+	    "zvar":"lev",
+	    "factor":"1.e0"
 	}
     },
     "AWI-FESOM":{
@@ -204,7 +204,7 @@
 	"y":"lat",
 	"amoc":{
 	    "path":"../model/NorESM-BLOM/20190814",
-	    "fname":"msftmyz_core2_20190804.nc",
+	    "fname":"msftmyz_core2_20190804_WOA.nc",
 	    "name":"msftmyz",
 	    "exdim_name":"region",
 	    "exdim":"1",
@@ -230,7 +230,7 @@
 	},
 	"gmoc":{
 	    "path":"../model/NorESM-BLOM/20190814",
-	    "fname":"msftmyz_core2_20190804.nc",
+	    "fname":"msftmyz_core2_20190804_WOA.nc",
 	    "name":"msftmyz",
 	    "exdim_name":"region",
 	    "exdim":"3",

@@ -1,31 +1,4 @@
 {
-    "AWI-FESOM":{
-	"multidata":"True",
-	"thetaoga_all":{
-	    "path":"../model/AWI-FESOM/20190731/OMIP2/loop*",
-	    "fname":"thetaoga_Oyr_FESOM1.4_historical_loop*_gr_195801-201812.nc",
-	    "varname":"thetaoga",
-	    "factor":"1.e0"
-	},
-	"thetaoga_700":{
-	    "path":"../model/AWI-FESOM/20190927/OMIP2/loop*",
-	    "fname":"thetao_0_700_Oyr_FESOM1.4_historical_loop*_gr_195801-201812.nc",
-	    "varname":"thetao",
-	    "factor":"1.e0"
-	},
-	"thetaoga_2000":{
-	    "path":"../model/AWI-FESOM/20190927/OMIP2/loop*",
-	    "fname":"thetao_0_2000_Oyr_FESOM1.4_historical_loop*_gr_195801-201812.nc",
-	    "varname":"thetao",
-	    "factor":"1.e0"
-	},
-	"thetaoga_2000_bottom":{
-	    "path":"../model/AWI-FESOM/20190927/OMIP2/loop*",
-	    "fname":"thetao_2000_depth_Oyr_FESOM1.4_historical_loop*_gr_195801-201812.nc",
-	    "varname":"thetao",
-	    "factor":"1.e0"
-	}
-    },
     "FSU-HYCOM":{
 	"multidata":"False",
 	"thetaoga_all":{
@@ -107,29 +80,29 @@
 	    "factor":"1.e0"
 	}
     },
-    "NorESM-BLOM":{
-	"multidata":"False",
+    "AWI-FESOM":{
+	"multidata":"True",
 	"thetaoga_all":{
-	    "path":"../model/NorESM-BLOM/20190814",
-	    "fname":"thetaoga_jra_20190804.nc",
+	    "path":"../model/AWI-FESOM/20190731/OMIP2/loop*",
+	    "fname":"thetaoga_Oyr_FESOM1.4_historical_loop*_gr_195801-201812.nc",
 	    "varname":"thetaoga",
 	    "factor":"1.e0"
 	},
 	"thetaoga_700":{
-	    "path":"../model/NorESM-BLOM/20190917",
-	    "fname":"thetao_0-700_OMIP2_20190730.nc",
+	    "path":"../model/AWI-FESOM/20190927/OMIP2/loop*",
+	    "fname":"thetao_0_700_Oyr_FESOM1.4_historical_loop*_gr_195801-201812.nc",
 	    "varname":"thetao",
 	    "factor":"1.e0"
 	},
 	"thetaoga_2000":{
-	    "path":"../model/NorESM-BLOM/20190917",
-	    "fname":"thetao_0-2000_OMIP2_20190730.nc",
+	    "path":"../model/AWI-FESOM/20190927/OMIP2/loop*",
+	    "fname":"thetao_0_2000_Oyr_FESOM1.4_historical_loop*_gr_195801-201812.nc",
 	    "varname":"thetao",
 	    "factor":"1.e0"
 	},
 	"thetaoga_2000_bottom":{
-	    "path":"../model/NorESM-BLOM/20190917",
-	    "fname":"thetao_2000-bottom_OMIP2_20190730.nc",
+	    "path":"../model/AWI-FESOM/20190927/OMIP2/loop*",
+	    "fname":"thetao_2000_depth_Oyr_FESOM1.4_historical_loop*_gr_195801-201812.nc",
 	    "varname":"thetao",
 	    "factor":"1.e0"
 	}
@@ -158,6 +131,33 @@
 	    "path":"../model/CESM-POP/20190917/omip2",
 	    "fname":"thetaoga_Oyr_CESM2_omip2_r1i1p1f1_gn_2000m-bott_0001-0366.nc",
 	    "varname":"thetaoga",
+	    "factor":"1.e0"
+	}
+    },
+    "NorESM-BLOM":{
+	"multidata":"False",
+	"thetaoga_all":{
+	    "path":"../model/NorESM-BLOM/20190814",
+	    "fname":"thetaoga_jra_20190804.nc",
+	    "varname":"thetaoga",
+	    "factor":"1.e0"
+	},
+	"thetaoga_700":{
+	    "path":"../model/NorESM-BLOM/20190917",
+	    "fname":"thetao_0-700_OMIP2_20190730.nc",
+	    "varname":"thetao",
+	    "factor":"1.e0"
+	},
+	"thetaoga_2000":{
+	    "path":"../model/NorESM-BLOM/20190917",
+	    "fname":"thetao_0-2000_OMIP2_20190730.nc",
+	    "varname":"thetao",
+	    "factor":"1.e0"
+	},
+	"thetaoga_2000_bottom":{
+	    "path":"../model/NorESM-BLOM/20190917",
+	    "fname":"thetao_2000-bottom_OMIP2_20190730.nc",
+	    "varname":"thetao",
 	    "factor":"1.e0"
 	}
     },

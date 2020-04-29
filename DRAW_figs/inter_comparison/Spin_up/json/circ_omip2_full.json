@@ -124,7 +124,7 @@
 	"y":"lat",
 	"amoc":{
 	    "path":"../model/NorESM-BLOM/20190814",
-	    "fname":"msftmyz_jra_20190804.nc",
+	    "fname":"msftmyz_jra_20190804_WOA.nc",
 	    "name":"msftmyz",
 	    "exdim_name":"region",
 	    "exdim":"1",
@@ -150,7 +150,7 @@
 	},
 	"gmoc":{
 	    "path":"../model/NorESM-BLOM/20190814",
-	    "fname":"msftmyz_jra_20190804.nc",
+	    "fname":"msftmyz_jra_20190804_WOA.nc",
 	    "name":"msftmyz",
 	    "exdim_name":"region",
 	    "exdim":"3",

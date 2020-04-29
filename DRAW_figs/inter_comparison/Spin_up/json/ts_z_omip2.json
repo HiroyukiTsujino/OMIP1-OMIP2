@@ -78,13 +78,13 @@
 	"multidata":"False",
 	"thetao":{
 	    "path":"../model/NorESM-BLOM/20190814",
-	    "fname":"thetao_jra_20190804.nc",
+	    "fname":"thetao_jra_20190804_WOA.nc",
 	    "vname":"thetao",
 	    "factor":"1.e0"
 	},
 	"so":{
 	    "path":"../model/NorESM-BLOM/20190814",
-	    "fname":"so_jra_20190804.nc",
+	    "fname":"so_jra_20190804_WOA.nc",
 	    "vname":"so",
 	    "factor":"1.e0"
 	}
