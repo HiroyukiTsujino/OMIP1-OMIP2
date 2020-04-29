@@ -2,11 +2,13 @@
 import sys
 import json
 import numpy as np
+import pandas as pd
 import xarray as xr
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 import datetime
+import netCDF4
 
 
 title = [ '(a) OMIP1 - WOA13v2', '(b) OMIP2 - WOA13v2', '(c) OMIP2 - OMIP1', '(d) WOA13v2' ]
@@ -41,9 +43,16 @@ time = [ time1, time2 ]
 #J データ読込・平均
 
 print( "Loading WOA13v2 data" )
-reffile = '../refdata/WOA/WOA13v2/netCDF/1deg_L33/annual/woa13_decav_s.1000'
+reffile = '../refdata/WOA13v2/1deg_L33/annual/woa13_decav_s.1000'
 DS0 = xr.open_dataset( reffile, decode_times=False )
 da0 = DS0.so.sel(depth=0).isel(time=0)
+
+arefile = '../refdata/PCMDI-SST/areacello_input4MIPs_SSTsAndSeaIce_CMIP_PCMDI-AMIP-1-1-4_gn.nc'
+ncare = netCDF4.Dataset(arefile,'r')
+nx = len(ncare.dimensions['lon'])
+ny = len(ncare.dimensions['lat'])
+area = ncare.variables['areacello'][:,:]
+ncare.close()
 
 data = []
 for omip in range(2):
@@ -110,6 +119,16 @@ for panel in range(4):
     if item[panel] == 'omip1bias' or item[panel] == 'omip2bias':
         bounds = bounds1
         ticks_bounds = bounds1
+        da = DS[item[panel]].mean(dim='model',skipna=False)
+        msktmp = np.where( np.isnan(da.values), 0.0, 1.0 )
+        datmp = np.where( np.isnan(da.values), 0.0, da.values )
+        tmp1 = (datmp * datmp * area * msktmp).sum()
+        tmp2 = (area * msktmp).sum()
+        tmp3 = (datmp * area * msktmp).sum()
+        rmse = np.sqrt(tmp1/tmp2)
+        bias = tmp3/tmp2
+        title[panel] = title[panel] + '\n' \
+            + ' mean bias = ' + '{:.3f}'.format(bias) + 'psu,' + '    bias rmse = ' + '{:.3f}'.format(rmse) + 'psu'
     elif item[panel] == 'omip2-1':
         bounds = bounds2
         ticks_bounds = bounds2

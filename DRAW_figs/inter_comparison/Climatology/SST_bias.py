@@ -9,7 +9,8 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 import datetime
-from uncertain_Wakamatsu import uncertain_2d
+import netCDF4
+#from uncertain_Wakamatsu import uncertain_2d
 
 
 ystr = 1980
@@ -54,13 +55,21 @@ time = [ time1, time2 ]
 #J データ読込・平均
 
 print( "Loading AMIP data" )
-reffile = '../AMIP/tos_input4MIPs_SSTsAndSeaIce_CMIP_PCMDI-AMIP-1-1-4_gn_187001-201712.nc'
-mskfile = '../AMIP/sftof_input4MIPs_SSTsAndSeaIce_CMIP_PCMDI-AMIP-1-1-4_gn.nc'
+reffile = '../refdata/PCMDI-SST/tos_input4MIPs_SSTsAndSeaIce_CMIP_PCMDI-AMIP-1-1-4_gn_187001-201712.nc'
+mskfile = '../refdata/PCMDI-SST/sftof_input4MIPs_SSTsAndSeaIce_CMIP_PCMDI-AMIP-1-1-4_gn.nc'
 #J 年平均計算も行う。ただし日数の重みがつかないので不正確
 DS0 = xr.open_dataset( reffile ).resample(time='1YS').mean()
 da0 = DS0.tos.sel(time=slice(str(ystr),str(yend)))
 DS1 = xr.open_dataset( mskfile )
 da1 = DS1.sftof
+
+arefile = '../refdata/PCMDI-SST/areacello_input4MIPs_SSTsAndSeaIce_CMIP_PCMDI-AMIP-1-1-4_gn.nc'
+ncare = netCDF4.Dataset(arefile,'r')
+nx = len(ncare.dimensions['lon'])
+ny = len(ncare.dimensions['lat'])
+area = ncare.variables['areacello'][:,:]
+ncare.close()
+
 
 data = []
 for omip in range(2):
@@ -105,40 +114,40 @@ DS = xr.Dataset( {'omip1bias': (['model','time','lat','lon'], data[0] - da0.valu
                             'lat': np.linspace(-89.5,89.5,num=180), 
                             'lon': np.linspace(0.5,359.5,num=360), } )
 
-DS_out_list = []
-
-num_bootstraps = 10000
-print( 'Calculating OMIP1 - AMIP' )
-dout = uncertain_2d( DS['omip1bias'].values, num_bootstraps )
-DS_out_list += [ xr.Dataset( { 'mean': (['lat','lon'], dout[0]),
-                               'std':  (['lat','lon'], dout[1]),
-                               'M':    (['lat','lon'], dout[2]),
-                               'V':    (['lat','lon'], dout[3]),
-                               'B':    (['lat','lon'], dout[4]),},
-                             coords = { 'lat': np.linspace(-89.5,89.5,num=180), 
-                                        'lon': np.linspace(0.5,359.5,num=360), }, ) ]
-print( 'Calculating OMIP2 - AMIP' )
-dout = uncertain_2d( DS['omip2bias'].values, num_bootstraps )
-DS_out_list += [ xr.Dataset( { 'mean': (['lat','lon'], dout[0]),
-                               'std':  (['lat','lon'], dout[1]),
-                               'M':    (['lat','lon'], dout[2]),
-                               'V':    (['lat','lon'], dout[3]),
-                               'B':    (['lat','lon'], dout[4]),},
-                             coords = { 'lat': np.linspace(-89.5,89.5,num=180), 
-                                        'lon': np.linspace(0.5,359.5,num=360), }, ) ]
-print( 'Calculating OMIP2 - OMIP1' )
-dout = uncertain_2d( DS['omip2-1'].values, num_bootstraps )
-DS_out_list += [ xr.Dataset( { 'mean': (['lat','lon'], dout[0]),
-                               'std':  (['lat','lon'], dout[1]),
-                               'M':    (['lat','lon'], dout[2]),
-                               'V':    (['lat','lon'], dout[3]),
-                               'B':    (['lat','lon'], dout[4]),},
-                             coords = { 'lat': np.linspace(-89.5,89.5,num=180), 
-                                        'lon': np.linspace(0.5,359.5,num=360), }, ) ]
-DS_out_list += [ DS["amip"].mean(dim='time',skipna=False) ]
-
+#DS_out_list = []
+#
+#num_bootstraps = 10000
+#print( 'Calculating OMIP1 - AMIP' )
+#ndout = uncertain_2d( DS['omip1bias'].values, num_bootstraps )
+#DS_out_list += [ xr.Dataset( { 'mean': (['lat','lon'], dout[0]),
+#                               'std':  (['lat','lon'], dout[1]),
+#                               'M':    (['lat','lon'], dout[2]),
+#                               'V':    (['lat','lon'], dout[3]),
+#                               'B':    (['lat','lon'], dout[4]),},
+#                             coords = { 'lat': np.linspace(-89.5,89.5,num=180), 
+#                                        'lon': np.linspace(0.5,359.5,num=360), }, ) ]
+#print( 'Calculating OMIP2 - AMIP' )
+#dout = uncertain_2d( DS['omip2bias'].values, num_bootstraps )
+#DS_out_list += [ xr.Dataset( { 'mean': (['lat','lon'], dout[0]),
+#                               'std':  (['lat','lon'], dout[1]),
+#                               'M':    (['lat','lon'], dout[2]),
+#                               'V':    (['lat','lon'], dout[3]),
+#                               'B':    (['lat','lon'], dout[4]),},
+#                             coords = { 'lat': np.linspace(-89.5,89.5,num=180), 
+#                                        'lon': np.linspace(0.5,359.5,num=360), }, ) ]
+#print( 'Calculating OMIP2 - OMIP1' )
+#dout = uncertain_2d( DS['omip2-1'].values, num_bootstraps )
+#DS_out_list += [ xr.Dataset( { 'mean': (['lat','lon'], dout[0]),
+#                               'std':  (['lat','lon'], dout[1]),
+#                               'M':    (['lat','lon'], dout[2]),
+#                               'V':    (['lat','lon'], dout[3]),
+#                               'B':    (['lat','lon'], dout[4]),},
+#                             coords = { 'lat': np.linspace(-89.5,89.5,num=180), 
+#                                        'lon': np.linspace(0.5,359.5,num=360), }, ) ]
+#DS_out_list += [ DS["amip"].mean(dim='time',skipna=False) ]
 
 #J 描画
+
 print( 'Start drawing' )
 fig = plt.figure(figsize=(16,12))
 fig.suptitle( suptitle, fontsize=20 )
@@ -167,6 +176,16 @@ for panel in range(4):
     if item[panel] == 'omip1bias' or item[panel] == 'omip2bias':
         bounds = bounds1
         ticks_bounds = bounds1
+        da = DS[item[panel]].mean(dim='model',skipna=False).mean(dim='time')
+        msktmp = np.where( np.isnan(da.values), 0.0, 1.0 )
+        datmp = np.where( np.isnan(da.values), 0.0, da.values )
+        tmp1 = (datmp * datmp * area * msktmp).sum()
+        tmp2 = (area * msktmp).sum()
+        tmp3 = (datmp * area * msktmp).sum()
+        rmse = np.sqrt(tmp1/tmp2)
+        bias = tmp3/tmp2
+        title[panel] = title[panel] + '\n' \
+            + ' mean bias = ' + '{:.3f}'.format(bias) + '$^\circ$C,' + '    bias rmse = ' + '{:.3f}'.format(rmse) + '$^\circ$C'
     elif item[panel] == 'omip2-1':
         bounds = bounds2
         ticks_bounds = bounds2
@@ -174,9 +193,11 @@ for panel in range(4):
         bounds = bounds3
         ticks_bounds = ticks_bounds3
     if item[panel] == 'amip':
-        da = DS_out_list[panel]
+        da = DS[item[panel]].mean(dim='time')
     else:
-        da = DS_out_list[panel]["mean"]
+        da = DS[item[panel]].mean(dim='model',skipna=False).mean(dim='time')
+
+
     da.plot(ax=ax[panel],cmap=cmap[panel],
             levels=bounds,
             extend='both',
@@ -187,14 +208,14 @@ for panel in range(4):
                          'ticks': ticks_bounds,},
             transform=ccrs.PlateCarree())
 
-mpl.rcParams['hatch.color'] = 'limegreen'
-mpl.rcParams['hatch.linewidth'] = 0.5
-for panel in range(3):
-    x = DS_out_list[panel]["lon"].values
-    y = DS_out_list[panel]["lat"].values
-    z = np.abs(DS_out_list[panel]["mean"]) - factor * DS_out_list[panel]["std"]
-    z = np.where( z > 0, 1, np.nan )
-    ax[panel].contourf(x,y,z,hatches=['xxx'],colors='none',transform=ccrs.PlateCarree())
+#mpl.rcParams['hatch.color'] = 'limegreen'
+#mpl.rcParams['hatch.linewidth'] = 0.5
+#for panel in range(3):
+#    x = DS_out_list[panel]["lon"].values
+#    y = DS_out_list[panel]["lat"].values
+#    z = np.abs(DS_out_list[panel]["mean"]) - factor * DS_out_list[panel]["std"]
+#    z = np.where( z > 0, 1, np.nan )
+#    ax[panel].contourf(x,y,z,hatches=['xxx'],colors='none',transform=ccrs.PlateCarree())
 
 for panel in range(4):
     ax[panel].coastlines()

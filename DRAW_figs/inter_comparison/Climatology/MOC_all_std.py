@@ -43,7 +43,7 @@ else:
 
 # uncertainty of difference between omip-1 and omip-2
 
-stdfile = '../analysis/STDs/ZMS_omip1-omip2_stats.nc'
+stdfile = '../analysis/STDs/MOC_omip1-omip2_stats.nc'
 DS_stats = xr.open_dataset( stdfile )
 
 data = []
@@ -222,7 +222,8 @@ bounds2 = np.array([-10,-8,-6,-5,-4,-3,-2,-1,-0.5, 0, 0.5, 1,2,3,4,5,6,8,10])
 tick_bounds2 = np.array([-10,-8,-6,-5,-4,-3,-2,-1,-0.5, 0, 0.5, 1,2,3,4,5,6,8,10])
 bounds3 = np.linspace(0,8,9)
 
-cmap = [ 'RdBu_r', 'RdBu_r', 'viridis', 'viridis', 'coolwarm', 'coolwarm' ]
+cmap = [ 'RdBu_r', 'RdBu_r', 'terrain', 'terrain', 'coolwarm', 'coolwarm' ]
+extflg = [ 'both', 'both', 'max', 'max', 'both', 'both' ]
 
 item = [ 'omip1', 'omip2', 'omip1std', 'omip2std', 'omip2-1', 'omip2-1' ]
 
@@ -253,7 +254,7 @@ for panel in range(6):
     for m in range(3):
         da.isel(basin=m).plot(ax=ax[panel][m],cmap=cmap[panel],
                               levels=bounds,
-                              extend='both',
+                              extend=extflg[panel],
                               cbar_kwargs={'orientation': 'vertical',
                                            'spacing':'uniform',
                                            'ticks': ticks_bounds,},
@@ -265,12 +266,22 @@ for panel in range(6):
                                           levels=bounds,
                                           add_labels=False,
                                           linewidths=1.0)
-        #if (panel == 4):
-        #    x = DS_stats["lat"].values
-        #    y = DS_stats["depth"].values
-        #    z = np.abs(DS_stats["mean"].isel(basin=m)) - factor_5ptail * DS_stats["std"].isel(basin=m)
-        #    z = np.where( z > 0, 1, np.nan )
-        #    ax[panel][m].contourf(x,y,z,hatches=['xxxxxxx'],colors='none')
+        if (panel == 4):
+            x = DS_stats["lat"].values
+            y = DS_stats["depth"].values
+            z = np.abs(DS_stats["mean"].isel(basin=m)) - factor_5ptail * DS_stats["std"].isel(basin=m)
+            z = np.where( z > 0, 1, np.nan )
+            ax[panel][m].contourf(x,y,z,hatches=['xxxxxxx'],colors='none')
+            mpl.rcParams['hatch.color'] = 'lime'
+            mpl.rcParams['hatch.linewidth'] = 0.5
+        if (panel == 5):
+            x = DS_stats["lat"].values
+            y = DS_stats["depth"].sel(depth=slice(0,500)).values
+            z = np.abs(DS_stats["mean"].sel(depth=slice(0,500)).isel(basin=m)) - factor_5ptail * DS_stats["std"].sel(depth=slice(0,500)).isel(basin=m)
+            z = np.where( z > 0, 1, np.nan )
+            ax[panel][m].contourf(x,y,z,hatches=['xxxxxxx'],colors='none')
+            mpl.rcParams['hatch.color'] = 'lime'
+            mpl.rcParams['hatch.linewidth'] = 0.5
 
         ax[panel][m].set_title(title[m],{'fontsize':8, 'verticalalignment':'top'})
         ax[panel][m].tick_params(labelsize=9)

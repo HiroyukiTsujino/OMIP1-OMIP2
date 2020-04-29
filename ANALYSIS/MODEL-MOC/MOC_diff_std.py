@@ -25,7 +25,7 @@ metainfo = [ json.load(open("./json/moc_omip1.json")),
 model_list = [ metainfo[0].keys(), metainfo[1].keys() ]
 
 suptitle = 'Multi Model Mean' + ' Meridional Overturning Circulation (ave. from '+str(ystr)+' to '+str(yend)+')'
-outfile = './fig/MOC_diff_bias.png'
+outfile = './fig/MOC_diff_significance.png'
 
 time0 = np.empty(nyr,dtype='object')
 for yr in range(ystr,yend+1):

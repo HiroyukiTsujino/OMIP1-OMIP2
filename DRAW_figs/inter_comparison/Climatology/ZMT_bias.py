@@ -31,7 +31,18 @@ if len(sys.argv) == 1:
 
 else:
     model_list = [ [sys.argv[1]], [sys.argv[1]] ]
-    outfile = './fig/ZMT_bias_' + sys.argv[1] + '.png'
+    if ( sys.argv[1] == 'Kiel-NEMO'):
+        if (len(sys.argv) == 3):
+            if (sys.argv[2] == 'filt'):
+                outfile = './fig/ZMT_bias_' + sys.argv[1] + '_filt.png'
+                filter = 'yes'
+            else:
+                outfile = './fig/ZMT_bias_' + sys.argv[1] + '_asis.png'
+                filter = 'no'
+        else:
+            outfile = './fig/ZMT_bias_' + sys.argv[1] + '_asis.png'
+    else:
+        outfile = './fig/ZMT_bias_' + sys.argv[1] + '_asis.png'
     suptitle = sys.argv[1] + ' Zonal mean temperature (ave. from 1980 to 2009)'
 
 print("Drawing " + suptitle)
@@ -42,7 +53,7 @@ time = [ np.linspace(1948,2009,62), np.linspace(1958,2018,61) ]
 
 #J データ読込・平均
 print( "Loading WOA13v2 data" )
-reffile = '../WOA/annual/woa13_decav_th_basin.1000'
+reffile = '../refdata/WOA13v2/1deg_L33/annual/woa13_decav_th_basin.1000'
 da_ref = xr.open_dataset( reffile, decode_times=False)["thetao"].mean(dim='time')
 da_ref = da_ref.assign_coords(basin=[0,1,2,3])
 
@@ -53,6 +64,11 @@ for omip in range(2):
     print( "Loading OMIP" + str(omip+1) + " data" )
 
     nmodel = 0
+    if ( omip == 0 ):
+        nyr = 62
+    else:
+        nyr = 61
+
     for model in model_list[omip]:
 
         path = metainfo[omip][model]['path']
@@ -70,22 +86,66 @@ for omip in range(2):
             ncglb = netCDF4.Dataset(infile_glb,'r')
             thetao_glb = ncglb.variables['thetao_global'][:,:,:]
             ncglb.close()
-            thetao_glb = np.where(thetao_glb > 9.9e36, np.NaN, thetao_glb)
+            thetao_glb = np.where(thetao_glb > 9.0e36, np.NaN, thetao_glb)
+            if (filter == 'yes'):
+                thetao_glb = np.where(thetao_glb > 40, np.NaN, thetao_glb)
+                thetao_glb = np.where(thetao_glb < -2, np.NaN, thetao_glb)
+                for n in range(0,nyr):
+                    for k in range(0,32):
+                        for j in range(0,180):
+                            if (np.isnan(thetao_glb[n,k+1,j]) and abs(thetao_glb[n,k,j]) < 1.0e-4):
+                                thetao_glb[n,k,j] = np.NaN
+                    for j in range(0,180):
+                        if (abs(thetao_glb[n,32,j]) < 1.0e-4):
+                            thetao_glb[n,32,j] = np.NaN
             
             ncatl = netCDF4.Dataset(infile_atl,'r')
             thetao_atl = ncatl.variables['thetao_atl'][:,:,:]
             ncatl.close()
-            thetao_atl = np.where(thetao_atl > 9.9e36, np.NaN, thetao_atl)
+            thetao_atl = np.where(thetao_atl > 9.0e36, np.NaN, thetao_atl)
+            if (filter == 'yes'):
+                thetao_atl = np.where(thetao_atl > 40, np.NaN, thetao_atl)
+                thetao_atl = np.where(thetao_atl < -2, np.NaN, thetao_atl)
+                for n in range(0,nyr):
+                    for k in range(0,32):
+                        for j in range(0,180):
+                            if (np.isnan(thetao_atl[n,k+1,j]) and abs(thetao_atl[n,k,j]) < 1.0e-4):
+                                thetao_atl[n,k,j] = np.NaN
+                    for j in range(0,180):
+                        if (abs(thetao_atl[n,32,j]) < 1.0e-4):
+                            thetao_atl[n,32,j] = np.NaN
 
             ncind = netCDF4.Dataset(infile_ind,'r')
             thetao_ind = ncind.variables['thetao_ind'][:,:,:]
             ncind.close()
-            thetao_ind = np.where(thetao_ind > 9.9e36, np.NaN, thetao_ind)
+            thetao_ind = np.where(thetao_ind > 9.0e36, np.NaN, thetao_ind)
+            if (filter == 'yes'):
+                thetao_ind = np.where(thetao_ind > 40, np.NaN, thetao_ind)
+                thetao_ind = np.where(thetao_ind < -2, np.NaN, thetao_ind)
+                for n in range(0,nyr):
+                    for k in range(0,32):
+                        for j in range(0,180):
+                            if (np.isnan(thetao_ind[n,k+1,j]) and abs(thetao_ind[n,k,j]) < 1.0e-4):
+                                thetao_ind[n,k,j] = np.NaN
+                    for j in range(0,180):
+                        if (abs(thetao_ind[n,32,j]) < 1.0e-4):
+                            thetao_ind[n,32,j] = np.NaN
 
             ncpac = netCDF4.Dataset(infile_pac,'r')
             thetao_pac = ncpac.variables['thetao_pac'][:,:,:]
             ncpac.close()
-            thetao_pac = np.where(thetao_pac > 9.9e36, np.NaN, thetao_pac)
+            thetao_pac = np.where(thetao_pac > 9.0e36, np.NaN, thetao_pac)
+            if (filter == 'yes'):
+                thetao_pac = np.where(thetao_pac > 40, np.NaN, thetao_pac)
+                thetao_pac = np.where(thetao_pac < -2, np.NaN, thetao_pac)
+                for n in range(0,nyr):
+                    for k in range(0,32):
+                        for j in range(0,180):
+                            if (np.isnan(thetao_pac[n,k+1,j]) and abs(thetao_pac[n,k,j]) < 1.0e-4):
+                                thetao_pac[n,k,j] = np.NaN
+                    for j in range(0,180):
+                        if (abs(thetao_pac[n,32,j]) < 1.0e-4):
+                            thetao_pac[n,32,j] = np.NaN
 
             if ( omip == 0 ):
                 thetao_all = np.array(np.zeros((62,4,33,180)),dtype=np.float32)

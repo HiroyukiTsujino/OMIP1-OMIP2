@@ -22,7 +22,7 @@ if (len(sys.argv) < 2) :
 
 
 title = [ '(a) Ensemble bias (OMIP1 - CMEMS)', '(b) Ensemble bias (OMIP2 - CMEMS)',
-          '(c) Ensemble std (OMIP1)', '(d) Ensemble std (OMIP2)',
+          '(c) Ensemble std (OMIP1 bias)', '(d) Ensemble std (OMIP2 bias)',
           '(e) OMIP2 - OMIP1', '(f) CMEMS' ]
 
 #metainfo = [ json.load(open("./json/zos_omip1_wo_coco.json")),
@@ -33,7 +33,7 @@ model_list = [ metainfo[0].keys(), metainfo[1].keys() ]
 
 if (sys.argv[1] == 'MMM'):
     suptitle = 'Multi Model Mean' + ' SSH (ave. from '+str(ystr)+' to '+str(yend)+')'
-    outfile = './fig/SSH_bias_MMM'
+    outfile = './fig/SSH_bias_MMM_midlat'
 else:
     suptitle = sys.argv[1] + ' SSH (ave. from '+str(ystr)+' to '+str(yend)+')'
     model_list[0] = [sys.argv[1]]
@@ -185,7 +185,7 @@ ax = [
     plt.subplot(3,2,3,projection=proj),
     plt.subplot(3,2,4,projection=proj),
     plt.subplot(3,2,5,projection=proj),
-    plt.subplot(3,2,6,projection=proj),
+    plt.subplot(3,2,6),
 ]
 
 bounds1 = [-1.0, -0.7, -0.5, -0.3, -0.2, -0.1, -0.05, 0., 0.05, 0.1, 0.2, 0.3, 0.5, 0.7, 1.0]
@@ -195,7 +195,7 @@ ticks_bounds3 = np.arange(-1.8,1.201,0.3)
 bounds4 = [0.01, 0.02, 0.03, 0.04, 0.05, 0.07, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5]
 ticks_bounds4 = [0.0, 0.5, 1.0] 
 
-cmap = [ 'RdBu_r', 'RdBu_r', 'terrain', 'terrain', 'bwr', 'RdYlBu_r' ]
+cmap = [ 'RdBu_r', 'RdBu_r', 'terrain', 'terrain', 'RdBu_r', 'RdYlBu_r' ]
 
 item = [ 'omip1bias', 'omip2bias', 'omip1std', 'omip2std', 'omip2-1', 'obs' ]
 
@@ -231,8 +231,8 @@ for panel in range(6):
     elif (item[panel] == 'omip1std'):
         bounds = bounds4
         ticks_bounds = bounds4
-        da = DS['omip1mean'].std(dim='model',skipna=False, **ddof_dic)
-        tmp = DS['omip1mean'].var(dim='model', skipna=False, **ddof_dic)
+        da = DS['omip1bias'].std(dim='model',skipna=False, **ddof_dic)
+        tmp = DS['omip1bias'].var(dim='model', skipna=False, **ddof_dic)
         msktmp = np.where( np.isnan(tmp.values), 0.0, 1.0 )
         datmp = np.where( np.isnan(tmp.values), 0.0, tmp.values )
         tmp1 = (datmp * area * msktmp).sum()
@@ -248,8 +248,8 @@ for panel in range(6):
     elif (item[panel] == 'omip2std'):
         bounds = bounds4
         ticks_bounds = bounds4
-        da = DS['omip2mean'].std(dim='model',skipna=False, **ddof_dic)
-        tmp = DS['omip2mean'].var(dim='model', skipna=False, **ddof_dic)
+        da = DS['omip2bias'].std(dim='model',skipna=False, **ddof_dic)
+        tmp = DS['omip2bias'].var(dim='model', skipna=False, **ddof_dic)
         msktmp = np.where( np.isnan(tmp.values), 0.0, 1.0 )
         datmp = np.where( np.isnan(tmp.values), 0.0, tmp.values )
         tmp1 = (datmp * area * msktmp).sum()
@@ -262,7 +262,7 @@ for panel in range(6):
         title[panel] = title[panel] + r' 2$\bar{\sigma}$=' + '{:.2f}'.format(200*rmse) + ' cm ' + '\n' \
             + 'observation uncaptured by model spread = ' + '{:.1f}'.format(failcapt) + '%'
         print(title[panel])
-    elif (item[panel] == 'omip2-1'):
+    elif item[panel] == 'omip2-1':
         bounds = bounds2
         ticks_bounds = bounds2
         da = DS[item[panel]].mean(dim='model',skipna=False)
@@ -271,14 +271,16 @@ for panel in range(6):
         tmp1 = (datmp * datmp * area * msktmp).sum()
         tmp2 = (area * msktmp).sum()
         rmsd = np.sqrt(tmp1/tmp2)
-        title[panel] = title[panel] + '     rmsd= ' + '{:.2f}'.format(100*rmsd) + ' cm '
+        title[panel] = title[panel] + ' rmsd= ' + '{:.2f}'.format(100*rmsd) + ' cm '
         print(title[panel])
     else:
         bounds = bounds3
         ticks_bounds = ticks_bounds3
-        da = DS[item[panel]]
+        daobs = DS[item[panel]]
+        damod = DS['omip1mean'].mean(dim='model',skipna=False)
 
-    da.plot(ax=ax[panel],cmap=cmap[panel],
+    if (panel < 5):
+        da.plot(ax=ax[panel],cmap=cmap[panel],
             levels=bounds,
             extend='both',
             cbar_kwargs = { 'orientation': 'vertical',
@@ -287,41 +289,56 @@ for panel in range(6):
                             'label': '[m]',
                             'ticks': ticks_bounds, },
             transform=ccrs.PlateCarree())
-
-    if (panel == 2):
-        mpl.rcParams['hatch.color'] = 'red'
-        mpl.rcParams['hatch.linewidth'] = 0.5
-        x = DS["lon"].values
-        y = DS["lat"].values
-        z = np.abs(DS["omip1bias"]).mean(dim='model',skipna=False) - 2.0 * DS['omip1bias'].std(dim='model',skipna=False, **ddof_dic)
-        z = np.where( z > 0, 1, np.nan )
-        ax[panel].contourf(x,y,z,hatches=['xxxxxxx'],colors='none',transform=ccrs.PlateCarree())
-    if (panel == 3):
-        mpl.rcParams['hatch.color'] = 'red'
-        mpl.rcParams['hatch.linewidth'] = 0.5
-        x = DS["lon"].values
-        y = DS["lat"].values
-        z = np.abs(DS["omip2bias"]).mean(dim='model',skipna=False) - 2.0 * DS['omip2bias'].std(dim='model',skipna=False, **ddof_dic)
-        z = np.where( z > 0, 1, np.nan )
-        ax[panel].contourf(x,y,z,hatches=['xxxxxxx'],colors='none',transform=ccrs.PlateCarree())
-    if (panel == 4):
-        mpl.rcParams['hatch.color'] = 'lime'
-        mpl.rcParams['hatch.linewidth'] = 0.5
-        x = DS_stats["lon"].values
-        y = DS_stats["lat"].values
-        z = np.abs(DS_stats["mean"]) - factor_5ptail * DS_stats["std"]
-        z = np.where( z > 0, 1, np.nan )
-        ax[panel].contourf(x,y,z,hatches=['xxxxxxx'],colors='none',transform=ccrs.PlateCarree())
         
-    ax[panel].coastlines()
-    ax[panel].set_xticks(np.arange(-180,180.1,60),crs=ccrs.PlateCarree())
-    ax[panel].set_yticks(np.arange(-90,90.1,30),crs=ccrs.PlateCarree())
-    ax[panel].xaxis.set_major_formatter(lon_formatter)
-    ax[panel].yaxis.set_major_formatter(lat_formatter)
-    ax[panel].set_xlabel('')
-    ax[panel].set_title(title[panel],{'fontsize':10, 'verticalalignment':'top'})
-    ax[panel].tick_params(labelsize=9)
-    ax[panel].background_patch.set_facecolor('lightgray')
+        if (panel == 2):
+            mpl.rcParams['hatch.color'] = 'red'
+            mpl.rcParams['hatch.linewidth'] = 0.5
+            x = DS["lon"].values
+            y = DS["lat"].values
+            z = np.abs(DS["omip1bias"]).mean(dim='model',skipna=False) - 2.0 * DS['omip1bias'].std(dim='model',skipna=False, **ddof_dic)
+            z = np.where( z > 0, 1, np.nan )
+            ax[panel].contourf(x,y,z,hatches=['xxxxxxx'],colors='none',transform=ccrs.PlateCarree())
+        if (panel == 3):
+            mpl.rcParams['hatch.color'] = 'red'
+            mpl.rcParams['hatch.linewidth'] = 0.5
+            x = DS["lon"].values
+            y = DS["lat"].values
+            z = np.abs(DS["omip2bias"]).mean(dim='model',skipna=False) - 2.0 * DS['omip2bias'].std(dim='model',skipna=False, **ddof_dic)
+            z = np.where( z > 0, 1, np.nan )
+            ax[panel].contourf(x,y,z,hatches=['xxxxxxx'],colors='none',transform=ccrs.PlateCarree())
+        
+        if (panel == 4):
+            mpl.rcParams['hatch.color'] = 'limegreen'
+            mpl.rcParams['hatch.linewidth'] = 0.5
+            x = DS_stats["lon"].values
+            y = DS_stats["lat"].values
+            z = np.abs(DS_stats["mean"]) - factor_5ptail * DS_stats["std"]
+            z = np.where( z > 0, 1, np.nan )
+            ax[panel].contourf(x,y,z,hatches=['xxxxxxx'],colors='none',transform=ccrs.PlateCarree())
+        
+        ax[panel].coastlines()
+        ax[panel].set_xticks(np.arange(-180,180.1,60),crs=ccrs.PlateCarree())
+        ax[panel].set_yticks(np.arange(-90,90.1,30),crs=ccrs.PlateCarree())
+        ax[panel].xaxis.set_major_formatter(lon_formatter)
+        ax[panel].yaxis.set_major_formatter(lat_formatter)
+        ax[panel].set_xlabel('')
+        ax[panel].set_title(title[panel],{'fontsize':10, 'verticalalignment':'top'})
+        ax[panel].tick_params(labelsize=9)
+        ax[panel].background_patch.set_facecolor('lightgray')
+
+    else:
+        daobs.sel(lon=150.5).plot(ax=ax[panel], color='darkorange', label='CMEMS')
+        damod.sel(lon=150.5).plot(ax=ax[panel], color='darkblue', label='MMM')
+        ax[panel].set_title("(f) Longitude = $150.5^{\circ}$E")
+        ax[panel].set_xlabel("Latitude")
+        ax[panel].set_xlim(25,55)
+        ax[panel].set_xticks(np.linspace(25,55,7))
+        ax[panel].set_ylabel("SSH mean [m]")
+        ax[panel].set_ylim(-0.6,1.2)
+        ax[panel].set_yticks(np.linspace(-0.6,1.2,10))
+        ax[panel].legend()
+        ax[panel].grid()
+
 
 plt.subplots_adjust(left=0.07,right=0.98,bottom=0.05,top=0.92,wspace=0.16,hspace=0.15)
 

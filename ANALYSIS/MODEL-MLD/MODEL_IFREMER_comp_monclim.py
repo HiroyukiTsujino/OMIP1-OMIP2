@@ -12,7 +12,30 @@ from netCDF4 import Dataset
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 from cartopy.util import add_cyclic_point
 
-#--------------------
+from numba import jit
+
+
+@jit('f8[:,:](f8[:,:],f8[:,:],f8[:,:],i4,i4,i4,i4)', nopython=True)
+def onedeg2twodeg(d_two, d_one, am_one, nx, ny, nxm, nym):
+
+    d_two[ny-1,0] = am_one[2*ny-1,0] * d_one[2*ny-1,0] \
+                  + am_one[2*ny-1,nxm-1] * d_one[2*ny-1,nxm-1]
+    for i in range(1,nx):
+        d_two[ny-1,i] = am_one[2*ny-1,2*i-1] * d_one[2*ny-1,2*i-1] \
+                      + am_one[2*ny-1,2*i] * d_one[2*ny-1,2*i]
+    for j in range(0,ny-1):
+        d_two[j,0] = am_one[2*j+1,0]     * d_one[2*j+1,0] \
+                   + am_one[2*j+1,nxm-1] * d_one[2*j+1,nxm-1] \
+                   + am_one[2*j+2,0]     * d_one[2*j+2,0] \
+                   + am_one[2*j+2,nxm-1] * d_one[2*j+2,nxm-1] 
+        for i in range(1,nx):
+            d_two[j,i] = am_one[2*j+1,2*i-1] * d_one[2*j+1,2*i-1] \
+                       + am_one[2*j+2,2*i-1] * d_one[2*j+2,2*i-1] \
+                       + am_one[2*j+1,2*i] * d_one[2*j+1,2*i] \
+                       + am_one[2*j+2,2*i] * d_one[2*j+2,2*i] 
+    return d_two
+
+#---------------------------------------------------------------------
 
 if (len(sys.argv) < 5):
     print ('Usage: '+ sys.argv[0] + ' mip start_year end_year exlab(0 or 1)')
@@ -53,6 +76,8 @@ miss_val_obsmon = ncobsmon.variables['mlotst'].missing_value
 
 print (nx, ny, miss_val_obsann, miss_val_obsmon)
 
+dtwoout = np.array(np.empty((ny,nx)),dtype=np.float64)
+
 # mask
 
 fobsmskf= path_obs + '/' + 'mld_DR003_mask.nc'
@@ -64,7 +89,8 @@ ncmskobs.close()
 
 for j in range(0,ny):
     for i in range (0,nx):
-        if (lat_[j] < -60.0 and lon_[i] > 300.0):
+#        if (lat_[j] < -60.0 and lon_[i] > 300.0):
+        if (lat_[j] < -60.0):
             maskobs[j,i] = 0.0
 
 if (exlab == 1):
@@ -128,53 +154,29 @@ for model in metainfo.keys():
     mldannm= np.array(np.empty((ny,nx)),dtype=np.float64)
     mldmonm = np.array(np.empty((12,ny,nx)),dtype=np.float64)
 
+    amsk_all[ny-1,0] = areamask[2*ny-1,0] + areamask[2*ny-1,nxm-1]
     for j in range(0,ny-1):
         amsk_all[j,0] = areamask[2*j+1,0] + areamask[2*j+1,nxm-1] \
-            + areamask[2*j+2,0] + areamask[2*j+2,nxm-1]
-        mldannm[j,0] = areamask[2*j+1,0] * mldomip_ann[2*j+1,0] \
-            + areamask[2*j+1,nxm-1] * mldomip_ann[2*j+1,nxm-1] \
-            + areamask[2*j+2,0] * mldomip_ann[2*j+2,0] \
-            + areamask[2*j+2,nxm-1] * mldomip_ann[2*j+2,nxm-1] 
+                      + areamask[2*j+2,0] + areamask[2*j+2,nxm-1]
         for i in range(1,nx):
             amsk_all[j,i] = areamask[2*j+1,2*i-1] + areamask[2*j+2,2*i-1] \
-                + areamask[2*j+1,2*i] + areamask[2*j+2,2*i]
-            mldannm[j,i] = areamask[2*j+1,2*i-1] * mldomip_ann[2*j+1,2*i-1] \
-                + areamask[2*j+2,2*i-1] * mldomip_ann[2*j+2,2*i-1] \
-                + areamask[2*j+1,2*i] * mldomip_ann[2*j+1,2*i] \
-                + areamask[2*j+2,2*i] * mldomip_ann[2*j+2,2*i] 
-
-    amsk_all[ny-1,0] = areamask[2*ny-1,0] + areamask[2*ny-1,nxm-1]
-    mldannm[ny-1,0] = areamask[2*ny-1,0] * mldomip_ann[2*ny-1,0] \
-        + areamask[2*ny-1,nxm-1] * mldomip_ann[2*ny-1,nxm-1]
+                              + areamask[2*j+1,2*i] + areamask[2*j+2,2*i]
     for i in range(1,nx):
         amsk_all[ny-1,i] = areamask[2*ny-1,2*i-1] + areamask[2*ny-1,2*i]
-        mldannm[ny-1,i] = areamask[2*ny-1,2*i-1] * mldomip_ann[2*ny-1,2*i-1] \
-            + areamask[2*ny-1,2*i] * mldomip_ann[2*ny-1,2*i]
 
     mask_all = np.where(amsk_all > 0.0, 1.0, 0.0)
-    mldannm = mldannm / (1.0 - mask_all + amsk_all) 
+
+    donein = mldomip_ann.copy()
+    dtwoout[:,:] = 0.0
+    onedeg2twodeg(dtwoout, donein, areamask, nx, ny, nxm, nym)
+
+    mldannm = dtwoout / (1.0 - mask_all + amsk_all) 
 
     for m in range(0,12):
-        for j in range(0,ny-1):
-            mldmonm[m,j,0] = areamask[2*j+1,0] * mldomip_mon[m,2*j+1,0] \
-                + areamask[2*j+1,nxm-1] * mldomip_mon[m,2*j+1,nxm-1] \
-                + areamask[2*j+2,0] * mldomip_mon[m,2*j+2,0] \
-                + areamask[2*j+2,nxm-1] * mldomip_mon[m,2*j+2,nxm-1] 
-            for i in range(1,nx):
-                mldmonm[m,j,i] = areamask[2*j+1,2*i-1] * mldomip_mon[m,2*j+1,2*i-1] \
-                    + areamask[2*j+2,2*i-1] * mldomip_mon[m,2*j+2,2*i-1] \
-                    + areamask[2*j+1,2*i] * mldomip_mon[m,2*j+1,2*i] \
-                    + areamask[2*j+2,2*i] * mldomip_mon[m,2*j+2,2*i] 
-
-        mldmonm[m,ny-1,0] = areamask[2*ny-1,0] * mldomip_mon[m,2*ny-1,0] \
-            + areamask[2*ny-1,nxm-1] * mldomip_mon[m,2*ny-1,nxm-1]
-        for i in range(1,nx):
-            mldmonm[m,ny-1,i] = areamask[2*ny-1,2*i-1] * mldomip_mon[m,2*ny-1,2*i-1] \
-                + areamask[2*ny-1,2*i] * mldomip_mon[m,2*ny-1,2*i]
-
-
-    for m in range(0,12):
-        mldmonm[m,:,:] = mldmonm[m,:,:] / (1.0 - mask_all[:,:] + amsk_all[:,:]) 
+        donein = mldomip_mon[m,:,:]
+        dtwoout[:,:] = 0.0
+        onedeg2twodeg(dtwoout, donein, areamask, nx, ny, nxm, nym)
+        mldmonm[m,:,:] = dtwoout / (1.0 - mask_all + amsk_all) 
 
     #----------------------------------------------
     # total space-time correlation
@@ -407,7 +409,7 @@ out_mmm = 'fig/MLD_monclim_correlation-mmm-' + mip + '.png'
 
 ct = np.arange(-1.0,1.1,0.1)
 
-fig = plt.figure(figsize=(15,9))
+fig = plt.figure(figsize=(11,8))
 
 proj = ccrs.PlateCarree(central_longitude=-140.)
 lon_formatter = LongitudeFormatter(zero_direction_label=True)

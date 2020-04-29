@@ -20,8 +20,8 @@ nyr = yend - ystr + 1
 factor_5ptail = 1.64  # 5-95%
 
 
-title = [ '(a) Ensemble bias (OMIP1 -  PCMDI)', '(b) Ensemble bias (OMIP2 -  PCMDI)', '(c) Ensemble STD (OMIP1 - PCMDI)',
-          '(d) Ensemble STD (OMIP2 -  PCMDI)', '(e) OMIP2 - OMIP1', '(f) PCMDI' ]
+title = [ '(a) Ensemble bias (OMIP1 -  PCMDI)', '(b) Ensemble bias (OMIP2 -  PCMDI)', '(c) Ensemble STD (OMIP1)',
+          '(d) Ensemble STD (OMIP2)', '(e) OMIP2 - OMIP1', '(f) PCMDI' ]
 
 metainfo = [ json.load(open("./json/tos_omip1.json")), 
              json.load(open("./json/tos_omip2.json")) ]
@@ -141,14 +141,17 @@ bounds1 = [-2.0, -1.5, -1.0, -0.7, -0.4, -0.1, 0.1, 0.4, 0.7, 1.0, 1.5, 2.0]
 bounds2 = [-1.0, -0.7, -0.4, -0.3, -0.2, -0.1, 0.1, 0.2, 0.3, 0.4, 0.7, 1.0]
 bounds3 = np.arange(-1,30.1,1)
 ticks_bounds3 = [0, 5, 10, 15, 20, 25, 30] 
-bounds4 = [0.1, 0.2, 0.3, 0.4, 0.5, 0.7, 1.0, 1.5, 2.0, 2.5]
-ticks_bounds4 = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5] 
+bounds4 = [0.1, 0.2, 0.3, 0.4, 0.5, 0.7, 1.0, 1.5, 2.0]
+ticks_bounds4 = [0.0, 0.5, 1.0, 1.5, 2.0] 
 
-cmap = [ 'RdBu_r', 'RdBu_r', 'viridis', 'viridis', 'RdBu_r', 'RdYlBu_r' ]
+cmap = [ 'RdBu_r', 'RdBu_r', 'terrain', 'terrain', 'bwr', 'RdYlBu_r' ]
 
 item = [ 'omip1bias', 'omip2bias', 'omip1std', 'omip2std', 'omip2-1', 'amip' ]
 
+ddof_dic={'ddof' : 0}
+
 for panel in range(6):
+    print("processing panel ", panel)
     if (item[panel] == 'omip1bias'):
         bounds = bounds1
         ticks_bounds = bounds1
@@ -156,11 +159,15 @@ for panel in range(6):
         msktmp = np.where( np.isnan(da.values), 0.0, 1.0 )
         datmp = np.where( np.isnan(da.values), 0.0, da.values )
         tmp1 = (datmp * datmp * area * msktmp).sum()
+        tmp4 = (datmp * area * msktmp).sum()
         tmp2 = (area * msktmp).sum()
         tmp3 = (area).sum()
         print(tmp1,tmp2,tmp3)
         rmse = np.sqrt(tmp1/tmp2)
-        title[panel] = title[panel]+' rmse = ' + '{:.3f}'.format(rmse) + '$^\circ$C'
+        mean_bias = tmp4/tmp2
+        title[panel] = title[panel] + '\n' \
+            + ' mean bias = ' + '{:.3f}'.format(mean_bias) + '$^\circ$C,' + '    bias rmse = ' + '{:.3f}'.format(rmse) + '$^\circ$C'
+        print(title[panel])
     elif (item[panel] == 'omip2bias'):
         bounds = bounds1
         ticks_bounds = bounds1
@@ -168,22 +175,59 @@ for panel in range(6):
         msktmp = np.where( np.isnan(da.values), 0.0, 1.0 )
         datmp = np.where( np.isnan(da.values), 0.0, da.values )
         tmp1 = (datmp * datmp * area * msktmp).sum()
+        tmp4 = (datmp * area * msktmp).sum()
         tmp2 = (area * msktmp).sum()
         rmse = np.sqrt(tmp1/tmp2)
-        title[panel] = title[panel]+' rmse = ' + '{:.3f}'.format(rmse) + '$^\circ$C'
-        #print(tmp1,tmp2,tmp1/tmp2)
+        mean_bias = tmp4/tmp2
+        title[panel] = title[panel] + '\n' \
+            + ' mean bias = ' + '{:.3f}'.format(mean_bias) + '$^\circ$C,' + '    bias rmse = ' + '{:.3f}'.format(rmse) + '$^\circ$C'
+        print(title[panel])
     elif (item[panel] == 'omip1std'):
         bounds = bounds4
         ticks_bounds = bounds4
-        da = DS['omip1bias'].std(dim='model',skipna=False)
+        da = DS['omip1bias'].std(dim='model',skipna=False, **ddof_dic)
+        tmp = DS['omip1bias'].var(dim='model', skipna=False, **ddof_dic)
+        msktmp = np.where( np.isnan(tmp.values), 0.0, 1.0 )
+        datmp = np.where( np.isnan(tmp.values), 0.0, tmp.values )
+        tmp1 = (datmp * area * msktmp).sum()
+        tmp2 = (area * msktmp).sum()
+        rmse = np.sqrt(tmp1/tmp2)
+        z = np.abs(DS['omip1bias'].mean(dim='model',skipna=False)) - 2.0 * da
+        z = np.where( z > 0, 1, 0 )
+        tmp3 = (z * area * msktmp).sum()
+        failcapt=tmp3/tmp2*100
+        title[panel] = title[panel] + r'   2$\bar{\sigma}$=' + '{:.2f}'.format(2*rmse) + r'$^{\circ}$C ' + '\n' \
+            + 'Observation uncaptured by model spread = ' + '{:.1f}'.format(failcapt) + '%'
+        print(title[panel])
     elif (item[panel] == 'omip2std'):
         bounds = bounds4
         ticks_bounds = bounds4
-        da = DS['omip2bias'].std(dim='model',skipna=False)
-    elif item[panel] == 'omip2-1':
+        da = DS['omip2bias'].std(dim='model',skipna=False, **ddof_dic)
+        tmp = DS['omip2bias'].var(dim='model', skipna=False, **ddof_dic)
+        msktmp = np.where( np.isnan(tmp.values), 0.0, 1.0 )
+        datmp = np.where( np.isnan(tmp.values), 0.0, tmp.values )
+        tmp1 = (datmp * area * msktmp).sum()
+        tmp2 = (area * msktmp).sum()
+        rmse = np.sqrt(tmp1/tmp2)
+        z = np.abs(DS['omip2bias'].mean(dim='model',skipna=False)) - 2.0 * da
+        z = np.where( z > 0, 1, 0 )
+        tmp3 = (z * area * msktmp).sum()
+        failcapt=tmp3/tmp2*100
+        title[panel] = title[panel] + r'   2$\bar{\sigma}$=' + '{:.2f}'.format(2*rmse) + r'$^{\circ}$C ' + '\n' \
+            + 'Observation uncaptured by model spread = ' + '{:.1f}'.format(failcapt) + '%'
+        print(title[panel])
+    elif (item[panel] == 'omip2-1'):
         bounds = bounds2
         ticks_bounds = bounds2
         da = DS[item[panel]].mean(dim='model',skipna=False)
+        msktmp = np.where( np.isnan(da.values), 0.0, 1.0 )
+        datmp = np.where( np.isnan(da.values), 0.0, da.values )
+        tmp1 = (datmp * datmp * area * msktmp).sum()
+        tmp2 = (area * msktmp).sum()
+        #print(tmp1, tmp2)
+        rmsd = np.sqrt(tmp1/tmp2)
+        title[panel] = title[panel] + '      rmsd = ' + '{:.2f}'.format(rmsd) + r'$^{\circ}$C '
+        print(title[panel])
     else:
         bounds = bounds3
         ticks_bounds = ticks_bounds3
@@ -199,8 +243,25 @@ for panel in range(6):
                          'ticks': ticks_bounds,},
             transform=ccrs.PlateCarree())
 
+    if (panel == 2):
+        mpl.rcParams['hatch.color'] = 'red'
+        mpl.rcParams['hatch.linewidth'] = 0.5
+        x = DS["lon"].values
+        y = DS["lat"].values
+        z = np.abs(DS["omip1bias"].mean(dim='model',skipna=False)) - 2.0 * DS['omip1bias'].std(dim='model',skipna=False, **ddof_dic)
+        z = np.where( z > 0, 1, np.nan )
+        ax[panel].contourf(x,y,z,hatches=['xxxxxxx'],colors='none',transform=ccrs.PlateCarree())
+    if (panel == 3):
+        mpl.rcParams['hatch.color'] = 'red'
+        mpl.rcParams['hatch.linewidth'] = 0.5
+        x = DS["lon"].values
+        y = DS["lat"].values
+        z = np.abs(DS["omip2bias"].mean(dim='model',skipna=False)) - 2.0 * DS['omip2bias'].std(dim='model',skipna=False, **ddof_dic)
+        z = np.where( z > 0, 1, np.nan )
+        ax[panel].contourf(x,y,z,hatches=['xxxxxxx'],colors='none',transform=ccrs.PlateCarree())
+        
     if (panel == 4):
-        mpl.rcParams['hatch.color'] = 'limegreen'
+        mpl.rcParams['hatch.color'] = 'lime'
         mpl.rcParams['hatch.linewidth'] = 0.5
         x = DS_stats["lon"].values
         y = DS_stats["lat"].values
@@ -214,10 +275,11 @@ for panel in range(6):
     ax[panel].xaxis.set_major_formatter(lon_formatter)
     ax[panel].yaxis.set_major_formatter(lat_formatter)
     ax[panel].set_xlabel('')
-    ax[panel].set_title(title[panel],{'fontsize':10, 'verticalalignment':'top'})
+    ax[panel].set_title(title[panel],{'fontsize':10, 'verticalalignment':'top', 'linespacing':0.9})
     ax[panel].tick_params(labelsize=9)
     ax[panel].background_patch.set_facecolor('lightgray')
 
+print("...Done drawing")
 plt.subplots_adjust(left=0.07,right=0.98,bottom=0.05,top=0.92,wspace=0.16,hspace=0.15)
 
 outpdf = outfile+'.pdf'

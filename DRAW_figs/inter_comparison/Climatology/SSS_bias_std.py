@@ -130,9 +130,11 @@ bounds3 = [30, 31, 32, 33.0, 33.6, 34.0, 34.3, 34.6, 34.9, 35.2, 35.5, 35.8, 36.
 bounds4 = [0.02, 0.05, 0.1, 0.2, 0.3, 0.5, 0.7, 1.0, 1.5, 2.0]
 ticks_bounds4 = [0.0, 0.5, 1.0, 1.5, 2.0] 
 
-cmap = [ 'RdBu_r', 'RdBu_r', 'viridis', 'viridis', 'RdBu_r', 'RdYlBu_r' ]
+cmap = [ 'RdBu_r', 'RdBu_r', 'YlOrBr', 'YlOrBr', 'RdBu_r', 'RdYlBu_r' ]
 
 item = [ 'omip1bias', 'omip2bias', 'omip1std', 'omip2std', 'omip2-1', 'obs' ]
+
+ddof_dic={'ddof' : 0}
 
 for panel in range(6):
     if (item[panel] == 'omip1bias'):
@@ -158,15 +160,46 @@ for panel in range(6):
     elif (item[panel] == 'omip1std'):
         bounds = bounds4
         ticks_bounds = bounds4
-        da = DS['omip1bias'].std(dim='model',skipna=False)
+        da = DS['omip1bias'].std(dim='model',skipna=False, **ddof_dic)
+        tmp = DS['omip1bias'].var(dim='model', skipna=False, **ddof_dic)
+        msktmp = np.where( np.isnan(tmp.values), 0.0, 1.0 )
+        datmp = np.where( np.isnan(tmp.values), 0.0, tmp.values )
+        tmp1 = (datmp * area * msktmp).sum()
+        tmp2 = (area * msktmp).sum()
+        rmse = np.sqrt(tmp1/tmp2)
+        z = np.abs(DS['omip1bias'].mean(dim='model',skipna=False)) - 2.0 * da
+        z = np.where( z > 0, 1, 0 )
+        tmp3 = (z * area * msktmp).sum()
+        failcapt=tmp3/tmp2*100
+        title[panel] = title[panel] + r' 2$\bar{\sigma}$=' + '{:.2f}'.format(2*rmse) + ' psu ' + '{:.2f}'.format(failcapt) + '%'
+        print(title[panel])
     elif (item[panel] == 'omip2std'):
         bounds = bounds4
         ticks_bounds = bounds4
-        da = DS['omip2bias'].std(dim='model',skipna=False)
-    elif item[panel] == 'omip2-1':
+        da = DS['omip2bias'].std(dim='model',skipna=False, **ddof_dic)
+        tmp = DS['omip2bias'].var(dim='model', skipna=False, **ddof_dic)
+        msktmp = np.where( np.isnan(tmp.values), 0.0, 1.0 )
+        datmp = np.where( np.isnan(tmp.values), 0.0, tmp.values )
+        tmp1 = (datmp * area * msktmp).sum()
+        tmp2 = (area * msktmp).sum()
+        rmse = np.sqrt(tmp1/tmp2)
+        z = np.abs(DS['omip2bias'].mean(dim='model',skipna=False)) - 2.0 * da
+        z = np.where( z > 0, 1, 0 )
+        tmp3 = (z * area * msktmp).sum()
+        failcapt=tmp3/tmp2*100
+        title[panel] = title[panel] + r' 2$\bar{\sigma}$=' + '{:.2f}'.format(2*rmse) + ' psu ' + '{:.2f}'.format(failcapt) + '%'
+        print(title[panel])
+    elif (item[panel] == 'omip2-1'):
         bounds = bounds2
         ticks_bounds = bounds2
         da = DS[item[panel]].mean(dim='model',skipna=False)
+        msktmp = np.where( np.isnan(da.values), 0.0, 1.0 )
+        datmp = np.where( np.isnan(da.values), 0.0, da.values )
+        tmp1 = (datmp * datmp * area * msktmp).sum()
+        tmp2 = (area * msktmp).sum()
+        rmsd = np.sqrt(tmp1/tmp2)
+        title[panel] = title[panel] + ' rmsd= ' + '{:.2f}'.format(rmsd) + ' psu '
+        print(title[panel])
     else:
         bounds = bounds3
         ticks_bounds = bounds3
@@ -182,6 +215,23 @@ for panel in range(6):
                          'ticks': ticks_bounds,},
             transform=ccrs.PlateCarree())
 
+    if (panel == 2):
+        mpl.rcParams['hatch.color'] = 'blue'
+        mpl.rcParams['hatch.linewidth'] = 0.5
+        x = DS["lon"].values
+        y = DS["lat"].values
+        z = np.abs(DS["omip1bias"].mean(dim='model',skipna=False)) - 2.0 * DS['omip1bias'].std(dim='model',skipna=False, **ddof_dic)
+        z = np.where( z > 0, 1, np.nan )
+        ax[panel].contourf(x,y,z,hatches=['xxxxxxx'],colors='none',transform=ccrs.PlateCarree())
+    if (panel == 3):
+        mpl.rcParams['hatch.color'] = 'blue'
+        mpl.rcParams['hatch.linewidth'] = 0.5
+        x = DS["lon"].values
+        y = DS["lat"].values
+        z = np.abs(DS["omip2bias"].mean(dim='model',skipna=False)) - 2.0 * DS['omip2bias'].std(dim='model',skipna=False, **ddof_dic)
+        z = np.where( z > 0, 1, np.nan )
+        ax[panel].contourf(x,y,z,hatches=['xxxxxxx'],colors='none',transform=ccrs.PlateCarree())
+        
     if (panel == 4):
         mpl.rcParams['hatch.color'] = 'limegreen'
         mpl.rcParams['hatch.linewidth'] = 0.5

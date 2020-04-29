@@ -3,6 +3,7 @@ import sys
 import json
 import numpy as np
 import netCDF4
+import pandas as pd
 import xarray as xr
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
@@ -118,17 +119,20 @@ ax = [
 ax_cbar = plt.axes([0.15,0.06,0.7,0.02])
 
 bounds1 = [-1.0, -0.7, -0.4, -0.3, -0.2, -0.1, 0.1, 0.2, 0.3, 0.4, 0.7, 1.0]
-bounds2 = [-0.4, -0.3, -0.2, -0.1, -0.06, -0.02, 0.02, 0.06, 0.1, 0.2, 0.3, 0.4]
+bounds2 = [-1.0, -0.4, -0.3, -0.2, -0.1, -0.06, -0.02, 0.02, 0.06, 0.1, 0.2, 0.3, 0.4, 1.0]
 bounds3 = [30, 31, 32, 33.0, 33.6, 34.0, 34.3, 34.6, 34.9, 35.2, 35.5, 35.8, 36.1, 36.5, 36.9, 37.3 ]
 
-cmap = [ 'RdBu_r', 'RdBu_r', 'RdBu_r', 'RdYlBu_r' ]
+cmap = [ 'RdBu_r', 'RdBu_r', 'bwr', 'RdYlBu_r' ]
 
 item = [ 'omip1bias', 'omip2bias', 'omip2-1', 'obs' ]
 outfile = './fig/SSS_bias_allmodels_'+item[nv_out]+'.png'
 
+dict_rmse={}
+
 # MMM
 
 nax = 11
+model = 'MMM'
 if item[nv_out] == 'omip1bias' or item[nv_out] == 'omip2bias':
     bounds = bounds1
     ticks_bounds = bounds1
@@ -137,16 +141,21 @@ if item[nv_out] == 'omip1bias' or item[nv_out] == 'omip2bias':
     datmp = np.where( np.isnan(da.values), 0.0, da.values )
     tmp1 = (datmp * datmp * area * msktmp).sum()
     tmp2 = (area * msktmp).sum()
+    tmp3 = (datmp * area * msktmp).sum()
     rmse = np.sqrt(tmp1/tmp2)
-    title_append = ' rmse = ' + '{:.3f}'.format(rmse) + ' psu'
+    bias = tmp3/tmp2
+    title_panel = model + '\n' \
+            + ' mean bias = ' + '{:.3f}'.format(bias) + 'psu,' + '    bias rmse = ' + '{:.3f}'.format(rmse) + 'psu'
+    #title_append = ' rmse = ' + '{:.3f}'.format(rmse) + ' psu'
+    dict_rmse['MMM']=[rmse,bias]
 elif item[nv_out] == 'omip2-1':
     bounds = bounds2
     ticks_bounds = bounds2
-    title_append = ''
+    title_panel = model
 else:
     bounds = bounds3
     ticks_bounds = bounds3
-    title_append = ''
+    title_panel = 'OBS'
 
 da = DS[item[nv_out]].mean(dim='model',skipna=False)
 
@@ -167,7 +176,8 @@ ax[nax].xaxis.set_major_formatter(lon_formatter)
 ax[nax].yaxis.set_major_formatter(lat_formatter)
 ax[nax].set_xlabel('')
 ax[nax].set_ylabel('')
-ax[nax].set_title('MMM'+ title_append,{'fontsize':9,'verticalalignment':'top'})
+ax[nax].set_title(title_panel,{'fontsize':8, 'verticalalignment':'top', 'linespacing':0.8})
+#ax[nax].set_title('MMM'+ title_append,{'fontsize':9,'verticalalignment':'top'})
 ax[nax].tick_params(labelsize=8)
 ax[nax].background_patch.set_facecolor('lightgray')
 
@@ -182,16 +192,21 @@ for model in model_list[0]:
         datmp = np.where( np.isnan(da.values), 0.0, da.values )
         tmp1 = (datmp * datmp * area * msktmp).sum()
         tmp2 = (area * msktmp).sum()
+        tmp3 = (datmp * area * msktmp).sum()
         rmse = np.sqrt(tmp1/tmp2)
-        title_append = ' rmse = ' + '{:.3f}'.format(rmse) + ' psu'
+        bias = tmp3/tmp2
+        title_panel = model + '\n' \
+            + ' mean bias = ' + '{:.3f}'.format(bias) + 'psu,' + '    bias rmse = ' + '{:.3f}'.format(rmse) + 'psu'
+        #title_append = ' rmse = ' + '{:.3f}'.format(rmse) + ' psu'
+        dict_rmse[model]=[rmse,bias]
     elif item[nv_out] == 'omip2-1':
         bounds = bounds2
         ticks_bounds = bounds2
-        title_append = ''
+        title_panel = model
     else:
         bounds = bounds3
         ticks_bounds = bounds3
-        title_append = ''
+        title_panel = 'OBS'
 
     da = DS[item[nv_out]].isel(model=nmodel)
 
@@ -208,12 +223,19 @@ for model in model_list[0]:
     ax[nmodel].yaxis.set_major_formatter(lat_formatter)
     ax[nmodel].set_xlabel('')
     ax[nmodel].set_ylabel('')
-    ax[nmodel].set_title(model+title_append,{'fontsize':9, 'verticalalignment':'top'})
+    ax[nmodel].set_title(title_panel,{'fontsize':8, 'verticalalignment':'top', 'linespacing':0.8})
+    #ax[nmodel].set_title(model+title_append,{'fontsize':9, 'verticalalignment':'top'})
     ax[nmodel].tick_params(labelsize=8)
     ax[nmodel].background_patch.set_facecolor('lightgray')
     nmodel += 1
 
-plt.subplots_adjust(left=0.05,right=0.98,bottom=0.12,top=0.93,hspace=0.26,wspace=0.15)
+plt.subplots_adjust(left=0.05,right=0.98,bottom=0.12,top=0.92,hspace=0.32,wspace=0.15)
 plt.savefig(outfile, bbox_inches='tight', pad_inches=0.0)
+
+summary=pd.DataFrame(dict_rmse,index=['OMIP'+str(omip_out)+'_rmse','OMIP'+str(omip_out)+'_mean'])
+summary_t=summary.T
+print (summary_t)
+summary_t.to_csv('csv/SSS_bias_OMIP' + str(omip_out) + '.csv')
+
 if (len(sys.argv) == 3 and sys.argv[2] == 'show'):
     plt.show()

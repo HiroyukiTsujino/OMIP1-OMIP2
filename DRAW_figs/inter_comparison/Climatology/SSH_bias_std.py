@@ -7,6 +7,7 @@ import xarray as xr
 import cartopy.crs as ccrs
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+import matplotlib.colors as colors
 import datetime
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 import math
@@ -148,6 +149,8 @@ for omip in range(2):
 
 DS = xr.Dataset( {'omip1bias': (['model','lat','lon'], data[0] - da0.values),
                   'omip2bias': (['model','lat','lon'], data[1] - da0.values),
+                  'omip1mean': (['model','lat','lon'], data[0]),
+                  'omip2mean': (['model','lat','lon'], data[1]),
                   'omip2-1': (['model','lat','lon'], data[1] - data[0]),
                   'obs': (['lat','lon'], da0.values), },
                  coords = { 'lat': np.linspace(-89.5,89.5,num=180), 
@@ -178,7 +181,7 @@ ticks_bounds3 = np.arange(-1.8,1.201,0.3)
 bounds4 = [0.01, 0.02, 0.03, 0.04, 0.05, 0.07, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5]
 ticks_bounds4 = [0.0, 0.5, 1.0] 
 
-cmap = [ 'RdBu_r', 'RdBu_r', 'viridis', 'viridis', 'RdBu_r', 'RdYlBu_r' ]
+cmap = [ 'RdBu_r', 'RdBu_r', 'YlGnBu', 'YlGnBu', 'RdBu_r', 'RdYlBu_r' ]
 
 item = [ 'omip1bias', 'omip2bias', 'omip1std', 'omip2std', 'omip2-1', 'obs' ]
 
@@ -210,11 +213,11 @@ for panel in range(6):
     elif (item[panel] == 'omip1std'):
         bounds = bounds4
         ticks_bounds = bounds4
-        da = DS['omip1bias'].std(dim='model',skipna=False)
+        da = DS['omip1mean'].std(dim='model',skipna=False)
     elif (item[panel] == 'omip2std'):
         bounds = bounds4
         ticks_bounds = bounds4
-        da = DS['omip2bias'].std(dim='model',skipna=False)
+        da = DS['omip2mean'].std(dim='model',skipna=False)
     elif item[panel] == 'omip2-1':
         bounds = bounds2
         ticks_bounds = bounds2
@@ -224,8 +227,11 @@ for panel in range(6):
         ticks_bounds = ticks_bounds3
         da = DS[item[panel]]
 
+    #norm = colors.BoundaryNorm(bounds,256)
+
     da.plot(ax=ax[panel],cmap=cmap[panel],
             levels=bounds,
+#            norm=norm,
             extend='both',
             cbar_kwargs = { 'orientation': 'vertical',
 #                            'spacing': 'proportional',

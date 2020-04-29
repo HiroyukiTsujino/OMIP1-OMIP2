@@ -152,11 +152,12 @@ bounds2 = np.array([-0.2, -0.15, -0.1, -0.05, -0.02, 0, 0.02, 0.05, 0.1, 0.15, 0
 tick_bounds2 =  np.array([-0.2, -0.15, -0.1, -0.05, -0.02, 0, 0.02, 0.05, 0.1, 0.15, 0.2])
 bounds2_c =  np.array([-0.2, -0.15, -0.1, -0.05, -0.02, 0, 0.02, 0.05, 0.1, 0.15, 0.2])
 #
-bounds3 = np.arange(0.0,0.22,0.02)
-tick_bounds3 = np.arange(0.0,0.22,0.02)
-bounds3_c = np.arange(0.0,0.22,0.02)
+bounds3 = np.arange(0.0,0.20,0.02)
+tick_bounds3 = np.arange(0.0,0.20,0.02)
+bounds3_c = np.arange(0.0,0.20,0.02)
 
-cmap = [ 'RdYlBu_r', 'RdYlBu_r', 'viridis', 'viridis', 'RdBu_r', 'RdYlBu_r' ]
+cmap = [ 'RdYlBu_r', 'RdYlBu_r', 'terrain', 'terrain', 'RdBu_r', 'RdYlBu_r' ]
+extflg = [ 'both', 'both', 'max', 'max', 'both', 'both' ]
 
 item = [ 'omip1', 'omip2', 'omip1std', 'omip2std', 'omip2-1', 'UM' ]
 
@@ -167,7 +168,7 @@ ticks_bounds = tick_bounds1
 
 da_ref.sel(XLON=220).plot.contourf(ax=ax[5],cmap=cmap[5],
             levels=bounds,
-            extend='both',
+            extend=extflg[5],
             cbar_kwargs={'orientation': 'vertical',
                          'spacing':'uniform',
                          'ticks': ticks_bounds,},
@@ -181,6 +182,8 @@ ax[5].set_xlabel('latitude')
 ax[5].set_ylim([500,0])
 ax[5].set_ylabel('depth')
 
+ddof_dic={'ddof' : 0}
+
 for panel in range(5):
     if item[panel] == 'omip1' or item[panel] == 'omip2':
         bounds = bounds1
@@ -192,12 +195,12 @@ for panel in range(5):
         bounds = bounds3
         boundsc = bounds3_c
         ticks_bounds = tick_bounds3
-        da = DS['omip1'].std(dim='model',skipna=False)
+        da = DS['omip1'].std(dim='model',skipna=False, **ddof_dic)
     elif item[panel] == 'omip2std':
         bounds = bounds3
         boundsc = bounds3_c
         ticks_bounds = tick_bounds3
-        da = DS['omip2'].std(dim='model',skipna=False)
+        da = DS['omip2'].std(dim='model',skipna=False, **ddof_dic)
     elif item[panel] == 'omip2-1':
         bounds = bounds2
         boundsc = bounds2_c
@@ -211,7 +214,7 @@ for panel in range(5):
 
     da.plot.contourf(ax=ax[panel],cmap=cmap[panel],
             levels=bounds,
-            extend='both',
+            extend=extflg[panel],
             cbar_kwargs={'orientation': 'vertical',
 #                         'spacing':'proportional',
                          'spacing':'uniform',

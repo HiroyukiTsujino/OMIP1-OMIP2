@@ -61,7 +61,7 @@ print(models)
 
 DSNH = xr.Dataset( {'omip1mean': (['model','lat','lon'], datanh[0]),
                     'omip2mean': (['model','lat','lon'], datanh[1]),},
-                   coords = { 'model': np.linspace(1,10,num=10),
+                   coords = { 'model': np.linspace(1,11,num=11),
                               'lat': np.linspace(0.5,89.5,num=90), 
                               'lon': np.linspace(0.5,359.5,num=360), } )
 
@@ -69,7 +69,7 @@ print(DSNH)
 
 DSSH = xr.Dataset( {'omip1mean': (['model','lat','lon'], datash[0]),
                     'omip2mean': (['model','lat','lon'], datash[1]),},
-                 coords = { 'model': np.linspace(1,10,num=10),
+                 coords = { 'model': np.linspace(1,11,num=11),
                             'lat': np.linspace(-89.5,-0.5,num=90), 
                             'lon': np.linspace(0.5,359.5,num=360), } )
 
@@ -79,10 +79,12 @@ nm=0
 for model_name in model_list[0]:
     nm+=1
     shmld=DSSH['omip1mean'].sel(model=nm,lat=slice(-89.5,-60.5),lon=slice(0.5,359.5)).max().values
-    nhmld=DSNH['omip1mean'].sel(model=nm,lat=slice(50.5,80.5),lon=slice(285.5,359.5)).max().values
+    nhmld1=DSNH['omip1mean'].sel(model=nm,lat=slice(45.5,79.5),lon=slice(280.5,359.5)).max().values
+    nhmld2=DSNH['omip1mean'].sel(model=nm,lat=slice(45.5,79.5),lon=slice(0.5,29.5)).max().values
+    nhmld = max(nhmld1,nhmld2)
     dict_mld[modnam[0][nm-1]]=[shmld,nhmld]
 
-summary=pd.DataFrame(dict_mld,index=['SH-MLD','NH-MLD'])
+summary=pd.DataFrame(dict_mld,index=['SH-MLD-OMIP1','NH-MLD-OMIP1'])
 summary_t=summary.T
 print (summary_t)
 summary_t.to_csv('csv/winter_mld_omip1.csv')
@@ -93,10 +95,12 @@ nm=0
 for model_name in model_list[1]:
     nm+=1
     shmld=DSSH['omip2mean'].sel(model=nm,lat=slice(-89.5,-60.5),lon=slice(0.5,359.5)).max().values
-    nhmld=DSNH['omip2mean'].sel(model=nm,lat=slice(50.5,80.5),lon=slice(285.5,359.5)).max().values
+    nhmld1=DSNH['omip2mean'].sel(model=nm,lat=slice(45.5,79.5),lon=slice(280.5,359.5)).max().values
+    nhmld2=DSNH['omip2mean'].sel(model=nm,lat=slice(45.5,79.5),lon=slice(0.5,29.5)).max().values
+    nhmld = max(nhmld1,nhmld2)
     dict_mld[modnam[1][nm-1]]=[shmld,nhmld]
 
-summary=pd.DataFrame(dict_mld,index=['SH-MLD','NH-MLD'])
+summary=pd.DataFrame(dict_mld,index=['SH-MLD-OMIP2','NH-MLD-OMIP2'])
 summary_t=summary.T
 print (summary_t)
 summary_t.to_csv('csv/winter_mld_omip2.csv')

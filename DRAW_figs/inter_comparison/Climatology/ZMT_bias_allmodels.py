@@ -2,6 +2,7 @@
 import sys
 import json
 import numpy as np
+import pandas as pd
 import xarray as xr
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -25,12 +26,22 @@ model_list = [ metainfo[0].keys(), metainfo[1].keys() ]
 title = [ 'Southern Ocean', 'Atlantic Ocean', 
           'Indian Ocean', 'Pacific Ocean' ]
 
+basin_name = [ 'Southern', 'Atlantic', 'Indian', 'Pacific' ]
+title_bas = ['a', 'b', 'c', 'd']
+index_bas = ['a', 'b', 'c', 'd']
+
 xlim = [ [-90, -30], [-30, 90], [-30, 30], [-30, 60] ]
 
 lev33 = [ 0.,    10.,   20.,   30.,   50.,   75.,   100.,  125.,  150.,  200., 
           250.,  300.,  400.,  500.,  600.,  700.,  800.,  900.,  1000., 1100.,
           1200., 1300., 1400., 1500., 1750., 2000., 2500., 3000., 3500., 4000.,
           4500., 5000., 5500. ]
+
+dz33 = np.array(np.empty((33)),dtype=np.float64)
+dz33[0] = 0.5 * lev33[1]
+for k in range(1,32):
+    dz33[k] = 0.5 * (lev33[k+1] + lev33[k]) - 0.5 * (lev33[k] + lev33[k-1])
+dz33[32] = 500.0
 
 print("Drawing " + suptitle)
 
@@ -51,6 +62,11 @@ for omip in range(2):
     print( "Loading OMIP" + str(omip+1) + " data" )
 
     nmodel = 0
+    if ( omip == 0 ):
+        nyr = 62
+    else:
+        nyr = 61
+        
     for model in model_list[omip]:
 
         path = metainfo[omip][model]['path']
@@ -68,42 +84,70 @@ for omip in range(2):
             ncglb = netCDF4.Dataset(infile_glb,'r')
             thetao_glb = ncglb.variables['thetao_global'][:,:,:]
             ncglb.close()
-            thetao_glb = np.where(thetao_glb > 9.9e36, np.NaN, thetao_glb)
-            
+            thetao_glb = np.where(thetao_glb > 9.0e36, np.NaN, thetao_glb)
+            thetao_glb = np.where(thetao_glb > 40, np.NaN, thetao_glb)
+            thetao_glb = np.where(thetao_glb < -2, np.NaN, thetao_glb)
+            for n in range(0,nyr):
+                for k in range(0,32):
+                    for j in range(0,180):
+                        if (np.isnan(thetao_glb[n,k+1,j]) and abs(thetao_glb[n,k,j]) < 1.0e-4):
+                            thetao_glb[n,k,j] = np.NaN
+                for j in range(0,180):
+                    if (abs(thetao_glb[n,32,j]) < 1.0e-4):
+                        thetao_glb[n,32,j] = np.NaN
+                            
             ncatl = netCDF4.Dataset(infile_atl,'r')
             thetao_atl = ncatl.variables['thetao_atl'][:,:,:]
             ncatl.close()
-            thetao_atl = np.where(thetao_atl > 9.9e36, np.NaN, thetao_atl)
+            thetao_atl = np.where(thetao_atl > 9.0e36, np.NaN, thetao_atl)
+            thetao_atl = np.where(thetao_atl > 40, np.NaN, thetao_atl)
+            thetao_atl = np.where(thetao_atl < -2, np.NaN, thetao_atl)
+            for n in range(0,nyr):
+                for k in range(0,32):
+                    for j in range(0,180):
+                        if (np.isnan(thetao_atl[n,k+1,j]) and abs(thetao_atl[n,k,j]) < 1.0e-4):
+                            thetao_atl[n,k,j] = np.NaN
+                for j in range(0,180):
+                    if (abs(thetao_atl[n,32,j]) < 1.0e-4):
+                        thetao_atl[n,32,j] = np.NaN
 
             ncind = netCDF4.Dataset(infile_ind,'r')
             thetao_ind = ncind.variables['thetao_ind'][:,:,:]
             ncind.close()
-            thetao_ind = np.where(thetao_ind > 9.9e36, np.NaN, thetao_ind)
+            thetao_ind = np.where(thetao_ind > 9.0e36, np.NaN, thetao_ind)
+            thetao_ind = np.where(thetao_ind > 40, np.NaN, thetao_ind)
+            thetao_ind = np.where(thetao_ind < -2, np.NaN, thetao_ind)
+            for n in range(0,nyr):
+                for k in range(0,32):
+                    for j in range(0,180):
+                        if (np.isnan(thetao_ind[n,k+1,j]) and abs(thetao_ind[n,k,j]) < 1.0e-4):
+                            thetao_ind[n,k,j] = np.NaN
+                for j in range(0,180):
+                    if (abs(thetao_ind[n,32,j]) < 1.0e-4):
+                        thetao_ind[n,32,j] = np.NaN
 
             ncpac = netCDF4.Dataset(infile_pac,'r')
             thetao_pac = ncpac.variables['thetao_pac'][:,:,:]
             ncpac.close()
-            thetao_pac = np.where(thetao_pac > 9.9e36, np.NaN, thetao_pac)
+            thetao_pac = np.where(thetao_pac > 9.0e36, np.NaN, thetao_pac)
+            thetao_pac = np.where(thetao_pac > 40, np.NaN, thetao_pac)
+            thetao_pac = np.where(thetao_pac < -2, np.NaN, thetao_pac)
+            for n in range(0,nyr):
+                for k in range(0,32):
+                    for j in range(0,180):
+                        if (np.isnan(thetao_pac[n,k+1,j]) and abs(thetao_pac[n,k,j]) < 1.0e-4):
+                            thetao_pac[n,k,j] = np.NaN
+                for j in range(0,180):
+                    if (abs(thetao_pac[n,32,j]) < 1.0e-4):
+                        thetao_pac[n,32,j] = np.NaN
 
-            if ( omip == 0 ):
-                thetao_all = np.array(np.zeros((62,4,33,180)),dtype=np.float32)
-                thetao_all[0:62,0,0:33,0:180] = thetao_glb[0:62,0:33,0:180]
-                thetao_all[0:62,1,0:33,0:180] = thetao_atl[0:62,0:33,0:180]
-                thetao_all[0:62,2,0:33,0:180] = thetao_ind[0:62,0:33,0:180]
-                thetao_all[0:62,3,0:33,0:180] = thetao_pac[0:62,0:33,0:180]
-                #print(thetao_glb[0:62,0,90])
-                DS_read = xr.Dataset({'thetao': (['time','basin','depth','lat'], thetao_all)},
+            thetao_all = np.array(np.zeros((nyr,4,33,180)),dtype=np.float32)
+            thetao_all[0:nyr,0,0:33,0:180] = thetao_glb[0:nyr,0:33,0:180]
+            thetao_all[0:nyr,1,0:33,0:180] = thetao_atl[0:nyr,0:33,0:180]
+            thetao_all[0:nyr,2,0:33,0:180] = thetao_ind[0:nyr,0:33,0:180]
+            thetao_all[0:nyr,3,0:33,0:180] = thetao_pac[0:nyr,0:33,0:180]
+            DS_read = xr.Dataset({'thetao': (['time','basin','depth','lat'], thetao_all)},
                                  coords = {'time' : time[omip], 'depth': lev33, 'lat': np.linspace(-89.5,89.5,num=180) } )
-
-            else:
-                thetao_all = np.array(np.zeros((61,4,33,180)),dtype=np.float32)
-                thetao_all[0:61,0,0:33,0:180] = thetao_glb[0:61,0:33,0:180]
-                thetao_all[0:61,1,0:33,0:180] = thetao_atl[0:61,0:33,0:180]
-                thetao_all[0:61,2,0:33,0:180] = thetao_ind[0:61,0:33,0:180]
-                thetao_all[0:61,3,0:33,0:180] = thetao_pac[0:61,0:33,0:180]
-                DS_read = xr.Dataset({'thetao': (['time','basin','depth','lat'], thetao_all)},
-                                 coords = {'time' : time[omip], 'depth': lev33, 'lat': np.linspace(-89.5,89.5,num=180) } )
-
         else:
             DS_read = xr.open_dataset(infile,decode_times=False)
 
@@ -120,8 +164,12 @@ for omip in range(2):
         if model == 'EC-Earth3-NEMO':
             tmp = tmp.transpose("basin","depth","lat")
         if model == 'GFDL-MOM':
-            #print(tmp)
-            tmp = tmp.interp(z_l=lev33)
+            lattmp=tmp['lat'].values
+            depnew=tmp['z_l'].values
+            depnew[0] = 0.0
+            tmp1 = tmp.values
+            tmpgfdl = xr.DataArray(tmp1, dims = ('basin','depth','lat',), coords = {'depth': depnew, 'lat': lattmp } )
+            tmp = tmpgfdl.interp(depth=lev33)
 
         d[nmodel] = tmp.values
         nmodel += 1
@@ -206,10 +254,13 @@ bounds2 = [-1.0, -0.7, -0.4, -0.3, -0.2, -0.1, 0.1, 0.2, 0.3, 0.4, 0.7, 1.0]
 bounds3 = np.arange(-1,30.1,1)
 ticks_bounds3 = [0, 5, 10, 15, 20, 25, 30] 
 
-cmap = [ 'RdBu_r', 'RdBu_r', 'RdBu_r', 'RdYlBu_r' ]
+cmap = [ 'RdBu_r', 'RdBu_r', 'bwr', 'RdYlBu_r' ]
 
 item = [ 'omip1bias', 'omip2bias', 'omip2-1', 'obs' ]
 outfile = './fig/ZMT_bias_' + item[nv_out] + '.png'
+
+dict_rmse={}
+rmse=np.array(np.empty((4)),dtype=np.float64)
 
 # MMM
 
@@ -225,6 +276,16 @@ else:
 
 da = DS[item[nv_out]].mean(dim='model',skipna=False)
 for m in range(4):
+    tmp = da.isel(basin=m).sel(lat=slice(xlim[m][0],xlim[m][1]))
+    nz, ny = tmp.shape
+    dztmp = np.tile(dz33,ny).reshape(ny,nz).T
+    msktmp = np.where( np.isnan(tmp.values), 0.0, 1.0 )
+    datmp = np.where( np.isnan(tmp.values), 0.0, tmp.values )
+    tmp1 = (datmp * datmp * msktmp * dztmp).sum()
+    tmp2 = (msktmp * dztmp).sum()
+    rmse[m] = np.sqrt(tmp1/tmp2)
+    title_bas[m] = basin_name[m][0:3] + ' ' + '{:.2f}'.format(rmse[m]) + '$^{\circ}$C'
+    print(title_bas[m])
     if (m == 0):
         da.isel(basin=m).plot(ax=ax[11][m],cmap=cmap[nv_out],
                               levels=bounds,
@@ -240,7 +301,7 @@ for m in range(4):
                               extend='both',
                               add_labels=False,add_colorbar=False)
 
-    ax[11][m].set_title(title[m],{'fontsize':6,'verticalalignment':'top'})
+    ax[11][m].set_title(title_bas[m],{'fontsize':6,'verticalalignment':'top'})
     ax[11][m].tick_params(labelsize=7)
     ax[11][m].invert_yaxis()
     ax[11][m].set_xlim(xlim[m][0],xlim[m][1])
@@ -248,6 +309,8 @@ for m in range(4):
     ax[11][m].set_facecolor('lightgray')
 for m in range(1,4):
     ax[11][m].tick_params(axis='y',labelleft=False)
+
+dict_rmse['MMM']=rmse.copy()
 
 nmodel = 0
 for model in model_list[0]:
@@ -266,12 +329,22 @@ for model in model_list[0]:
     else:
         da = DS[item[nv_out]].isel(model=nmodel)
     for m in range(4):
+        tmp = da.isel(basin=m).sel(lat=slice(xlim[m][0],xlim[m][1]))
+        nz, ny = tmp.shape
+        dztmp = np.tile(dz33,ny).reshape(ny,nz).T
+        msktmp = np.where( np.isnan(tmp.values), 0.0, 1.0 )
+        datmp = np.where( np.isnan(tmp.values), 0.0, tmp.values )
+        tmp1 = (datmp * datmp * msktmp * dztmp).sum()
+        tmp2 = (msktmp * dztmp).sum()
+        rmse[m] = np.sqrt(tmp1/tmp2)
+        title_bas[m] = basin_name[m][0:3] + ' ' + '{:.2f}'.format(rmse[m]) + '$^{\circ}$C'
+        print(title_bas[m])
         da.isel(basin=m).plot(ax=ax[nmodel][m],cmap=cmap[nv_out],
                               levels=bounds,
                               extend='both',
                               add_labels=False,add_colorbar=False)
 
-        ax[nmodel][m].set_title(title[m],{'fontsize':6,'verticalalignment':'top'})
+        ax[nmodel][m].set_title(title_bas[m],{'fontsize':6,'verticalalignment':'top'})
         ax[nmodel][m].tick_params(labelsize=7)
         ax[nmodel][m].invert_yaxis()
         ax[nmodel][m].set_xlim(xlim[m][0],xlim[m][1])
@@ -280,6 +353,7 @@ for model in model_list[0]:
     for m in range(1,4):
         ax[nmodel][m].tick_params(axis='y',labelleft=False)
 
+    dict_rmse[model]=rmse.copy()
     nmodel += 1
         
 nmodel = 0
@@ -293,5 +367,14 @@ for model in model_list[0]:
 fig.text(model_title_locx[2],model_title_locy[3],'MMM',fontsize=10,horizontalalignment='center',verticalalignment='center')
 
 plt.savefig(outfile, bbox_inches='tight', pad_inches=0.0)
+
+for m in range(4):
+  index_bas[m]='OMIP'+str(omip_out)+'_rmse_'+ str(basin_name[m])
+
+summary=pd.DataFrame(dict_rmse,index=index_bas)
+summary_t=summary.T
+print (summary_t)
+summary_t.to_csv('csv/ZMT_bias_OMIP' + str(omip_out) + '.csv')
+
 if (len(sys.argv) == 3 and sys.argv[2] == 'show'):
     plt.show()

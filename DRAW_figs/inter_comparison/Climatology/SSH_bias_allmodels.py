@@ -3,6 +3,7 @@ import sys
 import json
 import numpy as np
 import netCDF4
+import pandas as pd
 import xarray as xr
 import cartopy.crs as ccrs
 import matplotlib.pyplot as plt
@@ -180,10 +181,12 @@ bounds2 = [-0.3, -0.25, -0.2, -0.15, -0.1, -0.05, 0., 0.05, 0.1, 0.15, 0.2, 0.25
 bounds3 = np.arange(-1.8,1.201,0.1)
 ticks_bounds3 = np.arange(-1.8,1.201,0.3)
 
-cmap = [ 'RdBu_r', 'RdBu_r', 'RdBu_r', 'RdYlBu_r' ]
+cmap = [ 'RdBu_r', 'RdBu_r', 'bwr', 'RdYlBu_r' ]
 
 item = [ 'omip1bias', 'omip2bias', 'omip2-1', 'obs' ]
 outfile = './fig/SSH_bias_allmodels_'+item[nv_out]+'.png'
+
+dict_rmse={}
 
 # MMM
 
@@ -196,8 +199,11 @@ if item[nv_out] == 'omip1bias' or item[nv_out] == 'omip2bias':
     datmp = np.where( np.isnan(da.values), 0.0, da.values )
     tmp1 = (datmp * datmp * area * msktmp * maskcmems).sum()
     tmp2 = (area * msktmp * maskcmems).sum()
+    tmp3 = (datmp * area * msktmp * maskcmems).sum()
     rmse = np.sqrt(tmp1/tmp2)
+    bias = tmp3/tmp2
     title_append = ' rmse = ' + '{:.2f}'.format(rmse*100) + ' cm'
+    dict_rmse['MMM']=[rmse*100,bias*100]
 elif item[nv_out] == 'omip2-1':
     bounds = bounds2
     ticks_bounds = bounds2
@@ -242,8 +248,11 @@ for model in model_list[0]:
         datmp = np.where( np.isnan(da.values), 0.0, da.values )
         tmp1 = (datmp * datmp * area * msktmp * maskcmems).sum()
         tmp2 = (area * msktmp * maskcmems).sum()
+        tmp3 = (datmp * area * msktmp * maskcmems).sum()
         rmse = np.sqrt(tmp1/tmp2)
+        bias = tmp3/tmp2
         title_append = ' rmse = ' + '{:.2f}'.format(rmse*100) + ' cm'
+        dict_rmse[model]=[rmse*100,bias*100]
     elif item[nv_out] == 'omip2-1':
         bounds = bounds2
         ticks_bounds = bounds2
@@ -275,5 +284,11 @@ for model in model_list[0]:
 
 plt.subplots_adjust(left=0.05,right=0.98,bottom=0.12,top=0.93,hspace=0.26,wspace=0.15)
 plt.savefig(outfile, bbox_inches='tight', pad_inches=0.0)
+
+summary=pd.DataFrame(dict_rmse,index=['OMIP'+str(omip_out)+'_rmse','OMIP'+str(omip_out)+'_mean'])
+summary_t=summary.T
+print (summary_t)
+summary_t.to_csv('csv/SSH_bias_OMIP' + str(omip_out) + '.csv')
+
 if (len(sys.argv) == 3 and sys.argv[2] == 'show'):
     plt.show()

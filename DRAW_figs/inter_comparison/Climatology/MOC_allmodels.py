@@ -224,7 +224,7 @@ model_title_locy = [0.94,0.71,0.48,0.25]
 bounds1 = np.linspace(-30,30,31)
 bounds2 = np.linspace(-8,8,17)
 
-cmap = [ 'RdBu_r', 'RdBu_r', 'RdBu_r', 'RdBu_r' ]
+cmap = [ 'RdBu_r', 'RdBu_r', 'coolwarm', 'coolwarm' ]
 
 item = [ 'omip1', 'omip2', 'omip2-1', 'omip2-1' ]
 
