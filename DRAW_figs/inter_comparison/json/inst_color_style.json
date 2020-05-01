@@ -53,5 +53,15 @@
 	"color":"deepskyblue",
         "style":"dashed",
 	"marker":"9"
+    },
+    "MMM":{
+	"color":"black",
+        "style":"solid",
+	"marker":"11"
+    },
+    "OBS":{
+	"color":"black",
+        "style":"solid",
+	"marker":"12"
     }
 }
