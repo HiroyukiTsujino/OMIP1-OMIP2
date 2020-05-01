@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 #
 import sys
+sys.path.append("../../../python")
 import json
 import netCDF4
 from netCDF4 import Dataset, num2date
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-#import seaborn as sns
+from uncertain_Wakamatsu import uncertain
 
 ######
 
@@ -231,6 +232,152 @@ for mon in range(1,13):
     siextents_model_omip2[mon-1] = siextents_model_omip2[mon-1].set_index('year')
     
 
+#-------------------------------------
+# NH
+mon = 9
+siextentn_model_omip1_sep_mean = siextentn_model_omip1[mon-1].loc['1980':'2009'].mean(axis=0)
+siextent_tmp = siextentn_model_omip1_sep_mean.rename("OMIP1-NH-SEP")
+siextent_tmp.loc['Z-MMM-OMIP1'] = siextent_tmp.mean()
+siextent_tmp.loc['Z-STD-OMIP1'] = siextent_tmp.std(ddof=0)
+print(siextentn_df[mon-1]['NSIDC_SII'])
+siextentn_obs_sep_mean = siextentn_df[mon-1]['NSIDC_SII'].loc['1980':'2009'].mean(axis=0)
+siextent_tmp.loc['OBS-OMIP1'] = siextentn_obs_sep_mean
+print (siextent_tmp)
+siextent_tmp.to_csv('csv/siextent_omip1-NH-SEP-mean.csv', header=True)
+
+siextentn_model_omip2_sep_mean = siextentn_model_omip2[mon-1].loc['1980':'2009'].mean(axis=0)
+siextent_tmp = siextentn_model_omip2_sep_mean.rename("OMIP2-NH-SEP")
+siextent_tmp.loc['Z-MMM-OMIP2'] = siextent_tmp.mean()
+siextent_tmp.loc['Z-STD-OMIP2'] = siextent_tmp.std(ddof=0)
+print(siextentn_df[mon-1]['NSIDC_SII'])
+siextentn_obs_sep_mean = siextentn_df[mon-1]['NSIDC_SII'].loc['1980':'2009'].mean(axis=0)
+siextent_tmp.loc['OBS-OMIP2'] = siextentn_obs_sep_mean
+print (siextent_tmp)
+siextent_tmp.to_csv('csv/siextent_omip2-NH-SEP-mean.csv', header=True)
+
+d_omip1 = siextentn_model_omip1[mon-1].loc['1980':'2009'].values
+print(d_omip1)
+d_omip2 = siextentn_model_omip2[mon-1].loc['1980':'2009'].values
+d_diff = (d_omip2 - d_omip1).T
+print(d_diff)
+num_m, num_t = d_diff.shape
+print(num_m,num_t)
+num_bootstraps = 10000
+factor_5pct = 1.64  # 5-95%
+dout_nhsep = uncertain(d_diff, "NH-SEP", num_m, num_t, num_bootstraps )
+zval = dout_nhsep["mean"] / dout_nhsep["std"]
+print(dout_nhsep)
+print("z-value (NH-SEP) = ",zval)
+
+
+mon = 3
+siextentn_model_omip1_mar_mean = siextentn_model_omip1[mon-1].loc['1980':'2009'].mean(axis=0)
+siextent_tmp = siextentn_model_omip1_mar_mean.rename("OMIP1-NH-MAR")
+siextent_tmp.loc['Z-MMM-OMIP1'] = siextent_tmp.mean()
+siextent_tmp.loc['Z-STD-OMIP1'] = siextent_tmp.std(ddof=0)
+print(siextentn_df[mon-1]['NSIDC_SII'])
+siextentn_obs_mar_mean = siextentn_df[mon-1]['NSIDC_SII'].loc['1980':'2009'].mean(axis=0)
+siextent_tmp.loc['OBS-OMIP1'] = siextentn_obs_mar_mean
+print (siextent_tmp)
+siextent_tmp.to_csv('csv/siextent_omip1-NH-MAR-mean.csv', header=True)
+
+siextentn_model_omip2_mar_mean = siextentn_model_omip2[mon-1].loc['1980':'2009'].mean(axis=0)
+siextent_tmp = siextentn_model_omip2_mar_mean.rename("OMIP2-NH-MAR")
+siextent_tmp.loc['Z-MMM-OMIP2'] = siextent_tmp.mean()
+siextent_tmp.loc['Z-STD-OMIP2'] = siextent_tmp.std(ddof=0)
+print(siextentn_df[mon-1]['NSIDC_SII'])
+siextentn_obs_mar_mean = siextentn_df[mon-1]['NSIDC_SII'].loc['1980':'2009'].mean(axis=0)
+siextent_tmp.loc['OBS-OMIP2'] = siextentn_obs_mar_mean
+print (siextent_tmp)
+siextent_tmp.to_csv('csv/siextent_omip2-NH-MAR-mean.csv', header=True)
+
+d_omip1 = siextentn_model_omip1[mon-1].loc['1980':'2009'].values
+print(d_omip1)
+d_omip2 = siextentn_model_omip2[mon-1].loc['1980':'2009'].values
+d_diff = (d_omip2 - d_omip1).T
+print(d_diff)
+num_m, num_t = d_diff.shape
+print(num_m,num_t)
+num_bootstraps = 10000
+factor_5pct = 1.64  # 5-95%
+dout_nhmar = uncertain(d_diff, "NH-MAR", num_m, num_t, num_bootstraps )
+zval = dout_nhmar["mean"] / dout_nhmar["std"]
+print(dout_nhmar)
+print("z-value (NH-MAR) = ",zval)
+
+
+# SH
+mon = 9
+siextents_model_omip1_sep_mean = siextents_model_omip1[mon-1].loc['1980':'2009'].mean(axis=0)
+siextent_tmp = siextents_model_omip1_sep_mean.rename("OMIP1-SH-SEP")
+siextent_tmp.loc['Z-MMM-OMIP1'] = siextent_tmp.mean()
+siextent_tmp.loc['Z-STD-OMIP1'] = siextent_tmp.std(ddof=0)
+print(siextents_df[mon-1]['NSIDC_SII'])
+siextents_obs_sep_mean = siextents_df[mon-1]['NSIDC_SII'].loc['1980':'2009'].mean(axis=0)
+siextent_tmp.loc['OBS-OMIP1'] = siextents_obs_sep_mean
+print (siextent_tmp)
+siextent_tmp.to_csv('csv/siextent_omip1-SH-SEP-mean.csv', header=True)
+
+siextents_model_omip2_sep_mean = siextents_model_omip2[mon-1].loc['1980':'2009'].mean(axis=0)
+siextent_tmp = siextents_model_omip2_sep_mean.rename("OMIP2-SH-SEP")
+siextent_tmp.loc['Z-MMM-OMIP2'] = siextent_tmp.mean()
+siextent_tmp.loc['Z-STD-OMIP2'] = siextent_tmp.std(ddof=0)
+print(siextents_df[mon-1]['NSIDC_SII'])
+siextents_obs_sep_mean = siextents_df[mon-1]['NSIDC_SII'].loc['1980':'2009'].mean(axis=0)
+siextent_tmp.loc['OBS-OMIP2'] = siextents_obs_sep_mean
+print (siextent_tmp)
+print (siextent_tmp)
+siextent_tmp.to_csv('csv/siextent_omip2-SH-SEP-mean.csv', header=True)
+
+d_omip1 = siextents_model_omip1[mon-1].loc['1980':'2009'].values
+print(d_omip1)
+d_omip2 = siextents_model_omip2[mon-1].loc['1980':'2009'].values
+d_diff = (d_omip2 - d_omip1).T
+print(d_diff)
+num_m, num_t = d_diff.shape
+print(num_m,num_t)
+num_bootstraps = 10000
+factor_5pct = 1.64  # 5-95%
+dout_shsep = uncertain(d_diff, "SH-SEP", num_m, num_t, num_bootstraps )
+zval = dout_shsep["mean"] / dout_shsep["std"]
+print(dout_shsep)
+print("z-value (SH-SEP) = ",zval)
+
+mon = 3
+siextents_model_omip1_mar_mean = siextents_model_omip1[mon-1].loc['1980':'2009'].mean(axis=0)
+siextent_tmp = siextents_model_omip1_mar_mean.rename("OMIP1-SH-MAR")
+siextent_tmp.loc['Z-MMM-OMIP1'] = siextent_tmp.mean()
+siextent_tmp.loc['Z-STD-OMIP1'] = siextent_tmp.std(ddof=0)
+print(siextents_df[mon-1]['NSIDC_SII'])
+siextents_obs_mar_mean = siextents_df[mon-1]['NSIDC_SII'].loc['1980':'2009'].mean(axis=0)
+siextent_tmp.loc['OBS-OMIP1'] = siextents_obs_mar_mean
+print (siextent_tmp)
+siextent_tmp.to_csv('csv/siextent_omip1-SH-MAR-mean.csv', header=True)
+
+siextents_model_omip2_mar_mean = siextents_model_omip2[mon-1].loc['1980':'2009'].mean(axis=0)
+siextent_tmp = siextents_model_omip2_mar_mean.rename("OMIP2-SH-MAR")
+siextent_tmp.loc['Z-MMM-OMIP2'] = siextent_tmp.mean()
+siextent_tmp.loc['Z-STD-OMIP2'] = siextent_tmp.std(ddof=0)
+print(siextents_df[mon-1]['NSIDC_SII'])
+siextents_obs_mar_mean = siextents_df[mon-1]['NSIDC_SII'].loc['1980':'2009'].mean(axis=0)
+siextent_tmp.loc['OBS-OMIP2'] = siextents_obs_mar_mean
+print (siextent_tmp)
+siextent_tmp.to_csv('csv/siextent_omip2-SH-MAR-mean.csv', header=True)
+
+d_omip1 = siextents_model_omip1[mon-1].loc['1980':'2009'].values
+print(d_omip1)
+d_omip2 = siextents_model_omip2[mon-1].loc['1980':'2009'].values
+d_diff = (d_omip2 - d_omip1).T
+print(d_diff)
+num_m, num_t = d_diff.shape
+print(num_m,num_t)
+num_bootstraps = 10000
+factor_5pct = 1.64  # 5-95%
+dout_shmar = uncertain(d_diff, "SH-MAR", num_m, num_t, num_bootstraps )
+zval = dout_shmar["mean"] / dout_shmar["std"]
+print(dout_shmar)
+print("z-value (SH-MAR) = ",zval)
+
 ########################
 # Statistical Analysis
 
@@ -238,7 +385,7 @@ ystr=1980
 yend=2009
 
 hemi = 'NH'
-
+capture_nh = []
 for mon in [3, 9]:
 
     obs=siextentn_df[mon-1].loc[str(ystr):str(yend),'NSIDC_SII'].values
@@ -287,9 +434,12 @@ for mon in [3, 9]:
         print (summary_t)
         summary_t.to_csv('csv/siextent_'+ hemi + '_' + month[mon-1] + '_OMIP' + str(omip+1) + '.csv')
 
-    
-hemi = 'SH'
+        capture_nh_tmp = 1 - np.floor(np.abs(siextentn_df[mon-1]['NSIDC_SII']-siextentn_df[mon-1]['OMIP' + str(omip+1) + '-mean'])/(siextentn_df[mon-1]['OMIP' + str(omip+1) + '-std']))
+        capture_nh += [capture_nh_tmp]
 
+        
+hemi = 'SH'
+capture_sh = []
 for mon in [3, 9]:
 
     obs=siextents_df[mon-1].loc[str(ystr):str(yend),'NSIDC_SII'].values
@@ -338,7 +488,29 @@ for mon in [3, 9]:
         print (summary_t)
         summary_t.to_csv('csv/siextent_'+ hemi + '_' + month[mon-1] + '_OMIP' + str(omip+1) + '.csv')
 
+        capture_sh_tmp = 1 - np.floor(np.abs(siextents_df[mon-1]['NSIDC_SII']-siextents_df[mon-1]['OMIP' + str(omip+1) + '-mean'])/(2.0*siextents_df[mon-1]['OMIP' + str(omip+1) + '-std']))
+        capture_sh += [capture_sh_tmp]
     
+print("Fraction captured by ensemble")
+print("OMIP1 NH-MAR")
+print(capture_nh[0].loc['1979':'2009'].sum()/31)
+print("OMIP2 NH-MAR")
+print(capture_nh[1].loc['1979':'2018'].sum()/40)
+print("OMIP1 NH-SEP")
+print(capture_nh[2].loc['1979':'2009'].sum()/31)
+print("OMIP2 NH-SEP")
+print(capture_nh[3].loc['1979':'2018'].sum()/40)
+        
+print("OMIP1 SH-MAR")
+print(capture_sh[0].loc['1979':'2009'].sum()/31)
+print("OMIP2 SH-MAR")
+print(capture_sh[1].loc['1979':'2018'].sum()/40)
+print("OMIP1 SH-SEP")
+print(capture_sh[2].loc['1979':'2009'].sum()/31)
+print("OMIP2 SH-SEP")
+print(capture_sh[3].loc['1979':'2018'].sum()/40)
+        
+
 ########################
 # Draw Figures
 

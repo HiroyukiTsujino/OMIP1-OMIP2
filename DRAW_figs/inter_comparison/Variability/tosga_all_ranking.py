@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 import sys
-sys.path.append("../../../python")
 import json
 import netCDF4
 from netCDF4 import Dataset, num2date
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from uncertain_Wakamatsu import uncertain
+#import seaborn as sns
 
 ######
 
@@ -16,8 +15,8 @@ metainfo = [json.load(open('json/tosga_omip1.json')),
 
 lineinfo = json.load(open('../json/inst_color_style.json'))
 
-outfile = './fig/Fig1d_all'
-suptitle = 'Sea Surface Temperature'
+outfile = './fig/tosga_all_ranking'
+suptitle = 'Sea Surface Temperature Ranking'
 
 template = 'Institution {0:3d} is {1:s}'
 
@@ -113,19 +112,17 @@ for omip in range(2):
     tosga_annual_model += [tosga_annual_model_tmp]
 
     col = pd.Index(['OMIP' + str(omip+1) + '-mean'],name='institution')
-    tosga_mean = tosga_annual_model_tmp.mean(axis=1) # MMM
+    tosga_mean = tosga_annual_model_tmp.mean(axis=1)
     tosga_mean_df_tmp = pd.DataFrame(tosga_mean,columns=col)
 
     col = pd.Index(['OMIP' + str(omip+1) + '-std'],name='institution')
-    tosga_std = tosga_annual_model_tmp.std(axis=1) # ensemble STD
+    tosga_std=tosga_annual_model_tmp.std(axis=1)
     tosga_std_df_tmp = pd.DataFrame(tosga_std,columns=col)
 
     tosga_mean_df_tmp = pd.concat([tosga_mean_df_tmp,tosga_std_df_tmp],axis=1)
 
     tosga_mean_df_tmp['OMIP' + str(omip+1) + '-min'] = tosga_mean_df_tmp.iloc[:,0] - tosga_mean_df_tmp.iloc[:,1]
-    tosga_mean_df_tmp['OMIP' + str(omip+1) + '-min2'] = tosga_mean_df_tmp.iloc[:,0] - 2.0 * tosga_mean_df_tmp.iloc[:,1]
     tosga_mean_df_tmp['OMIP' + str(omip+1) + '-max'] = tosga_mean_df_tmp.iloc[:,0] + tosga_mean_df_tmp.iloc[:,1]
-    tosga_mean_df_tmp['OMIP' + str(omip+1) + '-max2'] = tosga_mean_df_tmp.iloc[:,0] + 2.0 * tosga_mean_df_tmp.iloc[:,1]
 
     tosga_mean_df += [tosga_mean_df_tmp]
 
@@ -133,45 +130,19 @@ for omip in range(2):
     linsty += [stytmp]
     nummodel += [i]
 
+
 print (tosga_mean_df[0])
 print (tosga_mean_df[1])
-tosga_annual_all=pd.concat([tosga_cobe_annual,tosga_amip_annual,tosga_mean_df[0],tosga_mean_df[1],\
-                            tosga_annual_model[0],tosga_annual_model[1]],axis=1)
-
-#-------------------------------------
-
-capture = []
-for omip in range(2):
-    capture_tmp = 1 - np.floor(np.abs(tosga_annual_all['PCMDI-SST']-tosga_annual_all['OMIP' + str(omip+1) + '-mean'])/(2.0*tosga_annual_all['OMIP' + str(omip+1) + '-std']))
-    capture += [capture_tmp]
+tosga_annual_all=pd.concat([tosga_cobe_annual,tosga_amip_annual,tosga_mean_df[0],tosga_mean_df[1],tosga_annual_model[0],tosga_annual_model[1]],axis=1)
 
 #-------------------------------------
 
 for n in range(2):
     nmodel = 0
-    #tosga_mean_tmp=tosga_annual_model[n].loc['1980':'2009']
-    #print(tosga_mean_tmp)
-    tosga_mean=tosga_annual_model[n].loc['1980':'2009'].mean(axis=0)
+    tosga_mean=tosga_annual_model[n].mean(axis=0)
     tmp_sst = tosga_mean.rename("OMIP"+str(n+1)+"-SST")
-    tmp_sst.loc['Z-MMM'] = tmp_sst.mean()
-    tmp_sst.loc['Z-STD'] = tmp_sst.std(ddof=0)
     print (tmp_sst)
     tmp_sst.to_csv('csv/tosga_mean_omip' + str(n+1) + '.csv', header=True)
-
-
-d_omip1 = tosga_annual_model[0].loc['1980':'2009'].values
-print(d_omip1)
-d_omip2 = tosga_annual_model[1].loc['1980':'2009'].values
-d_diff = (d_omip2 - d_omip1).T
-print(d_diff)
-num_m, num_t = d_diff.shape
-print(num_m,num_t)
-num_bootstraps = 10000
-factor_5pct = 1.64  # 5-95%
-dout_tosga = uncertain(d_diff, "SST", num_m, num_t, num_bootstraps )
-zval = dout_tosga["mean"] / dout_tosga["std"]
-print(dout_tosga)
-print("z-value (SST) = ",zval)
 
 
 #-------------------------------------
@@ -180,62 +151,64 @@ print("z-value (SST) = ",zval)
 fig  = plt.figure(figsize = (8,11))
 fig.suptitle( suptitle, fontsize=18 )
 
+ytick=range(1,12)
+
 # OMIP1
-axes = fig.add_subplot(3,1,1)
-tosga_annual_all.plot(y=tosga_annual_all.columns[0],ax=axes,ylim=[17.7,18.9],color='black',linewidth=2,title='(a) OMIP1')
-tosga_annual_all.plot(y=tosga_annual_all.columns[1],ax=axes,ylim=[17.7,18.9],color='grey',linewidth=2)
+axes = fig.add_subplot(2,1,1)
+#tosga_annual_all.plot(y=tosga_annual_all.columns[0],ax=axes,ylim=[17.7,18.9],color='black',linewidth=2,title='(a) OMIP1')
+#tosga_annual_all.plot(y=tosga_annual_all.columns[1],ax=axes,ylim=[17.7,18.9],color='grey',linewidth=2)
+
+tosga_annual_modelrank = tosga_annual_model[0].rank(axis=1)
+
+#print(tosga_annual_modelrank)
+
 for ii in range(nummodel[0]):
     #print(ii)
     linecol=lincol[0][ii]
     linesty=linsty[0][ii]
     #print(ii,linecol,linesty)
     if (linesty == 'dashed'):
-        lwidth=1.2
+        lwidth=1.7
     else:
-        lwidth=1
-    tosga_annual_model[0].plot(y=tosga_annual_model[0].columns[ii],ax=axes,\
-                               color=linecol,linewidth=lwidth,linestyle=linesty,ylim=[17.7,18.9])
+        lwidth=1.5
+    if (ii == 0):
+        tosga_annual_modelrank.plot(y=tosga_annual_modelrank.columns[ii],ax=axes,color=linecol,linewidth=lwidth,linestyle=linesty,ylim=[0.5,11.5],title='(a) OMIP1',yticks=ytick)
+    else:
+        tosga_annual_modelrank.plot(y=tosga_annual_modelrank.columns[ii],ax=axes,color=linecol,linewidth=lwidth,linestyle=linesty,ylim=[0.5,11.5])
+
+    axes.grid(False)
     axes.set_xlabel('')
-    axes.set_ylabel(r'$^\circ \mathrm{C}$',fontsize=12)
+    axes.set_ylabel('Low  ' + r'$\leftarrow$' + '  (rank by temperature)  ' r'$\rightarrow$' + ' High',fontsize=12)
     leg = axes.legend(bbox_to_anchor=(1.01,0.3),loc='upper left')
     for legobj in leg.legendHandles:
         legobj.set_linewidth(2.0)
 
 # OMIP2
-axes = fig.add_subplot(3,1,2)
-tosga_annual_all.plot(y=tosga_annual_all.columns[0],ax=axes,ylim=[17.7,18.9],color='black',linewidth=2,title='(b) OMIP2',label='_nolegend_')
-tosga_annual_all.plot(y=tosga_annual_all.columns[1],ax=axes,ylim=[17.7,18.9],color='grey',linewidth=2,label='_nolegend_')
+axes = fig.add_subplot(2,1,2)
+#tosga_annual_all.plot(y=tosga_annual_all.columns[0],ax=axes,ylim=[17.7,18.9],color='black',linewidth=2,title='(b) OMIP2',label='_nolegend_')
+#tosga_annual_all.plot(y=tosga_annual_all.columns[1],ax=axes,ylim=[17.7,18.9],color='grey',linewidth=2,label='_nolegend_')
+
+tosga_annual_modelrank = tosga_annual_model[1].rank(axis=1)
+
 for ii in range(nummodel[1]):
     #print(ii)
     linecol=lincol[1][ii]
     linesty=linsty[1][ii]
     if (linesty == 'dashed'):
-        lwidth=1.2
+        lwidth=1.7
     else:
-        lwidth=1
+        lwidth=1.5
     #print(ii,linecol,linesty)
-    tosga_annual_model[1].plot(y=tosga_annual_model[1].columns[ii],ax=axes,\
-                               color=linecol,linewidth=lwidth,linestyle=linesty,ylim=[17.7,18.9],label='_nolegend_')
-    axes.set_xlabel('')
-    axes.set_ylabel(r'$^\circ \mathrm{C}$',fontsize=12)
-    #axes.legend(bbox_to_anchor=(0.0,0.0),loc='lower left')
+    if (ii == 0):
+        tosga_annual_modelrank.plot(y=tosga_annual_modelrank.columns[ii],ax=axes,color=linecol,linewidth=lwidth,linestyle=linesty,ylim=[0.5,11.5],label='_nolegend_',title='(b) OMIP2',yticks=ytick)
+    else:
+        tosga_annual_modelrank.plot(y=tosga_annual_modelrank.columns[ii],ax=axes,color=linecol,linewidth=lwidth,linestyle=linesty,ylim=[0.5,11.5],label='_nolegend_')
 
-# MMM
-axes = fig.add_subplot(3,1,3)
-tosga_annual_all.plot(y=tosga_annual_all.columns[0],ax=axes,color='darkgoldenrod',linewidth=2,ylim=[17.7,18.9],title='(c) MMM')
-tosga_annual_all.plot(y=tosga_annual_all.columns[1],ax=axes,color='dimgrey',linewidth=2,ylim=[17.7,18.9])
-axes.fill_between(x=tosga_annual_all.index,y1=tosga_annual_all['OMIP1-min'],y2=tosga_annual_all['OMIP1-max'],\
-                  alpha=0.5,facecolor='lightcoral')
-axes.fill_between(x=tosga_annual_all.index,y1=tosga_annual_all['OMIP2-min'],y2=tosga_annual_all['OMIP2-max'],\
-                  alpha=0.5,facecolor='lightblue')
-tosga_annual_all.plot(y=tosga_annual_all.columns[2],ax=axes,color='darkred',linewidth=2,ylim=[17.7,18.9])
-tosga_annual_all.plot(y=tosga_annual_all.columns[8],ax=axes,color='darkblue',linewidth=2,ylim=[17.7,18.9])
-#
-axes.set_xlabel('year',fontsize=10)
-axes.set_ylabel(r'$^\circ \mathrm{C}$',fontsize=12)
-leg = axes.legend(bbox_to_anchor=(1.01,1.0),loc='upper left')
-for legobj in leg.legendHandles:
-    legobj.set_linewidth(2.0)
+    axes.grid(False)
+    axes.set_xlabel('year',fontsize=10)
+    axes.set_ylabel('Low  ' + r'$\leftarrow$' + '  (rank by temperature)  ' r'$\rightarrow$' + ' High',fontsize=12)
+    #axes.set_ylabel(r'$^\circ \mathrm{C}$',fontsize=12)
+    #axes.legend(bbox_to_anchor=(0.0,0.0),loc='lower left')
 
 plt.subplots_adjust(left=0.12,right=0.78,bottom=0.08,top=0.92,hspace=0.22)
 #
@@ -247,13 +220,5 @@ plt.savefig(outpdf, bbox_inches='tight', pad_inches=0.05)
 
 if (len(sys.argv) == 2 and sys.argv[1] == 'show') :
     plt.show()
-
-print("Fraction captured by ensemble")
-print("OMIP1")
-#print(capture[0])
-print(capture[0].loc['1948':'2009'].sum()/62)
-print("OMIP2")
-#print(capture[1])
-print(capture[1].loc['1958':'2017'].sum()/60)
 
 print("figure is saved to " + outpng + " and " + outpdf)

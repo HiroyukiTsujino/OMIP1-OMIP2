@@ -10,8 +10,11 @@ Contents
   * Figure 17: amoc_rapid_all.py
   * Figure 18: drake_passage_all.py
   * Figure 19: tosga_all.py
+     tosga_all_ranking.py : show time evolution of the order among models of the global mean sst
+
   * Figure 20: siextent_all_month.py
      -> Figure 21: ../Performance_1/taylor_siextent.py)
+
 
   * Figure 22: ohca_topbot_dtr_all.py
   * Figure 23: zostoga_detrend_all.py
