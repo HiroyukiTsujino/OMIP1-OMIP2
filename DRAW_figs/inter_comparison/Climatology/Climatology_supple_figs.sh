@@ -4,6 +4,8 @@ set -e
 
 module load anaconda3
 
+#####if [ x${1} = xall ]; then
+
 echo "Figures S10-S12 ......."
 
 for omip in 1 2 3
@@ -58,27 +60,29 @@ mv ./fig/SSH_bias_allmodels_omip1bias.png ../supple_figs/figS24.png
 mv ./fig/SSH_bias_allmodels_omip2bias.png ../supple_figs/figS25.png
 mv ./fig/SSH_bias_allmodels_omip2-1.png   ../supple_figs/figS26.png
 
+#####fi
+
 echo "Figure S27-S29 ......."
 
 for omip in 1 2 3
 do 
-    python ./MLD_Winter_allmodels.py ${omip}
+    python ./MLD_Winter_bias_allmodels.py ${omip} 1980 2009 1
 done
 
-mv ./fig/MLD_Winter_allmodels_omip1mean.png ../supple_figs/figS27.png
-mv ./fig/MLD_Winter_allmodels_omip2mean.png ../supple_figs/figS28.png
-mv ./fig/MLD_Winter_allmodels_omip2-1.png   ../supple_figs/figS29.png
+mv ./fig/MLD_Winter_bias_allmodels_omip1bias.png ../supple_figs/figS27.png
+mv ./fig/MLD_Winter_bias_allmodels_omip2bias.png ../supple_figs/figS28.png
+mv ./fig/MLD_Winter_bias_allmodels_omip2-1.png   ../supple_figs/figS29.png
 
 echo "Figure S30-S32 ......."
 
 for omip in 1 2 3
 do 
-    python ./MLD_Summer_allmodels.py ${omip}
+    python ./MLD_Summer_bias_allmodels.py ${omip} 1980 2009 1
 done
 
-mv ./fig/MLD_Summer_allmodels_omip1mean.png ../supple_figs/figS30.png
-mv ./fig/MLD_Summer_allmodels_omip2mean.png ../supple_figs/figS31.png
-mv ./fig/MLD_Summer_allmodels_omip2-1.png   ../supple_figs/figS32.png
+mv ./fig/MLD_Summer_bias_allmodels_omip1bias.png ../supple_figs/figS30.png
+mv ./fig/MLD_Summer_bias_allmodels_omip2bias.png ../supple_figs/figS31.png
+mv ./fig/MLD_Summer_bias_allmodels_omip2-1.png   ../supple_figs/figS32.png
 
 echo "Figure S33-S35 ......."
 

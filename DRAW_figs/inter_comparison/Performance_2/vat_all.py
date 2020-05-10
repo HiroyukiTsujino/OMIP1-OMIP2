@@ -18,19 +18,22 @@ markinfo = json.load(open('../json/inst_color_style.json'))
 mldcirc=[]
 num_models=[]
 
-infl1 = "./csv_spin/vat_omip1.csv"
+infl1 = "./csv_spin/vat_full_omip1.csv"
 df1=pd.read_csv(infl1,index_col=0)
-infl2 = "./csv_spin/vat_omip2.csv"
+infl2 = "./csv_spin/vat_full_omip2.csv"
 df2=pd.read_csv(infl2,index_col=0)
 df = pd.merge(df1,df2,left_index=True,right_index=True)
 print(df)
+
+dfm=df.drop('Z-STD',axis=0)
+dfm.rename(index={'Z-MMM': 'MMM'}, inplace=True)
 
 fig = plt.figure(figsize=(11,8))
 fig.suptitle("VAT (1980-2009) of the last cycle relative to the first year mean", size='x-large')
 
 axes=fig.add_subplot(2,2,1)
 
-for index, row in df.iterrows():
+for index, row in dfm.iterrows():
     print(row['v700m-OMIP1'],row['v700m-OMIP2'])
     btm=row['v700m-OMIP1']
     side=row['v700m-OMIP2']
@@ -45,10 +48,10 @@ for index, row in df.iterrows():
         
     axes.scatter(btm,side,c=markcol,edgecolors=edgecol,marker=markers[mi],s=50,label=name)
 
-r = df[['v700m-OMIP1','v700m-OMIP2']].corr()
+r = dfm[['v700m-OMIP1','v700m-OMIP2']].corr()
 print(r)
-x_np = df[['v700m-OMIP1']].values
-y_np = df['v700m-OMIP2'].values
+x_np = dfm[['v700m-OMIP1']].values
+y_np = dfm['v700m-OMIP2'].values
 lr = LinearRegression()
 lr.fit(x_np, y_np)
 print("coefficients", lr.coef_)
@@ -73,7 +76,7 @@ axes.grid(b=True,which='major',axis='both')
 
 axes=fig.add_subplot(2,2,2)
 
-for index, row in df.iterrows():
+for index, row in dfm.iterrows():
     print(row['v2000m-OMIP1'],row['v2000m-OMIP2'])
     btm=row['v2000m-OMIP1']
     side=row['v2000m-OMIP2']
@@ -87,10 +90,10 @@ for index, row in df.iterrows():
         edgecol='lightblue'
     axes.scatter(btm,side,c=markcol,edgecolors=edgecol,marker=markers[mi],s=50,label=name)
 
-r = df[['v2000m-OMIP1','v2000m-OMIP2']].corr()
+r = dfm[['v2000m-OMIP1','v2000m-OMIP2']].corr()
 print(r)
-x_np = df[['v2000m-OMIP1']].values
-y_np = df['v2000m-OMIP2'].values
+x_np = dfm[['v2000m-OMIP1']].values
+y_np = dfm['v2000m-OMIP2'].values
 print(x_np,y_np)
 lr = LinearRegression()
 lr.fit(x_np, y_np)
@@ -116,7 +119,7 @@ axes.grid(b=True,which='major',axis='both')
 
 axes=fig.add_subplot(2,2,3)
 
-for index, row in df.iterrows():
+for index, row in dfm.iterrows():
     print(row['v2000m-bot-OMIP1'],row['v2000m-bot-OMIP2'])
     btm=row['v2000m-bot-OMIP1']
     side=row['v2000m-bot-OMIP2']
@@ -130,10 +133,10 @@ for index, row in df.iterrows():
         edgecol='lightblue'
     axes.scatter(btm,side,c=markcol,edgecolors=edgecol,marker=markers[mi],s=50,label=name)
 
-r = df[['v2000m-bot-OMIP1','v2000m-bot-OMIP2']].corr()
+r = dfm[['v2000m-bot-OMIP1','v2000m-bot-OMIP2']].corr()
 print(r)
-x_np = df[['v2000m-bot-OMIP1']].values
-y_np = df['v2000m-bot-OMIP2'].values
+x_np = dfm[['v2000m-bot-OMIP1']].values
+y_np = dfm['v2000m-bot-OMIP2'].values
 lr = LinearRegression()
 lr.fit(x_np, y_np)
 print("coefficients", lr.coef_)
@@ -158,7 +161,7 @@ axes.grid(b=True,which='major',axis='both')
 
 axes=fig.add_subplot(2,2,4)
 
-for index, row in df.iterrows():
+for index, row in dfm.iterrows():
     print(row['vtop-bot-OMIP1'],row['vtop-bot-OMIP2'])
     btm=row['vtop-bot-OMIP1']
     side=row['vtop-bot-OMIP2']
@@ -172,10 +175,10 @@ for index, row in df.iterrows():
         edgecol='lightblue'
     axes.scatter(btm,side,c=markcol,edgecolors=edgecol,marker=markers[mi],s=50,label=name)
 
-r = df[['vtop-bot-OMIP1','vtop-bot-OMIP2']].corr()
+r = dfm[['vtop-bot-OMIP1','vtop-bot-OMIP2']].corr()
 print(r)
-x_np = df[['vtop-bot-OMIP1']].values
-y_np = df['vtop-bot-OMIP2'].values
+x_np = dfm[['vtop-bot-OMIP1']].values
+y_np = dfm['vtop-bot-OMIP2'].values
 lr = LinearRegression()
 lr.fit(x_np, y_np)
 print("coefficients", lr.coef_)

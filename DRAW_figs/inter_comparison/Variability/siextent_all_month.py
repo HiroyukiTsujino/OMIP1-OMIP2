@@ -147,7 +147,7 @@ for omip in range(2):
     siextentn_mmm_df = pd.DataFrame(siextentn_mmm,columns=col)
 
     col = pd.Index(['OMIP' + str(omip+1) + '-std'],name='institution')
-    siextentn_mms=siextentn_df_all.std(axis=1)
+    siextentn_mms=siextentn_df_all.std(axis=1,ddof=0)
     siextentn_mms_df = pd.DataFrame(siextentn_mms,columns=col)
 
     siextentn_df_mean = pd.concat([siextentn_mmm_df,siextentn_mms_df],axis=1)
@@ -160,7 +160,7 @@ for omip in range(2):
     siextents_mmm_df = pd.DataFrame(siextents_mmm,columns=col)
 
     col = pd.Index(['OMIP' + str(omip+1) + '-std'],name='institution')
-    siextents_mms=siextents_df_all.std(axis=1)
+    siextents_mms=siextents_df_all.std(axis=1,ddof=0)
     siextents_mms_df = pd.DataFrame(siextents_mms,columns=col)
 
     siextents_df_mean = pd.concat([siextents_mmm_df,siextents_mms_df],axis=1)

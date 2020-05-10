@@ -10,6 +10,18 @@ Document
   Simple horizontal mean
 
 
+Usage
+--------
+
+  * annual mean
+
+    - execute ./script/horizontal_mean_woa13v2.sh
+
+  * monthly mean
+
+    - execute ./script/horizontal_mean_woa13v2_monthly.sh
+
+
 Source Program
 ---------
 

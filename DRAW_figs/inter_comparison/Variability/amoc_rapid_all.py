@@ -165,7 +165,7 @@ for omip in range(2):
     rapid_mean_df_tmp = pd.DataFrame(rapid_mean,columns=col)
 
     col = pd.Index(['OMIP' + str(omip+1) + '-std'],name='institution')
-    rapid_std=rapid_annual_model_tmp.std(axis=1)
+    rapid_std=rapid_annual_model_tmp.std(axis=1,ddof=0)
     rapid_std_df_tmp = pd.DataFrame(rapid_std,columns=col)
 
     rapid_mean_df_tmp = pd.concat([rapid_mean_df_tmp,rapid_std_df_tmp],axis=1)

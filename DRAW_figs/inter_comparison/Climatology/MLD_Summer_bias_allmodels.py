@@ -292,7 +292,13 @@ else:
     dadraw = DS[item[nv_out]].mean(dim='model',skipna=True)
     bounds = bounds2
     ticks_bounds = ticks_bounds2
-    title_panel = model
+    msktmp = np.where( np.isnan(dadraw.values), 0.0, 1.0 )
+    datmp = np.where( np.isnan(dadraw.values), 0.0, dadraw.values )
+    tmp1 = (datmp * datmp * area * msktmp * maskdeep).sum()
+    tmp2 = (area * msktmp * maskdeep).sum()
+    rmsd = np.sqrt(tmp1/tmp2)
+    title_panel = model + '     rmsd= ' + '{:.1f}'.format(rmsd) + ' m'
+    print(title_panel)
 
 dadraw.plot(ax=ax[nax],cmap=cmap[nv_out],
         levels=bounds,
@@ -345,7 +351,13 @@ for model in model_list[0]:
         dadraw = DS[item[nv_out]].isel(model=nmodel)
         bounds = bounds2
         ticks_bounds = ticks_bounds2
-        title_panel = model
+        msktmp = np.where( np.isnan(dadraw.values), 0.0, 1.0 )
+        datmp = np.where( np.isnan(dadraw.values), 0.0, dadraw.values )
+        tmp1 = (datmp * datmp * area * msktmp * maskdeep).sum()
+        tmp2 = (area * msktmp * maskdeep).sum()
+        rmsd = np.sqrt(tmp1/tmp2)
+        title_panel = model + '     rmsd= ' + '{:.1f}'.format(rmsd) + ' m'
+        print(title_panel)
 
 
     dadraw.plot(ax=ax[nmodel],cmap=cmap[nv_out],

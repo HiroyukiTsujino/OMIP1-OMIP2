@@ -46,11 +46,11 @@ Contents
 
   * Compute winter MLD in the northern North Atlantic and the merginal seas around the Antarctica
 
-    - $ python ./MLD_MOC_comp.py
+    - $ python ./MLD_deep_comp.py
 
       - the northern North Atlantic: (45.5-79.5N, 280-390E)
       - the merginal seas around the Antarctica: south of 60S
-
+      - results are listed in Table D4
 
   * csv: Store summary data used for drawing.
 

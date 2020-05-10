@@ -173,7 +173,14 @@ if (item[nv_out] == 'omip1bias' or item[nv_out] == 'omip2bias'):
 elif item[nv_out] == 'omip2-1':
     bounds = bounds2
     ticks_bounds = bounds2
-    title_panel = model
+    da = DS[item[nv_out]].mean(dim='time').mean(dim='model',skipna=False)
+    msktmp = np.where( np.isnan(da.values), 0.0, 1.0 )
+    datmp = np.where( np.isnan(da.values), 0.0, da.values )
+    tmp1 = (datmp * datmp * area * msktmp).sum()
+    tmp2 = (area * msktmp).sum()
+    rmsd = np.sqrt(tmp1/tmp2)
+    title_panel = model + '      rmsd = ' + '{:.2f}'.format(rmsd) + r'$^{\circ}$C '
+    print(title_panel)
 else:
     bounds = bounds3
     ticks_bounds = ticks_bounds3
@@ -224,7 +231,14 @@ for model in model_list[0]:
     elif item[nv_out] == 'omip2-1':
         bounds = bounds2
         ticks_bounds = bounds2
-        title_panel = model
+        da = DS[item[nv_out]].isel(model=nmodel).mean(dim='time',skipna=False)
+        msktmp = np.where( np.isnan(da.values), 0.0, 1.0 )
+        datmp = np.where( np.isnan(da.values), 0.0, da.values )
+        tmp1 = (datmp * datmp * area * msktmp).sum()
+        tmp2 = (area * msktmp).sum()
+        rmsd = np.sqrt(tmp1/tmp2)
+        title_panel = model + '      rmsd = ' + '{:.2f}'.format(rmsd) + r'$^{\circ}$C '
+        print(title_panel)
     else:
         bounds = bounds3
         ticks_bounds = ticks_bounds3

@@ -151,7 +151,7 @@ for omip in range(2):
     drake_mean_df_tmp = pd.DataFrame(drake_mean,columns=col)
 
     col = pd.Index(['OMIP' + str(omip+1) + '-std'],name='institution')
-    drake_std=drake_df_all.std(axis=1)
+    drake_std=drake_df_all.std(axis=1,ddof=0)
     drake_std_df_tmp = pd.DataFrame(drake_std,columns=col)
 
     drake_mean_df_tmp = pd.concat([drake_mean_df_tmp,drake_std_df_tmp],axis=1)

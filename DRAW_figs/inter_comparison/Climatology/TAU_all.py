@@ -317,17 +317,19 @@ ax = [
 ylim = [ [-0.1, 0.2], [-0.10, 0.14], [-0.10, 0.14] ]
 yint = [ 0.05, 0.02, 0.02 ]
 
+ddof_dic={'ddof' : 0}
+
 for n in range(3):
     DS_ref.tauuo.mean(dim='time',skipna=False).isel(basin=n).plot(ax=ax[n], color='palegreen', label='SCOW',linewidth=6)
     DS.omip1.mean(dim='model',skipna=False).isel(basin=n).plot(ax=ax[n], color='darkred', label='OMIP1', linewidth=2)
     ax[n].fill_between(x=DS.omip1["lat"],
-                       y1=DS.omip1.mean(dim='model',skipna=False).isel(basin=n)-DS.omip1.std(dim='model',skipna=False).isel(basin=n),
-                       y2=DS.omip1.mean(dim='model',skipna=False).isel(basin=n)+DS.omip1.std(dim='model',skipna=False).isel(basin=n),
+                       y1=DS.omip1.mean(dim='model',skipna=False).isel(basin=n)-DS.omip1.std(dim='model',skipna=False, **ddof_dic).isel(basin=n),
+                       y2=DS.omip1.mean(dim='model',skipna=False).isel(basin=n)+DS.omip1.std(dim='model',skipna=False, **ddof_dic).isel(basin=n),
                        alpha=0.5,facecolor='lightcoral')
     DS.omip2.mean(dim='model',skipna=False).isel(basin=n).plot(ax=ax[n], color='darkblue', label='OMIP2',linewidth=2)
     ax[n].fill_between(x=DS.omip2["lat"],
-                       y1=DS.omip2.mean(dim='model',skipna=False).isel(basin=n)-DS.omip2.std(dim='model',skipna=False).isel(basin=n),
-                       y2=DS.omip2.mean(dim='model',skipna=False).isel(basin=n)+DS.omip2.std(dim='model',skipna=False).isel(basin=n),
+                       y1=DS.omip2.mean(dim='model',skipna=False).isel(basin=n)-DS.omip2.std(dim='model',skipna=False, **ddof_dic).isel(basin=n),
+                       y2=DS.omip2.mean(dim='model',skipna=False).isel(basin=n)+DS.omip2.std(dim='model',skipna=False, **ddof_dic).isel(basin=n),
                        alpha=0.5,facecolor='lightblue')
 
     ax[n].set_title(title[n])

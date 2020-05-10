@@ -12,6 +12,13 @@ Contents
     - $ python ./ZMT_diff_std.py
     - $ python ./ZMS_diff_std.py
 
+  * Compare the ensemble spread and the room-mean-square of bias.
+
+    - $ python ./ZMT_rmse_std.py
+    - $ python ./ZMS_rmse_std.py
+
+
+
 
 Contact
 --------

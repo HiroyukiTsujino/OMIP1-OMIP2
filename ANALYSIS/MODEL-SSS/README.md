@@ -11,6 +11,10 @@ Contents
 
     - $ python ./SSS_diff_std.py
 
+  * Compare the ensemble spread and the room-mean-square of bias.
+
+    - $ python ./SSS_rmse_std.py
+
 
 Contact
 --------

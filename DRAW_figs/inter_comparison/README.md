@@ -7,12 +7,14 @@ DRAW_figs/inter_comparison
 First thing to do
 --------
 
-  * Make symbolic link to top directories of data archive.
+  * See README.md in the top directory for how to obtain and place the datasets.
 
-    - Use "sample/make_symbolic_link.sh" as an example if you like.
-    - model    ---> ${Where_Archive_is_Extracted}/model
-    - analysis ---> ${Where_Archive_is_Extracted}/analysis
-    - refdata  ---> ${Where_Archive_is_Extracted}/refdata
+  * Make symbolic links to data archives.
+    Use sample/make_symbolic_link.sh if you like.
+
+      - model    ---> ${Where_Archive_is_Extracted}/model
+      - analysis ---> ${Where_Archive_is_Extracted}/analysis
+      - refdata  ---> ${Where_Archive_is_Extracted}/refdata
   
 
 Contents

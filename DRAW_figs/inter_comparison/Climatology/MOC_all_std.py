@@ -230,6 +230,8 @@ item = [ 'omip1', 'omip2', 'omip1std', 'omip2std', 'omip2-1', 'omip2-1' ]
 mpl.rcParams['hatch.color'] = 'darkgreen'
 mpl.rcParams['hatch.linewidth'] = 0.5
 
+ddof_dic={'ddof' : 0}
+
 for panel in range(6):
     if item[panel] == 'omip1' or item[panel] == 'omip2':
         bounds = bounds1
@@ -238,11 +240,11 @@ for panel in range(6):
     elif item[panel] == 'omip1std':
         bounds = bounds3
         ticks_bounds = bounds3
-        da = DS['omip1'].std(dim='model',skipna=False)
+        da = DS['omip1'].std(dim='model',skipna=False, **ddof_dic)
     elif item[panel] == 'omip2std':
         bounds = bounds3
         ticks_bounds = bounds3
-        da = DS['omip2'].std(dim='model',skipna=False)
+        da = DS['omip2'].std(dim='model',skipna=False, **ddof_dic)
     elif item[panel] == 'omip2-1':
         bounds = bounds2
         ticks_bounds = tick_bounds2

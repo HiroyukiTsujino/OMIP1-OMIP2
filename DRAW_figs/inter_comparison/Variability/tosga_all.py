@@ -117,7 +117,7 @@ for omip in range(2):
     tosga_mean_df_tmp = pd.DataFrame(tosga_mean,columns=col)
 
     col = pd.Index(['OMIP' + str(omip+1) + '-std'],name='institution')
-    tosga_std = tosga_annual_model_tmp.std(axis=1) # ensemble STD
+    tosga_std = tosga_annual_model_tmp.std(axis=1,ddof=0) # ensemble STD
     tosga_std_df_tmp = pd.DataFrame(tosga_std,columns=col)
 
     tosga_mean_df_tmp = pd.concat([tosga_mean_df_tmp,tosga_std_df_tmp],axis=1)

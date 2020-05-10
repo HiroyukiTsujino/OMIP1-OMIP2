@@ -31,7 +31,7 @@ Contents
     - $ python ./MODEL_AMIP_comp_interannual.py omip2 1980 2009
 
 
-  * Calculation of stasistical properties
+  * Calculation of statistical properties
 
     - $ python ./MODEL_AMIP_comp_annual_wrt_annclim_rbar.py omip1 1980 2009
     - $ python ./MODEL_AMIP_comp_annual_wrt_annclim_rbar.py omip2 1980 2009
@@ -48,6 +48,9 @@ Contents
 
     - $ python ./SST_diff_std.py
 
+  * Compare the ensemble spread and the room-mean-square of bias.
+
+    - $ python ./SST_rmse_std.py
 
 Contact
 --------

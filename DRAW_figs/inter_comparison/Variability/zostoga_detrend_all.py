@@ -136,7 +136,7 @@ for omip in range(2):
     zostoga_mean_tmp = pd.DataFrame(zostoga_mean,columns=col)
 
     col = pd.Index(['OMIP' + str(omip+1) + '-std'],name='institution')
-    zostoga_std = zostoga_df_all.std(axis=1)
+    zostoga_std = zostoga_df_all.std(axis=1,ddof=0)
     zostoga_std_tmp = pd.DataFrame(zostoga_std,columns=col)
 
     zostoga_mean_df_tmp = pd.concat([zostoga_mean_tmp,zostoga_std_tmp],axis=1)
@@ -151,7 +151,7 @@ for omip in range(2):
     zostoga_dtr_mean_tmp = pd.DataFrame(zostoga_dtr_mean,columns=col)
 
     col = pd.Index(['OMIP' + str(omip+1) + '-std'],name='institution')
-    zostoga_dtr_std = zostoga_dtr_df_all.std(axis=1)
+    zostoga_dtr_std = zostoga_dtr_df_all.std(axis=1,ddof=0)
     zostoga_dtr_std_tmp = pd.DataFrame(zostoga_dtr_std,columns=col)
 
     zostoga_dtr_mean_df_tmp = pd.concat([zostoga_dtr_mean_tmp,zostoga_dtr_std_tmp],axis=1)

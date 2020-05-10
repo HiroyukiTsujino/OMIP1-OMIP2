@@ -8,11 +8,11 @@ fi
 target=${1}
    
 if [ x${1} = xall ]; then
-   draw[1]="yes"; draw[2]="yes"; draw[3]="yes"; draw[4]="yes"
-   draw[31]="yes"; draw[32]="yes"; draw[33]="yes"; draw[34]="yes"
+   draw[1]="yes"; draw[2]="yes"; draw[3]="yes"; draw[4]="yes"; draw[5]="yes"
+   draw[31]="yes"; draw[32]="yes"; draw[33]="yes"
 else 
-   draw[1]="no"; draw[2]="no"; draw[3]="no"; draw[4]="no"
-   draw[31]="no"; draw[32]="no"; draw[33]="no"; draw[34]="no"
+   draw[1]="no"; draw[2]="no"; draw[3]="no"; draw[4]="no"; draw[5]="no"
+   draw[31]="no"; draw[32]="no"; draw[33]="no"
    draw[${target}]="yes"        
 fi
 
@@ -22,30 +22,37 @@ module load anaconda3
 
 if [ x${draw[1]} = xyes ]; then
   echo "Figure 1 ......."
-  python ./FigS1_vat_all.py
-  mv ./fig/FigS1_vat_ALL.pdf ../main_figs/fig01.pdf
-  mv ./fig/FigS1_vat_ALL.png ../main_figs/fig01.png
+  python ./FigS2_sst_sss_all_std.py
+  mv ./fig/FigS2_sst_sss.pdf ../main_figs/fig01.pdf
+  mv ./fig/FigS2_sst_sss.png ../main_figs/fig01.png
 fi
 
 if [ x${draw[2]} = xyes ]; then
   echo "Figure 2 ......."
-  python ./FigS2_all_std.py MMM
-  mv ./fig/FigS2_MMM.pdf ../main_figs/fig02.pdf
-  mv ./fig/FigS2_MMM.png ../main_figs/fig02.png
+  python ./FigS1_vat_all.py
+  mv ./fig/FigS1_vat_ALL.pdf ../main_figs/fig02.pdf
+  mv ./fig/FigS1_vat_ALL.png ../main_figs/fig02.png
 fi
 
 if [ x${draw[3]} = xyes ]; then
   echo "Figure 3 ......."
-  python ./FigS1_sivol_all.py
-  mv ./fig/FigS1_sivol_ALL.pdf ../main_figs/fig03.pdf
-  mv ./fig/FigS1_sivol_ALL.png ../main_figs/fig03.png
+  python ./FigS2_all_std.py MMM
+  mv ./fig/FigS2_MMM.pdf ../main_figs/fig03.pdf
+  mv ./fig/FigS2_MMM.png ../main_figs/fig03.png
 fi
 
 if [ x${draw[4]} = xyes ]; then
   echo "Figure 4 ......."
+  python ./FigS1_sivol_all.py
+  mv ./fig/FigS1_sivol_ALL.pdf ../main_figs/fig04.pdf
+  mv ./fig/FigS1_sivol_ALL.png ../main_figs/fig04.png
+fi
+
+if [ x${draw[5]} = xyes ]; then
+  echo "Figure 5 ......."
   python ./FigS3_all.py
-  mv ./fig/FigS3_ALL.pdf ../main_figs/fig04.pdf
-  mv ./fig/FigS3_ALL.png ../main_figs/fig04.png
+  mv ./fig/FigS3_ALL.pdf ../main_figs/fig05.pdf
+  mv ./fig/FigS3_ALL.png ../main_figs/fig05.png
 fi
   
 if [ x${draw[31]} = xyes ]; then
@@ -76,11 +83,11 @@ if [ x${draw[33]} = xyes ]; then
   mv ./fig/FigS1_vat_aircore.png ../main_figs/figB3.png
 fi
 
-if [ x${draw[34]} = xyes ]; then
-  echo "Figure B4 (34)......."
-  python ./FigS3_mip_omip2_aircore.py
-  mv ./fig/FigS3_omip2_aircore.pdf ../main_figs/figB4.pdf
-  mv ./fig/FigS3_omip2_aircore.png ../main_figs/figB4.png
-fi
+#if [ x${draw[34]} = xyes ]; then
+#  echo "Figure B4 (34)......."
+#  python ./FigS3_mip_omip2_aircore.py
+#  mv ./fig/FigS3_omip2_aircore.pdf ../main_figs/figB4.pdf
+#  mv ./fig/FigS3_omip2_aircore.png ../main_figs/figB4.png
+#fi
 
 echo "............done"

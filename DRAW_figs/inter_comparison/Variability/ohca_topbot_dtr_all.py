@@ -135,7 +135,7 @@ for omip in range(2):
         vat_mean_tmp = pd.DataFrame(vat_mean,columns=col)
 
         col = pd.Index(['OMIP' + str(omip+1) + '-std'],name='institution')
-        vat_std = vat_df_all.std(axis=1)
+        vat_std = vat_df_all.std(axis=1,ddof=0)
         vat_std_tmp = pd.DataFrame(vat_std,columns=col)
 
         vat_mean_df_tmp = pd.concat([vat_mean_tmp,vat_std_tmp],axis=1)

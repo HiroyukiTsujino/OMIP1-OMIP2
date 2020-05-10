@@ -7,7 +7,9 @@ ANALYSIS
 First thing to do
 --------
 
-  * Make symbolic link to top directories of data archive.
+  * See README.md in the top directory for how to obtain and place the datasets.
+
+  * Make symbolic links to data archive.
     Use sample/make_symbolic_link.sh if you like.
 
     - model    ---> ${Where_Archive_is_Extracted}/model
@@ -15,31 +17,31 @@ First thing to do
     - refdata  ---> ${Where_Archive_is_Extracted}/refdata
 
 
-SST anaylsis
+SST analysis
 --------
 
   * AMIP-SST directory
 
-    - Compute climatology and time sereis of annual mean for PCMDI-SST.
+    - Compute climatology and time series of annual mean for PCMDI-SST.
 
   * MODEL_SST directory
 
     - Process results of OMIP simulations.
 
 
-SSH anaylsis
+SSH analysis
 --------
 
   * CMEMS-SSH directory
 
-    - Compute climatology and time sereis of annual mean for CMEMS-SSH.
+    - Compute climatology and time series of annual mean for CMEMS-SSH.
 
   * MODEL_SSH directory
 
     - Process results of OMIP simulations.
 
 
-MLD anaylsis
+MLD analysis
 --------
 
   * IFREMER-MLD
@@ -49,6 +51,38 @@ MLD anaylsis
   * MODEL_MLD directory
 
     - Process results of OMIP simulations.
+
+SSS analysis
+--------
+
+  * MODEL-SSS
+
+    - Process results of OMIP simulations.
+  
+
+Zonal mean analysis
+--------
+
+  * MODEL-ZM
+
+    - Process results of OMIP simulations.
+  
+
+MOC analysis
+--------
+
+  * MODEL-MOC
+
+    - Process results of OMIP simulations.
+  
+
+Wind stress analysis
+--------
+
+  * WIND_STRESS
+
+    - Process results of OMIP simulations.
+
 
 
 Contacts

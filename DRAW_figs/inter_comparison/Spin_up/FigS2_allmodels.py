@@ -18,6 +18,7 @@ from netCDF4 import Dataset, num2date
 
 
 var_list = [ "thetao", "so" ]
+clabel_list = ["$^{\circ}$C", "psu"]
 
 lev33 = [ 0.,    10.,   20.,   30.,   50.,   75.,   100.,  125.,  150.,  200., 
           250.,  300.,  400.,  500.,  600.,  700.,  800.,  900.,  1000., 1100.,
@@ -341,7 +342,7 @@ for model in model_list[omip-1]:
                                    cbar_kwargs={'orientation': 'horizontal',
                                                 'shrink':0.8,
                                                 'spacing': 'uniform',
-                                                'label': '$^{\circ}$C',
+                                                'label': clabel_list[item],
                                                 'ticks': bounds[item], },
                                    cbar_ax = ax_cbar )
     else:

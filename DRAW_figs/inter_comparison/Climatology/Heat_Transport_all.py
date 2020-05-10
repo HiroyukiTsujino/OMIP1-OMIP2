@@ -176,18 +176,20 @@ ax = [
     plt.subplot(3,1,3),
 ]
 
+ddof_dic={'ddof' : 0}
+
 for n in range(3):
     dac.isel(basin=n).plot(ax=ax[n], color='darkorange', label='CORE')
     daj.isel(basin=n).plot(ax=ax[n], color='green', label='JRA55do-v1_3')
     DS.omip1.mean(dim='model',skipna=False).isel(basin=n).plot(ax=ax[n], color='darkred', label='OMIP1')
     ax[n].fill_between(x=DS.omip1["lat"],
-                       y1=DS.omip1.mean(dim='model',skipna=False).isel(basin=n)-DS.omip1.std(dim='model',skipna=False).isel(basin=n),
-                       y2=DS.omip1.mean(dim='model',skipna=False).isel(basin=n)+DS.omip1.std(dim='model',skipna=False).isel(basin=n),
+                       y1=DS.omip1.mean(dim='model',skipna=False).isel(basin=n)-DS.omip1.std(dim='model',skipna=False, **ddof_dic).isel(basin=n),
+                       y2=DS.omip1.mean(dim='model',skipna=False).isel(basin=n)+DS.omip1.std(dim='model',skipna=False, **ddof_dic).isel(basin=n),
                        alpha=0.5,facecolor='lightcoral')
     DS.omip2.mean(dim='model',skipna=False).isel(basin=n).plot(ax=ax[n], color='darkblue', label='OMIP2')
     ax[n].fill_between(x=DS.omip2["lat"],
-                       y1=DS.omip2.mean(dim='model',skipna=False).isel(basin=n)-DS.omip2.std(dim='model',skipna=False).isel(basin=n),
-                       y2=DS.omip2.mean(dim='model',skipna=False).isel(basin=n)+DS.omip2.std(dim='model',skipna=False).isel(basin=n),
+                       y1=DS.omip2.mean(dim='model',skipna=False).isel(basin=n)-DS.omip2.std(dim='model',skipna=False, **ddof_dic).isel(basin=n),
+                       y2=DS.omip2.mean(dim='model',skipna=False).isel(basin=n)+DS.omip2.std(dim='model',skipna=False, **ddof_dic).isel(basin=n),
                        alpha=0.5,facecolor='lightblue')
     ax[n].set_title(title[n])
     ax[n].set_xlabel("Latitude")

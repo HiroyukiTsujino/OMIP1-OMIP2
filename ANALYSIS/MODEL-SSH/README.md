@@ -32,7 +32,7 @@ Contents
     - $ python ./MODEL_CMEMS_comp_interannual.py omip2 1993 2009 yes ! use filtered CMEMS
 
 
-  * Calculation of stasistical properties
+  * Calculation of statistical properties
 
     - $ python ./MODEL_CMEMS_comp_annual_wrt_annclim_rbar.py omip1 1993 2009 yes
     - $ python ./MODEL_CMEMS_comp_annual_wrt_annclim_rbar.py omip2 1993 2009 yes
@@ -49,6 +49,10 @@ Contents
 
     (- $ python ./SSH_diff_std.py)
     - $ python ./SSH_diff_std_med.py (Mediterranean Sea excluded)
+
+  * Compare the ensemble spread and the room-mean-square of bias.
+
+    - $ python ./SSH_rmse_std_med.py (Mediterranean Sea excluded)
 
 
 Contact
