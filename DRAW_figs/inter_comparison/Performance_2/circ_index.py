@@ -29,7 +29,7 @@ dfm.rename(index={'Z-MMM': 'MMM'}, inplace=True)
 
 
 fig = plt.figure(figsize=(11,8))
-fig.suptitle("Circulation index", size='x-large')
+fig.suptitle("Circulation index", fontsize=18)
 
 axes=fig.add_subplot(2,2,1)
 
@@ -188,7 +188,7 @@ y=x.copy()
 axes.plot(x,y,color="grey",linewidth=0.5)
 xx=x.reshape(-1,1)
 axes.plot(xx,lr.predict(xx),color='red',linewidth=0.25)
-axes.text(6,18,"$r^2$="+'{:.3f}'.format(lr.score(x_np,y_np)))
+axes.text(6,17,"$r^2$="+'{:.3f}'.format(lr.score(x_np,y_np)))
 axes.set_title('ITF')
 axes.set_xlabel('OMIP1-ITF [Sv]')
 axes.set_ylabel('OMIP2-ITF [Sv]')
@@ -197,7 +197,7 @@ axes.set_ylim(5,20)
 axes.grid(b=True,which='major',axis='both')
 axes.legend(bbox_to_anchor=(1.01,0.8),loc='lower left')
 
-plt.subplots_adjust(left=0.07,right=0.75,bottom=0.10,top=0.85,hspace=0.30)
+plt.subplots_adjust(left=0.07,right=0.75,bottom=0.10,top=0.90,hspace=0.30)
 
 #fig.tight_layout()
 

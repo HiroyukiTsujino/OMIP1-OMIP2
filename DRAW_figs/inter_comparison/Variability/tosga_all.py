@@ -195,11 +195,13 @@ for ii in range(nummodel[0]):
         lwidth=1
     tosga_annual_model[0].plot(y=tosga_annual_model[0].columns[ii],ax=axes,\
                                color=linecol,linewidth=lwidth,linestyle=linesty,ylim=[17.7,18.9])
-    axes.set_xlabel('')
-    axes.set_ylabel(r'$^\circ \mathrm{C}$',fontsize=12)
-    leg = axes.legend(bbox_to_anchor=(1.01,0.3),loc='upper left')
-    for legobj in leg.legendHandles:
-        legobj.set_linewidth(2.0)
+
+axes.grid()
+axes.set_xlabel('')
+axes.set_ylabel(r'$^\circ \mathrm{C}$',fontsize=12)
+leg = axes.legend(bbox_to_anchor=(1.01,0.3),loc='upper left')
+for legobj in leg.legendHandles:
+    legobj.set_linewidth(2.0)
 
 # OMIP2
 axes = fig.add_subplot(3,1,2)
@@ -216,9 +218,11 @@ for ii in range(nummodel[1]):
     #print(ii,linecol,linesty)
     tosga_annual_model[1].plot(y=tosga_annual_model[1].columns[ii],ax=axes,\
                                color=linecol,linewidth=lwidth,linestyle=linesty,ylim=[17.7,18.9],label='_nolegend_')
-    axes.set_xlabel('')
-    axes.set_ylabel(r'$^\circ \mathrm{C}$',fontsize=12)
-    #axes.legend(bbox_to_anchor=(0.0,0.0),loc='lower left')
+
+axes.grid()
+axes.set_xlabel('')
+axes.set_ylabel(r'$^\circ \mathrm{C}$',fontsize=12)
+#axes.legend(bbox_to_anchor=(0.0,0.0),loc='lower left')
 
 # MMM
 axes = fig.add_subplot(3,1,3)
@@ -231,6 +235,7 @@ axes.fill_between(x=tosga_annual_all.index,y1=tosga_annual_all['OMIP2-min'],y2=t
 tosga_annual_all.plot(y=tosga_annual_all.columns[2],ax=axes,color='darkred',linewidth=2,ylim=[17.7,18.9])
 tosga_annual_all.plot(y=tosga_annual_all.columns[8],ax=axes,color='darkblue',linewidth=2,ylim=[17.7,18.9])
 #
+axes.grid()
 axes.set_xlabel('year',fontsize=10)
 axes.set_ylabel(r'$^\circ \mathrm{C}$',fontsize=12)
 leg = axes.legend(bbox_to_anchor=(1.01,1.0),loc='upper left')

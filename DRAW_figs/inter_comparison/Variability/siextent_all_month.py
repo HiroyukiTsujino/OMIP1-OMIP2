@@ -533,6 +533,7 @@ for ii in range(nummodel[0]):
         lwidth=1.0
     siextentn_model_omip1[mon-1].plot(y=siextentn_model_omip1[mon-1].columns[ii],ax=axes,color=linecol,linewidth=lwidth,linestyle=linesty,ylim=[10,20],label=inst)
 
+axes.grid()
 axes.tick_params(labelsize=9)
 axes.set_xlabel('')
 axes.set_ylabel(r'$\times 10^{6} \mathrm{km}^{2}$',fontsize=10)
@@ -554,6 +555,7 @@ for ii in range(nummodel[1]):
         lwidth=1.0
     siextentn_model_omip2[mon-1].plot(y=siextentn_model_omip2[mon-1].columns[ii],ax=axes,color=linecol,linewidth=lwidth,linestyle=linesty,ylim=[10,20],legend=False)
 
+axes.grid()
 axes.tick_params(labelsize=9)
 axes.set_xlabel('')
 axes.set_title('(b) '+month[mon-1]+' NH OMIP2',{'fontsize':10, 'verticalalignment':'top'})
@@ -567,6 +569,7 @@ axes.fill_between(x=siextentn_df[mon-1].index,y1=siextentn_df[mon-1]['OMIP2-min'
 siextentn_df[mon-1].plot(y=siextentn_df[mon-1].columns[1],ax=axes,ylim=[10,20],color='darkred',linewidth=2)
 siextentn_df[mon-1].plot(y=siextentn_df[mon-1].columns[5],ax=axes,ylim=[10,20],color='darkblue',linewidth=2)
 
+axes.grid()
 axes.tick_params(labelsize=9)
 axes.set_xlabel('')
 axes.set_title('(c) '+month[mon-1]+' NH MMM',{'fontsize':10, 'verticalalignment':'top'})
@@ -591,6 +594,7 @@ for ii in range(nummodel[0]):
         lwidth=1.0
     siextentn_model_omip1[mon-1].plot(y=siextentn_model_omip1[mon-1].columns[ii],ax=axes,color=linecol,linewidth=lwidth,linestyle=linesty,ylim=[0,10],legend=False)
 
+axes.grid()
 axes.tick_params(labelsize=9)
 axes.set_xlabel('')
 axes.set_ylabel(r'$\times 10^{6} \mathrm{km}^{2}$',fontsize=10)
@@ -607,6 +611,7 @@ for ii in range(nummodel[1]):
         lwidth=1.0
     siextentn_model_omip2[mon-1].plot(y=siextentn_model_omip2[mon-1].columns[ii],ax=axes,color=linecol,linewidth=lwidth,linestyle=linesty,ylim=[0,10],legend=False)
 
+axes.grid()
 axes.tick_params(labelsize=9)
 axes.set_xlabel('')
 axes.set_title('(e) '+month[mon-1]+' NH OMIP2',{'fontsize':10, 'verticalalignment':'top'})
@@ -618,6 +623,7 @@ axes.fill_between(x=siextentn_df[mon-1].index,y1=siextentn_df[mon-1]['OMIP2-min'
 siextentn_df[mon-1].plot(y=siextentn_df[mon-1].columns[1],ax=axes,ylim=[0,10],color='darkred',linewidth=2,legend=False)
 siextentn_df[mon-1].plot(y=siextentn_df[mon-1].columns[5],ax=axes,ylim=[0,10],color='darkblue',linewidth=2,legend=False)
 
+axes.grid()
 axes.tick_params(labelsize=9)
 axes.set_xlabel('')
 axes.set_title('(f) '+month[mon-1]+' NH MMM',{'fontsize':10, 'verticalalignment':'top'})
@@ -640,6 +646,7 @@ for ii in range(nummodel[0]):
         lwidth=1.0
     siextents_model_omip1[mon-1].plot(y=siextents_model_omip1[mon-1].columns[ii],ax=axes,color=linecol,linewidth=lwidth,linestyle=linesty,ylim=[0,7],legend=False)
 
+axes.grid()
 axes.tick_params(labelsize=9)
 axes.set_xlabel('')
 axes.set_ylabel(r'$\times 10^{6} \mathrm{km}^{2}$',fontsize=10)
@@ -656,6 +663,7 @@ for ii in range(nummodel[1]):
         lwidth=1.0
     siextents_model_omip2[mon-1].plot(y=siextentn_model_omip2[mon-1].columns[ii],ax=axes,color=linecol,linewidth=lwidth,linestyle=linesty,ylim=[0,7],legend=False)
 
+axes.grid()
 axes.tick_params(labelsize=9)
 axes.set_xlabel('')
 axes.set_title('(h) '+month[mon-1]+' SH OMIP2',{'fontsize':10, 'verticalalignment':'top'})
@@ -668,6 +676,7 @@ axes.fill_between(x=siextents_df[mon-1].index,y1=siextents_df[mon-1]['OMIP2-min'
 siextents_df[mon-1].plot(y=siextents_df[mon-1].columns[1],ax=axes,ylim=[0,7],color='darkred',linewidth=2,legend=False)
 siextents_df[mon-1].plot(y=siextents_df[mon-1].columns[5],ax=axes,ylim=[0,7],color='darkblue',linewidth=2,legend=False)
 
+axes.grid()
 axes.tick_params(labelsize=9)
 axes.set_xlabel('')
 axes.set_title('(i) '+month[mon-1]+' SH MMM',{'fontsize':10, 'verticalalignment':'top'})
@@ -691,6 +700,7 @@ for ii in range(nummodel[0]):
         lwidth=1.0
     siextents_model_omip1[mon-1].plot(y=siextents_model_omip1[mon-1].columns[ii],ax=axes,color=linecol,linewidth=lwidth,linestyle=linesty,ylim=[12,27],legend=False)
 
+axes.grid()
 axes.tick_params(labelsize=9)
 axes.set_xlabel('year')
 axes.set_ylabel(r'$\times 10^{6} \mathrm{km}^{2}$',fontsize=10)
@@ -708,6 +718,7 @@ for ii in range(nummodel[1]):
         lwidth=1.0
     siextents_model_omip2[mon-1].plot(y=siextents_model_omip2[mon-1].columns[ii],ax=axes,color=linecol,linewidth=lwidth,linestyle=linesty,ylim=[12,27],legend=False)
 
+axes.grid()
 axes.tick_params(labelsize=9)
 axes.set_xlabel('year')
 axes.set_title('(k) '+month[mon-1]+' SH OMIP2',{'fontsize':10, 'verticalalignment':'top'})
@@ -720,6 +731,7 @@ axes.fill_between(x=siextents_df[mon-1].index,y1=siextents_df[mon-1]['OMIP2-min'
 siextents_df[mon-1].plot(y=siextents_df[mon-1].columns[1],ax=axes,ylim=[12,27],color='darkred',linewidth=2,legend=False)
 siextents_df[mon-1].plot(y=siextents_df[mon-1].columns[5],ax=axes,ylim=[12,27],color='darkblue',linewidth=2,legend=False)
 
+axes.grid()
 axes.set_title('(l) '+month[mon-1]+' SH MMM',{'fontsize':10, 'verticalalignment':'top'})
 axes.tick_params(labelsize=9)
 axes.set_xlabel('year')

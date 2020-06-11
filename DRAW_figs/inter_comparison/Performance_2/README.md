@@ -10,14 +10,14 @@ Main part
 
   * Table 3: r-scores of linear fits for model scatters between OMIP-1 and OMIP-2 in some metrics
      - vat_all.py          (Table D1)
-     - circ_index.py       (Table D2)
+     - circ_index.py       (Table D2) ----> Figure 28
         Check contents of "csv_spin", if vacant, you should either
           - run ../Spin_up/FigS1_vat_all.py
           - run ../Spin_up/FigS3_all.py
         or
           - copy contents of "csv_spin/samples" directory to "csv_spin".
 
-     - SST_SSS_bias.py     (Table D3)
+     - SST_SSS_bias.py     (Table D3) ----> Figure 27
      - SSH_bias.py         (Table D3)
      - mld_bias_win_sum.py (Table D4)
      - ZMT_bias.py         (Table D5)

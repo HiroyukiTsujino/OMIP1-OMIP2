@@ -298,6 +298,7 @@ for var in var_list:
         if (omip == 0):
             if (nv == 0):
                 thetaoga_mean_df[ndf].plot(y=thetaoga_mean_df[ndf].columns[0],color='darkgrey',linewidth=4,ax=axes[nax],ylim=ylim[nv],xlim=[1948,2018],legend=False)
+                axes[nax].grid()
                 axes[nax].set_title(title[nax],{'fontsize':8, 'verticalalignment':'top'})
                 axes[nax].tick_params(labelsize=6)
                 ax2=axes[nax].twinx()
@@ -318,6 +319,7 @@ for var in var_list:
                     legobj.set_linewidth(1.0)
             else:
                 thetaoga_mean_df[ndf].plot(y=thetaoga_mean_df[ndf].columns[0],color='darkgrey',linewidth=4,ax=axes[nax],ylim=ylim[nv],xlim=[1948,2018],legend=False)
+                axes[nax].grid()
                 axes[nax].set_title(title[nax],{'fontsize':8, 'verticalalignment':'top'})
                 axes[nax].tick_params(labelsize=6)
                 ax2=axes[nax].twinx()
@@ -335,6 +337,7 @@ for var in var_list:
                 
         if (omip == 1):
             thetaoga_mean_df[ndf].plot(y=thetaoga_mean_df[ndf].columns[0],color='darkgrey',linewidth=4,ax=axes[nax],ylim=ylim[nv],xlim=[1948,2018],title=title[nax],legend=False)
+            axes[nax].grid()
             axes[nax].set_title(title[nax],{'fontsize':8, 'verticalalignment':'top'})
             axes[nax].tick_params(labelleft=False,labelsize=6)
             ax2=axes[nax].twinx()
@@ -363,6 +366,7 @@ for var in var_list:
         ohc700m_all.plot(y=ohc700m_all.columns[0],color='deepskyblue',linewidth=2,ax=axes[nax],ylim=ylim[nv],xlim=[1948,2018])
         ohc700m_all.plot(y=ohc700m_all.columns[1],color='magenta', linewidth=2,ax=axes[nax],ylim=ylim[nv],xlim=[1948,2018])
         ohc700m_all.plot(y=ohc700m_all.columns[2],color='green',linewidth=2,ax=axes[nax],ylim=ylim[nv],xlim=[1948,2018])
+        axes[nax].grid()
         ax2=axes[nax].twinx()
         thetaoga_mean_df[ndf1].plot(y=thetaoga_mean_df[ndf1].columns[1],color='darkred',linewidth=2,ax=ax2,ylim=ylimvat[nv],xlim=[1948,2018])
         thetaoga_mean_df[ndf2].plot(y=thetaoga_mean_df[ndf2].columns[1],color='darkblue',linewidth=2,ax=ax2,ylim=ylimvat[nv],xlim=[1948,2018],title=title[nax])
@@ -381,6 +385,7 @@ for var in var_list:
             ohc2000m_all.plot(y=ohc2000m_all.columns[0],color='deepskyblue',linewidth=2,ax=axes[nax],ylim=ylim[nv],xlim=[1948,2018],legend=False)
             ohc2000m_all.plot(y=ohc2000m_all.columns[1],color='magenta', linewidth=2,ax=axes[nax],ylim=ylim[nv],xlim=[1948,2018],legend=False)
             ohc2000m_all.plot(y=ohc2000m_all.columns[2],color='green',linewidth=2,ax=axes[nax],ylim=ylim[nv],xlim=[1948,2018],legend=False)
+        axes[nax].grid()
         ax2=axes[nax].twinx()
         thetaoga_mean_df[ndf1].plot(y=thetaoga_mean_df[ndf1].columns[1],color='darkred',linewidth=2,ax=ax2,ylim=ylimvat[nv],xlim=[1948,2018],legend=False)
         thetaoga_mean_df[ndf2].plot(y=thetaoga_mean_df[ndf2].columns[1],color='darkblue',linewidth=2,ax=ax2,ylim=ylimvat[nv],xlim=[1948,2018],title=title[nax],legend=False)

@@ -214,12 +214,14 @@ for ii in range(nummodel[0]):
         lwidth = 1
     #print(ii,linecol,linesty)
     drake_annual_model[0].plot(y=drake_annual_model[0].columns[ii],ax=axes,color=linecol,linewidth=lwidth,linestyle=linesty,ylim=[90,220],label=inst)
-    axes.set_xlabel('')
-    axes.set_ylabel(r'$\times 10^9 \mathrm{kg}\,\mathrm{s}^{-1}$',fontsize=12)
-    leg = axes.legend(bbox_to_anchor=(1.01,0.3),loc='upper left')
-    for legobj in leg.legendHandles:
-        legobj.set_linewidth(2.0)
-    plt.subplots_adjust(left=0.08,right=0.78,top=0.92)
+
+axes.grid()
+axes.set_xlabel('')
+axes.set_ylabel(r'$\times 10^9 \mathrm{kg}\,\mathrm{s}^{-1}$',fontsize=12)
+leg = axes.legend(bbox_to_anchor=(1.01,0.3),loc='upper left')
+for legobj in leg.legendHandles:
+    legobj.set_linewidth(2.0)
+plt.subplots_adjust(left=0.08,right=0.78,top=0.92)
 
 # OMIP2
 axes = fig.add_subplot(3,1,2)
@@ -238,10 +240,12 @@ for ii in range(nummodel[1]):
         
     #print(ii,linecol,linesty)
     drake_annual_model[1].plot(y=drake_annual_model[1].columns[ii],ax=axes,color=linecol,linewidth=lwidth,linestyle=linesty,ylim=[90,220],legend=False)
-    axes.set_xlabel('')
-    axes.set_ylabel(r'$\times 10^9 \mathrm{kg}\,\mathrm{s}^{-1}$',fontsize=12)
-    #axes.legend(bbox_to_anchor=(0.0,0.0),loc='lower left')
-    plt.subplots_adjust(left=0.08,right=0.78)
+
+axes.grid()
+axes.set_xlabel('')
+axes.set_ylabel(r'$\times 10^9 \mathrm{kg}\,\mathrm{s}^{-1}$',fontsize=12)
+#axes.legend(bbox_to_anchor=(0.0,0.0),loc='lower left')
+plt.subplots_adjust(left=0.08,right=0.78)
 
 # MMM
 
@@ -252,6 +256,8 @@ axes.fill_between(x=drake_annual_all.index,y1=drake_annual_all['OMIP1-min'],y2=d
 axes.fill_between(x=drake_annual_all.index,y1=drake_annual_all['OMIP2-min'],y2=drake_annual_all['OMIP2-max'],alpha=0.5,facecolor='lightblue')
 drake_annual_all.plot(y=drake_annual_all.columns[8],color='darkred' ,linewidth=2,ax=axes,ylim=[90,220])
 drake_annual_all.plot(y=drake_annual_all.columns[12],color='darkblue',linewidth=2,ax=axes,ylim=[90,220])
+
+axes.grid()
 axes.set_xlabel('year',fontsize=10)
 axes.set_ylabel(r'$\times 10^9 \mathrm{kg}\,\mathrm{s}^{-1}$',fontsize=12)
 leg = axes.legend(bbox_to_anchor=(1.01,1.0),loc='upper left')

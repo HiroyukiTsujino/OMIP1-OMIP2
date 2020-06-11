@@ -206,11 +206,13 @@ for ii in range(nummodel[0]):
     inst=modnam[0][ii]
     #print(ii,linecol,linesty)
     zostoga_model[0].plot(y=zostoga_model[0].columns[ii],ax=axes,color=linecol,linewidth=1,linestyle=linesty,ylim=[-0.03,0.03],label=inst)
-    axes.set_xlabel('')
-    axes.set_ylabel('[m]',fontsize=10)
-    leg = axes.legend(bbox_to_anchor=(3.45,0.7),loc='upper left')
-    for legobj in leg.legendHandles:
-        legobj.set_linewidth(2.0)
+
+axes.grid()
+axes.set_xlabel('')
+axes.set_ylabel('[m]',fontsize=10)
+leg = axes.legend(bbox_to_anchor=(3.45,0.7),loc='upper left')
+for legobj in leg.legendHandles:
+    legobj.set_linewidth(2.0)
 
 # OMIP2
 axes = fig.add_subplot(2,3,2)
@@ -224,10 +226,12 @@ for ii in range(nummodel[1]):
     inst=modnam[1][ii]
     #print(ii,linecol,linesty)
     zostoga_model[1].plot(y=zostoga_model[1].columns[ii],ax=axes,color=linecol,linewidth=1,linestyle=linesty,ylim=[-0.03,0.03],legend=False)
-    axes.set_xlabel('')
-    axes.set_ylabel('')
-    #axes.set_ylabel('[m]',fontsize=12)
-    #axes.legend(bbox_to_anchor=(0.0,0.0),loc='lower left')
+
+axes.grid()
+axes.set_xlabel('')
+axes.set_ylabel('')
+#axes.set_ylabel('[m]',fontsize=12)
+#axes.legend(bbox_to_anchor=(0.0,0.0),loc='lower left')
 
 # MMM
 axes = fig.add_subplot(2,3,3)
@@ -238,6 +242,8 @@ axes.fill_between(x=zostoga_all.index,y1=zostoga_all['OMIP1-min'],y2=zostoga_all
 axes.fill_between(x=zostoga_all.index,y1=zostoga_all['OMIP2-min'],y2=zostoga_all['OMIP2-max'],alpha=0.5,facecolor='lightblue')
 zostoga_all.plot(y=zostoga_all.columns[1],color='darkred' ,linewidth=2,ax=axes,ylim=[-0.03,0.03])
 zostoga_all.plot(y=zostoga_all.columns[5],color='darkblue',linewidth=2,ax=axes,ylim=[-0.03,0.03])
+
+axes.grid()
 axes.set_xlabel('')
 axes.set_ylabel('')
 #axes.set_ylabel('[m]',fontsize=12)
@@ -258,10 +264,12 @@ for ii in range(nummodel[0]):
     inst=modnam[0][ii]
     #print(ii,linecol,linesty)
     zostoga_dtr_model[0].plot(y=zostoga_dtr_model[0].columns[ii],ax=axes,color=linecol,linewidth=1,linestyle=linesty,ylim=[-0.03,0.03],legend=False)
-    axes.set_xlabel('year',fontsize=10)
-    axes.set_ylabel('[m]',fontsize=10)
-    #axes.legend(bbox_to_anchor=(4.05,0.8))
-    #plt.subplots_adjust(left=0.1,right=0.9)
+
+axes.grid()
+axes.set_xlabel('year',fontsize=10)
+axes.set_ylabel('[m]',fontsize=10)
+#axes.legend(bbox_to_anchor=(4.05,0.8))
+#plt.subplots_adjust(left=0.1,right=0.9)
 
 # OMIP2
 axes = fig.add_subplot(2,3,5)
@@ -275,11 +283,13 @@ for ii in range(nummodel[1]):
     inst=modnam[1][ii]
     #print(ii,linecol,linesty)
     zostoga_dtr_model[1].plot(y=zostoga_dtr_model[1].columns[ii],ax=axes,color=linecol,linewidth=1,linestyle=linesty,ylim=[-0.03,0.03],legend=False)
-    axes.set_xlabel('year',fontsize=10)
-    axes.set_ylabel('')
-    #axes.set_ylabel('[m]',fontsize=12)
-    #axes.legend(bbox_to_anchor=(0.0,0.0),loc='lower left')
-    #plt.subplots_adjust(left=0.1,right=0.9)
+
+axes.grid()
+axes.set_xlabel('year',fontsize=10)
+axes.set_ylabel('')
+#axes.set_ylabel('[m]',fontsize=12)
+#axes.legend(bbox_to_anchor=(0.0,0.0),loc='lower left')
+#plt.subplots_adjust(left=0.1,right=0.9)
 
 # MMM
 axes = fig.add_subplot(2,3,6)
@@ -290,6 +300,8 @@ axes.fill_between(x=zostoga_dtr_all.index,y1=zostoga_dtr_all['OMIP1-min'],y2=zos
 axes.fill_between(x=zostoga_dtr_all.index,y1=zostoga_dtr_all['OMIP2-min'],y2=zostoga_dtr_all['OMIP2-max'],alpha=0.5,facecolor='lightblue')
 zostoga_dtr_all.plot(y=zostoga_dtr_all.columns[1],color='darkred' ,linewidth=2,ax=axes,ylim=[-0.03,0.03],legend=False)
 zostoga_dtr_all.plot(y=zostoga_dtr_all.columns[5],color='darkblue',linewidth=2,ax=axes,ylim=[-0.03,0.03],legend=False)
+
+axes.grid()
 axes.set_xlabel('year',fontsize=10)
 axes.set_ylabel('')
 
