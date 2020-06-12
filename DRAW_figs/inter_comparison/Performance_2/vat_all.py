@@ -27,6 +27,8 @@ print(df)
 
 dfm=df.drop('Z-STD',axis=0)
 dfm.rename(index={'Z-MMM': 'MMM'}, inplace=True)
+dfmm=dfm.drop('MMM',axis=0)
+print(dfmm)
 
 fig = plt.figure(figsize=(11,8))
 fig.suptitle("VAT (1980-2009) of the last cycle relative to the first year mean", size='x-large')
@@ -48,10 +50,10 @@ for index, row in dfm.iterrows():
         
     axes.scatter(btm,side,c=markcol,edgecolors=edgecol,marker=markers[mi],s=50,label=name)
 
-r = dfm[['v700m-OMIP1','v700m-OMIP2']].corr()
+r = dfmm[['v700m-OMIP1','v700m-OMIP2']].corr()
 print(r)
-x_np = dfm[['v700m-OMIP1']].values
-y_np = dfm['v700m-OMIP2'].values
+x_np = dfmm[['v700m-OMIP1']].values
+y_np = dfmm['v700m-OMIP2'].values
 lr = LinearRegression()
 lr.fit(x_np, y_np)
 print("coefficients", lr.coef_)
@@ -90,10 +92,10 @@ for index, row in dfm.iterrows():
         edgecol='lightblue'
     axes.scatter(btm,side,c=markcol,edgecolors=edgecol,marker=markers[mi],s=50,label=name)
 
-r = dfm[['v2000m-OMIP1','v2000m-OMIP2']].corr()
+r = dfmm[['v2000m-OMIP1','v2000m-OMIP2']].corr()
 print(r)
-x_np = dfm[['v2000m-OMIP1']].values
-y_np = dfm['v2000m-OMIP2'].values
+x_np = dfmm[['v2000m-OMIP1']].values
+y_np = dfmm['v2000m-OMIP2'].values
 print(x_np,y_np)
 lr = LinearRegression()
 lr.fit(x_np, y_np)
@@ -133,10 +135,10 @@ for index, row in dfm.iterrows():
         edgecol='lightblue'
     axes.scatter(btm,side,c=markcol,edgecolors=edgecol,marker=markers[mi],s=50,label=name)
 
-r = dfm[['v2000m-bot-OMIP1','v2000m-bot-OMIP2']].corr()
+r = dfmm[['v2000m-bot-OMIP1','v2000m-bot-OMIP2']].corr()
 print(r)
-x_np = dfm[['v2000m-bot-OMIP1']].values
-y_np = dfm['v2000m-bot-OMIP2'].values
+x_np = dfmm[['v2000m-bot-OMIP1']].values
+y_np = dfmm['v2000m-bot-OMIP2'].values
 lr = LinearRegression()
 lr.fit(x_np, y_np)
 print("coefficients", lr.coef_)
@@ -175,10 +177,10 @@ for index, row in dfm.iterrows():
         edgecol='lightblue'
     axes.scatter(btm,side,c=markcol,edgecolors=edgecol,marker=markers[mi],s=50,label=name)
 
-r = dfm[['vtop-bot-OMIP1','vtop-bot-OMIP2']].corr()
+r = dfmm[['vtop-bot-OMIP1','vtop-bot-OMIP2']].corr()
 print(r)
-x_np = dfm[['vtop-bot-OMIP1']].values
-y_np = dfm['vtop-bot-OMIP2'].values
+x_np = dfmm[['vtop-bot-OMIP1']].values
+y_np = dfmm['vtop-bot-OMIP2'].values
 lr = LinearRegression()
 lr.fit(x_np, y_np)
 print("coefficients", lr.coef_)

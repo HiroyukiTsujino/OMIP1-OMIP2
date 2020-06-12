@@ -32,14 +32,17 @@ df2.rename(index=lambda x: x[:-6],inplace=True)
 print(df2)
 df = pd.merge(df1,df2,left_index=True,right_index=True)
 print(df)
-#dfm=df.drop('MMM',axis=0)
-#print(dfm)
+dfm=df.drop('Z-STD',axis=0)
+dfm.rename(index={'Z-MMM': 'MMM'}, inplace=True)
+dfmt=dfm.drop('MMM',axis=0)
+dfmm=dfmt.drop('OBS',axis=0)
+print(dfmm)
 
-for index, row in df.iterrows():
+for index, row in dfm.iterrows():
     print(row['OMIP1-NH-MAR'],row['OMIP2-NH-MAR'])
     btm=row['OMIP1-NH-MAR']
     side=row['OMIP2-NH-MAR']
-    if ( index == 'OBS'):
+    if ( index == 'MMM' or index == 'OBS' ):
         markcol = 'red'
         edgecol = 'red'
     else:
@@ -50,10 +53,10 @@ for index, row in df.iterrows():
     name=index
     axes.scatter(btm,side,c=markcol,edgecolors=edgecol,marker=markers[mi],s=50,label=name)
 
-r = df.loc[:,['OMIP1-NH-MAR','OMIP2-NH-MAR']].corr()
+r = dfmm.loc[:,['OMIP1-NH-MAR','OMIP2-NH-MAR']].corr()
 print(r)
-x_np = df[['OMIP1-NH-MAR']].values
-y_np = df['OMIP2-NH-MAR'].values
+x_np = dfmm[['OMIP1-NH-MAR']].values
+y_np = dfmm['OMIP2-NH-MAR'].values
 lr = LinearRegression()
 lr.fit(x_np, y_np)
 print("coefficients", lr.coef_)
@@ -84,14 +87,17 @@ df2=pd.read_csv(infl2,index_col=0)
 df2.rename(index=lambda x: x[:-6],inplace=True)
 df = pd.merge(df1,df2,left_index=True,right_index=True)
 print(df)
-#dfm=df.drop('MMM',axis=0)
-#print(dfm)
+dfm=df.drop('Z-STD',axis=0)
+dfm.rename(index={'Z-MMM': 'MMM'}, inplace=True)
+dfmt=dfm.drop('MMM',axis=0)
+dfmm=dfmt.drop('OBS',axis=0)
+print(dfmm)
 
-for index, row in df.iterrows():
+for index, row in dfm.iterrows():
     print(row['OMIP1-NH-SEP'],row['OMIP2-NH-SEP'])
     btm=row['OMIP1-NH-SEP']
     side=row['OMIP2-NH-SEP']
-    if ( index == 'OBS'):
+    if ( index == 'MMM' or index == 'OBS' ):
         markcol = 'red'
         edgecol = 'red'
     else:
@@ -102,10 +108,10 @@ for index, row in df.iterrows():
     name=index
     axes.scatter(btm,side,c=markcol,edgecolors=edgecol,marker=markers[mi],s=50,label=name)
 
-r = df.loc[:,['OMIP1-NH-SEP','OMIP2-NH-SEP']].corr()
+r = dfmm.loc[:,['OMIP1-NH-SEP','OMIP2-NH-SEP']].corr()
 print(r)
-x_np = df[['OMIP1-NH-SEP']].values
-y_np = df['OMIP2-NH-SEP'].values
+x_np = dfmm[['OMIP1-NH-SEP']].values
+y_np = dfmm['OMIP2-NH-SEP'].values
 lr = LinearRegression()
 lr.fit(x_np, y_np)
 print("coefficients", lr.coef_)
@@ -135,14 +141,17 @@ df2=pd.read_csv(infl2,index_col=0)
 df2.rename(index=lambda x: x[:-6],inplace=True)
 df = pd.merge(df1,df2,left_index=True,right_index=True)
 print(df)
-#dfm=df.drop('MMM',axis=0)
-#print(dfm)
+dfm=df.drop('Z-STD',axis=0)
+dfm.rename(index={'Z-MMM': 'MMM'}, inplace=True)
+dfmt=dfm.drop('MMM',axis=0)
+dfmm=dfmt.drop('OBS',axis=0)
+print(dfmm)
 
-for index, row in df.iterrows():
+for index, row in dfm.iterrows():
     print(row['OMIP1-SH-SEP'],row['OMIP2-SH-SEP'])
     btm=row['OMIP1-SH-SEP']
     side=row['OMIP2-SH-SEP']
-    if ( index == 'OBS'):
+    if ( index == 'MMM' or index == 'OBS' ):
         markcol = 'red'
         edgecol = 'red'
     else:
@@ -153,10 +162,10 @@ for index, row in df.iterrows():
     name=index
     axes.scatter(btm,side,c=markcol,edgecolors=edgecol,marker=markers[mi],s=50,label=name)
 
-r = df.loc[:,['OMIP1-SH-SEP','OMIP2-SH-SEP']].corr()
+r = dfmm.loc[:,['OMIP1-SH-SEP','OMIP2-SH-SEP']].corr()
 print(r)
-x_np = df[['OMIP1-SH-SEP']].values
-y_np = df['OMIP2-SH-SEP'].values
+x_np = dfmm[['OMIP1-SH-SEP']].values
+y_np = dfmm['OMIP2-SH-SEP'].values
 lr = LinearRegression()
 lr.fit(x_np, y_np)
 print("coefficients", lr.coef_)
@@ -187,16 +196,19 @@ df2=pd.read_csv(infl2,index_col=0)
 df2.rename(index=lambda x: x[:-6],inplace=True)
 df = pd.merge(df1,df2,left_index=True,right_index=True)
 print(df)
-#dfm=df.drop('MMM',axis=0)
-#print(dfm)
+dfm=df.drop('Z-STD',axis=0)
+dfm.rename(index={'Z-MMM': 'MMM'}, inplace=True)
+dfmt=dfm.drop('MMM',axis=0)
+dfmm=dfmt.drop('OBS',axis=0)
+print(dfmm)
 
-for index, row in df.iterrows():
+for index, row in dfm.iterrows():
     print(row['OMIP1-SH-MAR'],row['OMIP2-SH-MAR'])
     btm=row['OMIP1-SH-MAR']
     side=row['OMIP2-SH-MAR']
     mi = int(markinfo[index]["marker"])
     name=index
-    if ( index == 'OBS'):
+    if ( index == 'MMM' or index == 'OBS' ):
         markcol = 'red'
         edgecol = 'red'
     else:
@@ -205,10 +217,10 @@ for index, row in df.iterrows():
 
     axes.scatter(btm,side,c=markcol,edgecolors=edgecol,marker=markers[mi],s=50,label=name)
 
-r = df.loc[:,['OMIP1-SH-MAR','OMIP2-SH-MAR']].corr()
+r = dfmm.loc[:,['OMIP1-SH-MAR','OMIP2-SH-MAR']].corr()
 print(r)
-x_np = df[['OMIP1-SH-MAR']].values
-y_np = df['OMIP2-SH-MAR'].values
+x_np = dfmm[['OMIP1-SH-MAR']].values
+y_np = dfmm['OMIP2-SH-MAR'].values
 lr = LinearRegression()
 lr.fit(x_np, y_np)
 print("coefficients", lr.coef_)

@@ -47,7 +47,7 @@ Main part
           - copy contents of "csv_mld/samples" directory to "csv_mld".
 
      - si_extent.py        (Table D7)
-        Check contents of "csv_mld", if vacant, you either
+        Check contents of "csv_var", if vacant, you either
           - run ../Variability/siextent_all_month.py
         or
           - copy contents of "csv_var/samples" directory to "csv_var".
@@ -70,6 +70,7 @@ In appendix
        or
          - copy contents of "csv_zos/samples" directory to simply reproduce Figure 31 of the manuscript.
 
+
 Other Plots
 --------
 
@@ -78,6 +79,7 @@ Other Plots
 
   * mld_circ_sh.py
      - Plot mld in the Weddell Sea and deep-bottom G-MOC
+
 
 Contact
 -------

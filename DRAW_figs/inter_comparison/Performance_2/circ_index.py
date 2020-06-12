@@ -26,7 +26,8 @@ df = pd.merge(df1,df2,left_index=True,right_index=True)
 print(df)
 dfm=df.drop('Z-STD',axis=0)
 dfm.rename(index={'Z-MMM': 'MMM'}, inplace=True)
-
+dfmm=dfm.drop('MMM',axis=0)
+print(dfmm)
 
 fig = plt.figure(figsize=(11,8))
 fig.suptitle("Circulation index", fontsize=18)
@@ -48,10 +49,11 @@ for index, row in dfm.iterrows():
 
     axes.scatter(btm,side,c=markcol,edgecolors=edgecol,marker=markers[mi],s=50,label=name)
 
-r = dfm[['AMOC-OMIP1','AMOC-OMIP2']].corr()
+
+r = dfmm[['AMOC-OMIP1','AMOC-OMIP2']].corr()
 print(r)
-x_np = dfm[['AMOC-OMIP1']].values
-y_np = dfm['AMOC-OMIP2'].values
+x_np = dfmm[['AMOC-OMIP1']].values
+y_np = dfmm['AMOC-OMIP2'].values
 lr = LinearRegression()
 lr.fit(x_np, y_np)
 print("coefficients", lr.coef_)
@@ -89,10 +91,10 @@ for index, row in dfm.iterrows():
 
     axes.scatter(btm,side,c=markcol,edgecolors=edgecol,marker=markers[mi],s=50,label=name)
 
-r = dfm[['GMOC-OMIP1','GMOC-OMIP2']].corr()
+r = dfmm[['GMOC-OMIP1','GMOC-OMIP2']].corr()
 print(r)
-x_np = -dfm[['GMOC-OMIP1']].values
-y_np = -dfm['GMOC-OMIP2'].values
+x_np = -dfmm[['GMOC-OMIP1']].values
+y_np = -dfmm['GMOC-OMIP2'].values
 lr = LinearRegression()
 lr.fit(x_np, y_np)
 print("coefficients", lr.coef_)
@@ -132,10 +134,10 @@ for index, row in dfm.iterrows():
 
     axes.scatter(btm,side,c=markcol,edgecolors=edgecol,marker=markers[mi],s=50,label=name)
 
-r = dfm[['ACC-OMIP1','ACC-OMIP2']].corr()
+r = dfmm[['ACC-OMIP1','ACC-OMIP2']].corr()
 print(r)
-x_np = dfm[['ACC-OMIP1']].values
-y_np = dfm['ACC-OMIP2'].values
+x_np = dfmm[['ACC-OMIP1']].values
+y_np = dfmm['ACC-OMIP2'].values
 lr = LinearRegression()
 lr.fit(x_np, y_np)
 print("coefficients", lr.coef_)
@@ -173,10 +175,10 @@ for index, row in dfm.iterrows():
 
     axes.scatter(btm,side,c=markcol,edgecolors=edgecol,marker=markers[mi],s=50,label=name)
 
-r = dfm[['ITF-OMIP1','ITF-OMIP2']].corr()
+r = dfmm[['ITF-OMIP1','ITF-OMIP2']].corr()
 print(r)
-x_np = -dfm[['ITF-OMIP1']].values
-y_np = -dfm['ITF-OMIP2'].values
+x_np = -dfmm[['ITF-OMIP1']].values
+y_np = -dfmm['ITF-OMIP2'].values
 lr = LinearRegression()
 lr.fit(x_np, y_np)
 print("coefficients", lr.coef_)
