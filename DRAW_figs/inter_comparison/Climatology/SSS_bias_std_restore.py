@@ -324,8 +324,8 @@ plt.subplots_adjust(left=0.07,right=0.98,bottom=0.05,top=0.92,wspace=0.16,hspace
 outpdf = outfile+'.pdf'
 outpng = outfile+'.png'
 
-plt.savefig(outpng, bbox_inches='tight', pad_inches=0.0)
-plt.savefig(outpdf, bbox_inches='tight', pad_inches=0.0)
+plt.savefig(outpng, bbox_inches='tight', pad_inches=0.05, dpi=200)
+plt.savefig(outpdf, bbox_inches='tight', pad_inches=0.05, dpi=200)
 
 if (len(sys.argv) == 3 and sys.argv[2] == 'show') :
     plt.show()

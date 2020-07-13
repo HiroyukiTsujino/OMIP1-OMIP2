@@ -161,15 +161,15 @@ dia._ax.legend(dia.samplePoints,
            [ p.get_label() for p in dia.samplePoints[0:num_models[0]+num_models[1]+1] ],
                numpoints=1, fontsize=9, loc=legcol['NH_MAR'],bbox_to_anchor=(1.1,0.3))
 
-PLT.subplots_adjust(left=0.1,right=0.82,bottom=0.05,top=0.90,hspace=0.25,wspace=0.1)
+PLT.subplots_adjust(left=0.1,right=0.82,bottom=0.05,top=0.90,hspace=0.25,wspace=0.05)
 
 outfile='fig/SIextent_Taylor'
 
 outpdf = outfile+'.pdf'
 outpng = outfile+'.png'
 
-PLT.savefig(outpng, bbox_inches='tight', pad_inches=0.0)
-PLT.savefig(outpdf, bbox_inches='tight', pad_inches=0.0)
+PLT.savefig(outpng, bbox_inches='tight', pad_inches=0.05)
+PLT.savefig(outpdf, bbox_inches='tight', pad_inches=0.05)
 
 if (len(sys.argv) == 2 and sys.argv[1] == 'show') :
     PLT.show()

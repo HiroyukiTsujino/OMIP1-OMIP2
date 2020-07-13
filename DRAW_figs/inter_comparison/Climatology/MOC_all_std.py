@@ -312,8 +312,8 @@ outpng = outfile+'.png'
 
 print("figure is saved to " + outpng + " and " + outpdf)
 
-plt.savefig(outpng, bbox_inches='tight', pad_inches=0.0)
-plt.savefig(outpdf, bbox_inches='tight', pad_inches=0.0)
+plt.savefig(outpng, bbox_inches='tight', pad_inches=0.05)
+plt.savefig(outpdf, bbox_inches='tight', pad_inches=0.05)
 
 if (len(sys.argv) == 3 and sys.argv[2] == 'show') :
     plt.show()

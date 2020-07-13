@@ -203,5 +203,15 @@ plt.subplots_adjust(left=0.07,right=0.75,bottom=0.10,top=0.90,hspace=0.30)
 
 #fig.tight_layout()
 
-plt.savefig('fig/Circulation.png')
-plt.show()
+outfile='fig/Circulation'
+
+outpdf = outfile+'.pdf'
+outpng = outfile+'.png'
+
+plt.savefig(outpng, bbox_inches='tight', pad_inches=0.05)
+plt.savefig(outpdf, bbox_inches='tight', pad_inches=0.05)
+
+if (len(sys.argv) == 2 and sys.argv[1] == 'show') :
+    plt.show()
+
+print("figure is saved to " + outpng + " and " + outpdf)

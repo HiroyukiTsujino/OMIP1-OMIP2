@@ -372,8 +372,10 @@ plt.subplots_adjust(left=0.07,right=0.95,bottom=0.02,top=0.90,wspace=0.16,hspace
 outpdf = outfile+'.pdf'
 outpng = outfile+'.png'
 
-plt.savefig(outpng, bbox_inches='tight', pad_inches=0.0, dpi=200)
-plt.savefig(outpdf, bbox_inches='tight', pad_inches=0.0, dpi=200)
+plt.savefig(outpng, bbox_inches='tight', pad_inches=0.05, dpi=200)
+plt.savefig(outpdf, bbox_inches='tight', pad_inches=0.05, dpi=200)
+#plt.savefig(outpng, bbox_inches='tight', pad_inches=0.1)
+#plt.savefig(outpdf, bbox_inches='tight', pad_inches=0.1)
 
 print("figure is saved to " + outpng + " and " + outpdf)
 

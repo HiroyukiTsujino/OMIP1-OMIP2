@@ -100,6 +100,10 @@ ncbas = netCDF4.Dataset(basinfile,'r')
 basin = ncbas.variables['basin_mask'][:,:]
 ncbas.close()
 
+basin = np.where(np.isnan(basin),-999,basin)
+
+print(basin)
+
 maskglb = np.array(np.zeros((ny,nx)),dtype=np.float64)
 maskatl = np.array(np.zeros((ny,nx)),dtype=np.float64)
 maskpac = np.array(np.zeros((ny,nx)),dtype=np.float64)
@@ -109,8 +113,8 @@ taux_annclim = np.array(np.zeros((ny,nx)),dtype=np.float64)
 tauy_annclim = np.array(np.zeros((ny,nx)),dtype=np.float64)
 day_annclim = np.array(np.zeros((ny,nx)),dtype=np.float64)
 
-for i in range(nx):
-    for j in range(ny):
+for j in range(ny):
+    for i in range(nx):
         if (basin[j,i] < 0 or basin[j,i] == 53):
             maskglb[j,i] = 0
         else:
@@ -263,8 +267,8 @@ for omip in range(2):
         arind = np.array(np.zeros((ny)),dtype=np.float64)
         masktmp = np.where(taux_annclim == 0, 0, 1)
 
-        for i in range(nx):
-            for j in range(ny):
+        for j in range(ny):
+            for i in range(nx):
                 txglb[j] = txglb[j] + area[j,i] * maskglb[j,i] * taux_annclim[j,i] * masktmp[j,i]
                 arglb[j] = arglb[j] + area[j,i] * maskglb[j,i] * masktmp[j,i]
                 txatl[j] = txatl[j] + area[j,i] * maskatl[j,i] * taux_annclim[j,i] * masktmp[j,i]
@@ -349,8 +353,8 @@ plt.subplots_adjust(left=0.12,right=0.98,top=0.93,bottom=0.05,hspace=0.25)
 outpdf = outfile+'.pdf'
 outpng = outfile+'.png'
 
-plt.savefig(outpng, bbox_inches='tight', pad_inches=0.0)
-plt.savefig(outpdf, bbox_inches='tight', pad_inches=0.0)
+plt.savefig(outpng, bbox_inches='tight', pad_inches=0.05)
+plt.savefig(outpdf, bbox_inches='tight', pad_inches=0.05)
 
 if (len(sys.argv) == 2 and sys.argv[1] == 'show') :
     plt.show()

@@ -90,8 +90,8 @@ outfile='fig/sst_sites_rbar'
 outpdf = outfile+'.pdf'
 outpng = outfile+'.png'
 
-plt.savefig(outpng, bbox_inches='tight', pad_inches=0.0)
-plt.savefig(outpdf, bbox_inches='tight', pad_inches=0.0)
+plt.savefig(outpng, bbox_inches='tight', pad_inches=0.05)
+plt.savefig(outpdf, bbox_inches='tight', pad_inches=0.05)
 
 if (len(sys.argv) == 2 and sys.argv[1] == 'show') :
     plt.show()
