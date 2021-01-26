@@ -71,12 +71,12 @@ ncmskcmems.close()
 ################################################
 # Ad hoc modification for Mediterranean (mask out entirely)
 maskcmems[120:140,0:40] = 0
-maskcmems[120:130,355:359] = 0
+maskcmems[120:130,355:360] = 0
 
 maskmed = np.array(np.empty((180,360)),dtype=np.int64)
 maskmed[:,:] = 1
 maskmed[120:140,0:40] = 0
-maskmed[120:130,355:359] = 0
+maskmed[120:130,355:360] = 0
 ################################################
 
 ##J wgt0 = 緯度に応じた重み (2次元配列, mask0 = False の場所は0に)

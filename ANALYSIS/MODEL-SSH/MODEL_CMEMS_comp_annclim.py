@@ -57,7 +57,7 @@ ncmskcmems.close()
 ################################################
 # Ad hoc modification for Mediterranean (mask out entirely)
 maskcmems[120:140,0:40] = 0
-maskcmems[120:130,355:359] = 0
+maskcmems[120:130,355:360] = 0
 ################################################
 
 arefile = path_amip + '/' + 'areacello_input4MIPs_SSTsAndSeaIce_CMIP_PCMDI-AMIP-1-1-4_gn.nc'
